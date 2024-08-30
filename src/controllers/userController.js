@@ -19,7 +19,6 @@ export const getUserProfile = async ( req, res ) => {
   }
 };
 
-// Update user profile
 /**
  * Actualiza el perfil del usuario que ha iniciado sesión actualmente.
  *

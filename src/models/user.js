@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const userSchema = mongoose.Schema({
+const userSchema = Schema({
   name: {
     type: String,
     required: true,
@@ -17,4 +17,4 @@ const userSchema = mongoose.Schema({
   twoFASecret: String,
 }, { timestamps: true });
 
-export default mongoose.model( 'User', userSchema );
+export default model( 'User', userSchema );

@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const sessionSchema = mongoose.Schema({
+const sessionSchema = Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
@@ -10,4 +10,4 @@ const sessionSchema = mongoose.Schema({
   browser: String,
 }, { timestamps: true });
 
-export default mongoose.model( 'Session', sessionSchema );
+export default model( 'Session', sessionSchema );
