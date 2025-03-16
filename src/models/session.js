@@ -4,10 +4,10 @@ const sessionSchema = Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   ip: String,
-  browser: String,
+  browser: String
 }, { timestamps: true });
 
-export default model( 'Session', sessionSchema );
+export default model('Session', sessionSchema);

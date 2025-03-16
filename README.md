@@ -1,5 +1,7 @@
 # Psychology Assistant
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 ## Estructura de Archivos
 
 ```bash
@@ -37,29 +39,33 @@ psychology-assistant/
 
 ### Descripción del Funcionamiento
 
-1. **Autenticación y Registro**:  
+1. **Autenticación y Registro**:
+
    - Los usuarios podrán registrarse y hacer login utilizando email y contraseña. El sistema usará `bcrypt` para el hashing de contraseñas.
    - Se integrará `passport` con `passport-local` y `passport-jwt` para manejar sesiones y autenticación con tokens JWT.
 
-2. **Autenticación 2FA**:  
-   - Se utilizará `otplib` para la generación y validación de códigos de autenticación de dos factores (2FA).  
+2. **Autenticación 2FA**:
+
+   - Se utilizará `otplib` para la generación y validación de códigos de autenticación de dos factores (2FA).
    - Se generarán códigos QR que los usuarios podrán escanear con aplicaciones como Google Authenticator para activar el 2FA.
 
-3. **Creación de Sesiones e Historial de Usuario**:  
+3. **Creación de Sesiones e Historial de Usuario**:
+
    - Las sesiones de los usuarios se guardarán en una colección de la base de datos (`sessions`) para poder mantener el historial de acceso y la gestión de la sesión activa.
    - El historial de cada usuario incluirá las citas agendadas y las notas de seguimiento que el psicólogo decida registrar.
 
-4. **Generación de Citas y Códigos QR**:  
+4. **Generación de Citas y Códigos QR**:
+
    - Las citas se almacenarán en la base de datos y se generará un código QR único para cada una de ellas utilizando `qrcode`.
    - El código QR puede contener información relevante como la fecha y hora de la cita, el ID del usuario, y un enlace para acceder directamente a la sesión.
 
-5. **Modularización y Buenas Prácticas**:  
+5. **Modularización y Buenas Prácticas**:
    - Todo el código estará modularizado en controladores, modelos, servicios, y utilidades para que sea fácil de mantener y escalar.
    - El manejo de errores será centralizado para asegurar que los errores se gestionen de manera consistente en toda la aplicación.
 
 ### **Tecnologías Recomendadas y a Instalar**
 
-**Backend**:  
+**Backend**:
 
 - `express`: Framework web para Node.js.
 - `mongoose`: ODM para MongoDB.
@@ -72,11 +78,11 @@ psychology-assistant/
 - `express-session`: Para manejar sesiones en Express.
 - `cors`: Para manejar Cross-Origin Resource Sharing.
 
-**Base de Datos**:  
+**Base de Datos**:
 
 - MongoDB (puedes utilizar un servicio como MongoDB Atlas para la nube).
 
-**Otros**:  
+**Otros**:
 
 - `pnpm`: Gestor de paquetes.
 - `nodemon`: Para reiniciar el servidor automáticamente durante el desarrollo.
@@ -88,6 +94,7 @@ Asegúrate de instalar todas las dependencias con `pnpm install` antes de ejecut
 El markmap del proyecto se puede construir de la siguiente manera:
 
 1. **Estructura General**
+
    - Configuración del servidor
    - Rutas principales: autenticación, usuarios, citas
    - Controladores: gestión de usuarios, sesiones y citas

@@ -7,8 +7,8 @@ import { totp } from 'otplib';
  * @param { string } secret - la clave secreta utilizada para generar la TOTP.
  * @returns { string } -  El código TOTP generado.
  */
-export const generate2FACode = ( secret ) => {
-  return totp.generate( secret );
+export const generate2FACode = (secret) => {
+  return totp.generate(secret);
 };
 
 /**
@@ -19,8 +19,8 @@ export const generate2FACode = ( secret ) => {
  * @param { string } secret -  la clave secreta utilizada para generar el token.
  * @returns { boolean } - verdadero si el token es válido, falso en caso contrario.
  */
-export const verify2FACode = ( token, secret ) => {
-  return totp.check( token, secret );
+export const verify2FACode = (token, secret) => {
+  return totp.check(token, secret);
 };
 
 export default { generate2FACode, verify2FACode };

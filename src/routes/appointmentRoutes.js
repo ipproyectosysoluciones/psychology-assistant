@@ -4,7 +4,7 @@ import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post( '/create', protect, createAppointment );
-router.get( '/my-appointments', protect, getUserAppointments );
+router.post('/create', protect, createAppointment);
+router.get('/my-appointments', protect, getUserAppointments);
 
 export default router;

@@ -4,15 +4,15 @@ const appointmentSchema = Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   date: {
     type: Date,
-    required: true,
+    required: true
   },
   description: {
-    type: String,
-  },
+    type: String
+  }
 }, { timestamps: true });
 
-export default model( 'Appointment', appointmentSchema );
+export default model('Appointment', appointmentSchema);

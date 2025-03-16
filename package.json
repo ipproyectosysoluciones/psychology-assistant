@@ -3,29 +3,36 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.6.0",
+    "mongoose": "^8.12.1",
     "otplib": "^12.0.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "qrcode": "^1.5.4"
   },
+  "eslintConfig": {
+    "extends": "./node_modules/semistandard/eslintrc.json"
+  },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "^3.0.0",
     "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.6",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/qrcode": "^1.5.5",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.3",
+    "semistandard": "^17.0.0"
   }
 }

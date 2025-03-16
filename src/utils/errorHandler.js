@@ -10,11 +10,11 @@
  * @param { Object } res - el objeto de respuesta.
  * @param { Function } next - la siguiente función de middleware en el ciclo de solicitud-respuesta de la aplicación.
  */
-export const errorHandler = ( err, req, res, next ) => {
+export const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status( statusCode );
+  res.status(statusCode);
   res.json({
     message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
   });
 };

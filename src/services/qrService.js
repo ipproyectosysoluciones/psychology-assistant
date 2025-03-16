@@ -8,12 +8,12 @@ import qrcode from 'qrcode';
  * @returns { Promise<string> } - una URL de datos que representa la imagen del código QR generada.
  * @throws { Error } - si falla el proceso de generación del código QR.
  */
-const generateQR = async ( text ) => {
+const generateQR = async (text) => {
   try {
-    const qrCode = await qrcode.toDataURL( text );
+    const qrCode = await qrcode.toDataURL(text);
     return qrCode;
-  } catch ( error ) {
-    throw new Error( 'QR Code generation failed' );
+  } catch (error) {
+    throw new Error('QR Code generation failed');
   }
 };
 

@@ -10,12 +10,12 @@ import User from '../models/user.js';
  * @param { Object } res - el objeto de respuesta para enviar los datos del perfil de usuario o el mensaje de error
  * @returns { Object } - los datos del perfil de usuario o un mensaje de error del servidor en formato JSON
  */
-export const getUserProfile = async ( req, res ) => {
+export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById( req.user._id ).select( '-password' );
-    res.json( user );
-  } catch ( error ) {
-    res.status( 500 ).json({ message: 'Server error' });
+    const user = await User.findById(req.user._id).select('-password');
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -27,17 +27,17 @@ export const getUserProfile = async ( req, res ) => {
  * @returns { Object } - El perfil de usuario actualizado en formato JSON.
  * @throws { Object } - Si se produce un error en el servidor, devuelve un objeto JSON con una clave 'message' establecida en 'Server error'.
  */
-export const updateUserProfile = async ( req, res ) => {
+export const updateUserProfile = async (req, res) => {
   const { name, email } = req.body;
   try {
-    const user = await User.findById( req.user._id );
+    const user = await User.findById(req.user._id);
 
     user.name = name || user.name;
     user.email = email || user.email;
-    
+
     const updatedUser = await user.save();
-    res.json( updatedUser );
-  } catch ( error ) {
-    res.status( 500 ).json({ message: 'Server error' });
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 };

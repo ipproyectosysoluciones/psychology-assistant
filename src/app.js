@@ -13,13 +13,13 @@ connectDB();
 
 const app = express();
 
-app.use( cors() );
-app.use( express.json() );
+app.use(cors());
+app.use(express.json());
 
-app.use( '/api/auth', authRoutes );
-app.use( '/api/users', userRoutes );
-app.use( '/api/appointments', appointmentRoutes );
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
-app.use( errorHandler );
+app.use(errorHandler);
 
 export default app;
