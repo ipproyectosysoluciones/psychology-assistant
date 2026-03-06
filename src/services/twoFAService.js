@@ -1,4 +1,22 @@
+import crypto from 'crypto';
 import { totp } from 'otplib';
+
+/**
+ * @module generateSecret
+ * @description Genera un nuevo secreto TOTP.
+ *
+ * @returns { string } - El nuevo secreto TOTP generado.
+ */
+export const generateSecret = () => {
+  // Generate random bytes and convert to a base32-compatible string
+  const randomBytes = crypto.randomBytes(32);
+  const secret = randomBytes
+    .toString('base64')
+    .replace(/\//g, '+')
+    .replace(/\+/g, '-')
+    .substring(0, 32);
+  return secret;
+};
 
 /**
  * @module generate2FACode
@@ -23,4 +41,8 @@ export const verify2FACode = (token, secret) => {
   return totp.check(token, secret);
 };
 
-export default { generate2FACode, verify2FACode };
+export default {
+  generateSecret,
+  generate2FACode,
+  verify2FACode,
+};

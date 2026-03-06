@@ -4,7 +4,12 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 interface LoginResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+interface TokenRefreshResponse {
+  accessToken: string;
 }
 
 @Injectable({
@@ -26,7 +31,12 @@ export class AuthService {
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password })
-      .pipe(tap((res) => this.setToken(res.token)));
+      .pipe(
+        tap((res) => {
+          this.setAccessToken(res.accessToken);
+          this.setRefreshToken(res.refreshToken);
+        }),
+      );
   }
 
   enable2FA(): Observable<any> {
@@ -36,15 +46,39 @@ export class AuthService {
   verify2FA(token: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/auth/verify-2fa`, { token })
-      .pipe(tap((res) => this.setToken(res.token)));
+      .pipe(
+        tap((res) => {
+          this.setAccessToken(res.accessToken);
+          this.setRefreshToken(res.refreshToken);
+        }),
+      );
   }
 
   logout(): Observable<any> {
-    this.clearToken();
+    this.clearTokens();
     return this.http.post(`${this.apiUrl}/auth/logout`, {});
   }
 
-  setToken(token: string) {
+  refreshToken(): Observable<TokenRefreshResponse> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return new Observable((observer) => {
+        observer.error(new Error('No refresh token available'));
+      });
+    }
+
+    return this.http
+      .post<TokenRefreshResponse>(`${this.apiUrl}/auth/refresh-token`, {
+        refreshToken,
+      })
+      .pipe(
+        tap((res) => {
+          this.setAccessToken(res.accessToken);
+        }),
+      );
+  }
+
+  setAccessToken(token: string) {
     localStorage.setItem('jwt', token);
   }
 
@@ -52,8 +86,17 @@ export class AuthService {
     return localStorage.getItem('jwt');
   }
 
-  clearToken() {
+  setRefreshToken(token: string) {
+    localStorage.setItem('refreshToken', token);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
+  clearTokens() {
     localStorage.removeItem('jwt');
+    localStorage.removeItem('refreshToken');
   }
 
   isLoggedIn(): boolean {

@@ -6,6 +6,7 @@ import environment from './config/environment.js';
 import logger from './config/logger.js';
 import { specs, swaggerUi } from './config/swagger.js';
 import { apiLimiter } from './middlewares/rateLimitMiddleware.js';
+import { sanitizationMiddleware } from './middlewares/sanitizationMiddleware.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -14,7 +15,9 @@ import { errorHandler } from './utils/errorHandler.js';
 dotenv.config();
 
 // Conectar a base de datos
-connectDB();
+if (environment.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 const app = express();
 
@@ -31,6 +34,9 @@ app.use(
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Sanitization middleware - prevent XSS attacks
+app.use(sanitizationMiddleware);
 
 // Security headers
 app.use((req, res, next) => {

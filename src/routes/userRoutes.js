@@ -8,6 +8,7 @@ import {
   updateUserProfile,
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
+import { strictLimiter } from '../middlewares/rateLimitMiddleware.js';
 import { validateRequest } from '../utils/validators.js';
 
 const router = express.Router();
@@ -97,6 +98,7 @@ router.put(
  *             required:
  *               - currentPassword
  *               - newPassword
+ *               - confirmPassword
  *             properties:
  *               currentPassword:
  *                 type: string
@@ -104,7 +106,10 @@ router.put(
  *               newPassword:
  *                 type: string
  *                 minLength: 8
- *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)'
+ *                 pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)'
+ *               confirmPassword:
+ *                 type: string
+ *                 minLength: 8
  *     responses:
  *       200:
  *         description: Contraseña cambiada exitosamente
@@ -112,24 +117,43 @@ router.put(
  *         description: Datos inválidos o contraseña actual incorrecta
  *       401:
  *         description: No autorizado
+ *       429:
+ *         description: Demasiados intentos
  */
 router.post(
   '/change-password',
   protect,
+  strictLimiter,
   [
     body('currentPassword')
+      .trim()
       .notEmpty()
       .withMessage('Current password is required'),
     body('newPassword')
+      .trim()
       .isLength({ min: 8 })
       .withMessage('New password must be at least 8 characters long')
       .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
       .withMessage(
-        'New password must contain uppercase, lowercase, and numbers',
-      ),
+        'New password must contain uppercase, lowercase, and numbers'
+      )
+      .custom((value, { req }) => {
+        if (value === req.body.currentPassword) {
+          throw new Error('New password must be different from current password');
+        }
+        return true;
+      }),
+    body('confirmPassword')
+      .trim()
+      .custom((value, { req }) => {
+        if (value !== req.body.newPassword) {
+          throw new Error('Passwords do not match');
+        }
+        return true;
+      })
   ],
   validateRequest,
-  changePassword,
+  changePassword
 );
 
 /**
@@ -140,15 +164,43 @@ router.post(
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 minLength: 8
  *     responses:
  *       200:
  *         description: Cuenta desactivada exitosamente
+ *       400:
+ *         description: Contraseña incorrecta
  *       401:
  *         description: No autorizado
  *       404:
  *         description: Usuario no encontrado
+ *       429:
+ *         description: Demasiados intentos
  */
-router.post('/deactivate', protect, deactivateAccount);
+router.post(
+  '/deactivate',
+  protect,
+  strictLimiter,
+  [
+    body('password')
+      .trim()
+      .notEmpty()
+      .withMessage('Password is required to deactivate account')
+  ],
+  validateRequest,
+  deactivateAccount
+);
 
 /**
  * @swagger

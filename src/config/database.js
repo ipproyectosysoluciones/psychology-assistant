@@ -21,15 +21,30 @@ const connectDB = async () => {
       const conn = await mongoose.connect(mongoUri);
       console.log(`MongoDB Memory Connected: ${conn.connection.host}`);
     } else if (process.env.NODE_ENV === 'development') {
-      // Use in-memory database for development too (faster startup)
-      mongoServer = await MongoMemoryServer.create();
-      const mongoUri = mongoServer.getUri();
-      const conn = await mongoose.connect(mongoUri);
-      console.log(`MongoDB Memory Connected: ${conn.connection.host}`);
+      // Development: use DATABASE_URL if provided, otherwise in-memory
+      if (process.env.DATABASE_URL || process.env.MONGO_URI) {
+        const mongoUri = process.env.DATABASE_URL || process.env.MONGO_URI;
+        const conn = await mongoose.connect(mongoUri);
+        console.log(`✅ MongoDB Connected (Real): ${conn.connection.host}`);
+      } else {
+        // Fallback to in-memory if no URI provided
+        mongoServer = await MongoMemoryServer.create();
+        const mongoUri = mongoServer.getUri();
+        const conn = await mongoose.connect(mongoUri);
+        console.log(
+          `⚠️  MongoDB Memory Connected (Dev-only): ${conn.connection.host}`,
+        );
+      }
     } else {
-      // Use production database
-      const conn = await mongoose.connect(process.env.MONGO_URI);
-      console.log(`MongoDB Connected: ${conn.connection.host}`);
+      // Production: use MONGO_URI or DATABASE_URL
+      const mongoUri = process.env.MONGO_URI || process.env.DATABASE_URL;
+      if (!mongoUri) {
+        throw new Error(
+          'MONGO_URI or DATABASE_URL environment variable is required for production',
+        );
+      }
+      const conn = await mongoose.connect(mongoUri);
+      console.log(`✅ MongoDB Connected (Production): ${conn.connection.host}`);
     }
   } catch (error) {
     console.error(`Error: ${error.message}`);

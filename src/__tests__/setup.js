@@ -18,9 +18,12 @@ jest.setTimeout(30000);
 
 // Setup antes de todos los tests
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
-  await mongoose.connect(mongoUri);
+  // Solo conectar si no hay una conexión activa
+  if (mongoose.connection.readyState === 0) {
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+  }
 });
 
 // Cleanup después de cada test

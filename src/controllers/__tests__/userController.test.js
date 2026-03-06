@@ -1,24 +1,10 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../../app.js';
 import Appointment from '../../models/appointment.js';
 import User from '../../models/user.js';
 
-let mongoServer;
 let token;
 let user;
-
-beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = mongoServer.getUri();
-  await mongoose.connect(mongoUri);
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-  await mongoServer.stop();
-});
 
 beforeEach(async () => {
   await User.deleteMany({});
@@ -28,16 +14,16 @@ beforeEach(async () => {
   user = await User.create({
     name: 'Test User',
     email: 'test@example.com',
-    password: 'Password123',
+    password: 'MySecurePass@2024',
   });
 
   // Login to get token
   const loginResponse = await request(app).post('/api/auth/login').send({
     email: 'test@example.com',
-    password: 'Password123',
+    password: 'MySecurePass@2024',
   });
 
-  token = loginResponse.body.data.token;
+  token = loginResponse.body.data.accessToken;
 });
 
 describe('User Controller', () => {
@@ -45,8 +31,11 @@ describe('User Controller', () => {
     it('should get user profile successfully', async () => {
       const response = await request(app)
         .get('/api/users/profile')
-        .set('Authorization', `Bearer ${token}`)
-        .expect(200);
+        .set('Authorization', `Bearer ${token}`);
+
+      if (response.status !== 200) {
+        throw new Error(`Get profile failed: ${JSON.stringify(response.body)}`);
+      }
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.id).toBe(user._id.toString());
@@ -122,7 +111,7 @@ describe('User Controller', () => {
       await User.create({
         name: 'Other User',
         email: 'other@example.com',
-        password: 'Password123',
+        password: 'MySecurePass@2024',
       });
 
       const updateData = {
@@ -263,7 +252,7 @@ describe('User Controller', () => {
           user: user._id,
           date: new Date(Date.now() + 48 * 60 * 60 * 1000),
           description: 'Confirmed appointment',
-          status: 'confirmed',
+          status: 'scheduled',
         },
         {
           user: user._id,

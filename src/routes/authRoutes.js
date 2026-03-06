@@ -4,6 +4,7 @@ import {
   enable2FA,
   login,
   logout,
+  refreshAccessToken,
   register,
   verify2FA,
 } from '../controllers/authController.js';
@@ -190,6 +191,45 @@ router.post(
   ],
   validateRequest,
   verify2FA,
+);
+
+/**
+ * @swagger
+ * /api/auth/refresh-token:
+ *   post:
+ *     summary: Refrescar token de acceso
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: Token de refresco válido
+ *     responses:
+ *       200:
+ *         description: Token de acceso renovado exitosamente
+ *       400:
+ *         description: Refresh token requerido
+ *       401:
+ *         description: Refresh token inválido o expirado
+ */
+router.post(
+  '/refresh-token',
+  [
+    body('refreshToken')
+      .notEmpty()
+      .withMessage('Refresh token is required')
+      .isString()
+      .withMessage('Refresh token must be a string'),
+  ],
+  validateRequest,
+  refreshAccessToken,
 );
 
 export default router;

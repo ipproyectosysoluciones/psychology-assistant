@@ -1,6 +1,8 @@
 import logger from '../config/logger.js';
+import { AUDIT_EVENTS, auditLog } from '../middlewares/auditMiddleware.js';
 import Appointment from '../models/appointment.js';
 import qrService from '../services/qrService.js';
+import validationService from '../services/validationService.js';
 import { ApiResponse, sendResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/appError.js';
 
@@ -24,8 +26,38 @@ export const createAppointment = asyncHandler(async (req, res) => {
     throw new Error('Invalid date format');
   }
 
-  if (appointmentDate <= new Date()) {
-    throw new Error('Appointment date must be in the future');
+  // Advanced date validation (business rules)
+  const dateValidation =
+    validationService.validateAppointmentDate(appointmentDate);
+  if (!dateValidation.valid) {
+    auditLog(
+      req.user._id,
+      AUDIT_EVENTS.DATA_MODIFICATION,
+      'Appointment',
+      { date },
+      'FAILURE',
+      dateValidation.error,
+    );
+    throw new Error(dateValidation.error);
+  }
+
+  // Check for appointment conflicts (within 30 minutes)
+  const conflictValidation =
+    await validationService.validateAppointmentConflict(
+      req.user._id,
+      appointmentDate,
+      Appointment,
+    );
+  if (!conflictValidation.valid) {
+    auditLog(
+      req.user._id,
+      AUDIT_EVENTS.DATA_MODIFICATION,
+      'Appointment',
+      { date },
+      'FAILURE',
+      conflictValidation.error,
+    );
+    throw new Error(conflictValidation.error);
   }
 
   // Create appointment
@@ -46,6 +78,17 @@ export const createAppointment = asyncHandler(async (req, res) => {
   };
 
   const qrCode = await qrService.generateQR(JSON.stringify(qrData));
+  // Audit log successful creation
+  auditLog(
+    req.user._id,
+    AUDIT_EVENTS.DATA_MODIFICATION,
+    'Appointment',
+    {
+      appointmentId: appointment._id,
+      date: appointment.date,
+    },
+    'SUCCESS',
+  );
 
   logger.info('Appointment created successfully', {
     appointmentId: appointment._id,
@@ -132,23 +175,21 @@ export const getUserAppointments = asyncHandler(async (req, res) => {
  * EN: Checks appointment ownership before returning.
  */
 export const getAppointmentById = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-
-  const appointment = await Appointment.findById(id).populate(
-    'user',
-    'name email',
-  );
+  // Use appointment attached by authorizeAppointmentOwner middleware
+  const appointment =
+    req.appointment ||
+    (await Appointment.findById(req.params.id).populate('user', 'name email'));
 
   if (!appointment) {
     throw new Error('Appointment not found');
   }
 
-  // Check if appointment belongs to user (unless admin)
-  if (
-    appointment.user._id.toString() !== req.user._id.toString() &&
-    req.user.role !== 'admin'
-  ) {
-    throw new Error('Access denied');
+  // Check if the user owns this appointment
+  const appointmentUserId = appointment.user._id || appointment.user;
+  const currentUserId = req.user._id;
+
+  if (appointmentUserId.toString() !== currentUserId.toString()) {
+    throw new Error('You are not authorized to access this appointment');
   }
 
   logger.info('Appointment retrieved', {
@@ -185,21 +226,16 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
  * EN: Allows updating date, description and status with validations.
  */
 export const updateAppointment = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  // Use appointment attached by authorizeAppointmentOwner middleware
+  const appointment = req.appointment;
   const { date, description, status } = req.body;
 
-  const appointment = await Appointment.findById(id);
+  // Check if the user owns this appointment
+  const appointmentUserId = appointment.user._id || appointment.user;
+  const currentUserId = req.user._id;
 
-  if (!appointment) {
-    throw new Error('Appointment not found');
-  }
-
-  // Check ownership
-  if (
-    appointment.user.toString() !== req.user._id.toString() &&
-    req.user.role !== 'admin'
-  ) {
-    throw new Error('Access denied');
+  if (appointmentUserId.toString() !== currentUserId.toString()) {
+    throw new Error('You are not authorized to update this appointment');
   }
 
   // Validate date if provided
@@ -268,20 +304,15 @@ export const updateAppointment = asyncHandler(async (req, res) => {
  * EN: Only allows deleting future or cancelled appointments.
  */
 export const deleteAppointment = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  // Use appointment attached by authorizeAppointmentOwner middleware
+  const appointment = req.appointment;
 
-  const appointment = await Appointment.findById(id);
+  // Check if the user owns this appointment
+  const appointmentUserId = appointment.user._id || appointment.user;
+  const currentUserId = req.user._id;
 
-  if (!appointment) {
-    throw new Error('Appointment not found');
-  }
-
-  // Check ownership
-  if (
-    appointment.user.toString() !== req.user._id.toString() &&
-    req.user.role !== 'admin'
-  ) {
-    throw new Error('Access denied');
+  if (appointmentUserId.toString() !== currentUserId.toString()) {
+    throw new Error('You are not authorized to delete this appointment');
   }
 
   // Only allow deleting future or cancelled appointments
@@ -289,10 +320,10 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
     throw new Error('Cannot delete past or active appointments');
   }
 
-  await Appointment.findByIdAndDelete(id);
+  await Appointment.findByIdAndDelete(appointment._id);
 
   logger.info('Appointment deleted', {
-    appointmentId: id,
+    appointmentId: appointment._id,
     userId: req.user._id,
   });
 

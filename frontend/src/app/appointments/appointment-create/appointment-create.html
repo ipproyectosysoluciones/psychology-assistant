@@ -13,14 +13,22 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Tipo de Cita</mat-label>
-      <mat-select formControlName="type">
+      <mat-label>Descripción de la Cita</mat-label>
+      <mat-select formControlName="description">
         <mat-option *ngFor="let type of appointmentTypes" [value]="type.value">
           {{ type.label }}
         </mat-option>
       </mat-select>
-      <mat-error *ngIf="form.get('type')?.invalid && form.get('type')?.touched">
-        El tipo de cita es requerido
+      <mat-error *ngIf="form.get('description')?.invalid && form.get('description')?.touched">
+        La descripción es requerida
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Duración (minutos)</mat-label>
+      <input matInput type="number" formControlName="duration" min="15" max="180" />
+      <mat-error *ngIf="form.get('duration')?.invalid && form.get('duration')?.touched">
+        Duración debe estar entre 15 y 180 minutos
       </mat-error>
     </mat-form-field>
 

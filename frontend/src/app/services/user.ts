@@ -29,8 +29,12 @@ export class UserService {
     });
   }
 
-  deactivate(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users/deactivate`, {});
+  /**
+   * ES: Desactiva la cuenta del usuario (requiere contraseña)
+   * EN: Deactivates user account (requires password confirmation)
+   */
+  deactivate(password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/deactivate`, { password });
   }
 
   getStats(): Observable<any> {

@@ -13,12 +13,15 @@ export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
   // Check for token in header
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
     token = req.headers.authorization.split(' ')[1];
   }
 
   if (!token) {
-    throw new AppError('Not authorized to access this route', 401);
+    throw new AppError('No token provided', 401);
   }
 
   try {
@@ -39,7 +42,13 @@ export const protect = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    throw new AppError('Not authorized to access this route', 401);
+    if (error.name === 'JsonWebTokenError') {
+      throw new AppError('Invalid token', 401);
+    }
+    if (error.message === 'No token provided') {
+      throw new AppError('No token provided', 401);
+    }
+    throw error;
   }
 });
 
@@ -56,7 +65,10 @@ export const authorize = (...roles) => {
     }
 
     if (!roles.includes(req.user.role)) {
-      throw new AppError(`User role ${req.user.role} is not authorized to access this route`, 403);
+      throw new AppError(
+        `User role ${req.user.role} is not authorized to access this route`,
+        403,
+      );
     }
 
     next();
@@ -75,3 +87,30 @@ export const require2FA = (req, res, next) => {
   }
   next();
 };
+
+/**
+ * @module authorizeAppointmentOwner
+ * @description Middleware para autorizar que solo el propietario pueda acceder/modificar una cita.
+ * ES: Verifica que el usuario autenticado sea el propietario de la cita.
+ * EN: Verifies that the authenticated user is the owner of the appointment.
+ */
+export const authorizeAppointmentOwner = asyncHandler(
+  async (req, res, next) => {
+    // Dynamically import Appointment model to avoid circular dependencies
+    const { default: Appointment } = await import('../models/appointment.js');
+
+    const { id } = req.params;
+
+    // Find the appointment
+    const appointment = await Appointment.findById(id);
+
+    if (!appointment) {
+      throw new AppError('Appointment not found', 404);
+    }
+
+    // Attach appointment to request for use in controller
+    // Ownership verification will be done in the controller
+    req.appointment = appointment;
+    next();
+  },
+);

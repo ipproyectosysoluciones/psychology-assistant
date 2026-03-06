@@ -1,7 +1,9 @@
 import logger from '../config/logger.js';
 import User from '../models/user.js';
+import validationService from '../services/validationService.js';
 import { ApiResponse, sendResponse } from '../utils/apiResponse.js';
 import { asyncHandler } from '../utils/appError.js';
+import { auditLog, AUDIT_EVENTS } from '../middlewares/auditMiddleware.js';
 
 /**
  * @module getUserProfile
@@ -10,9 +12,9 @@ import { asyncHandler } from '../utils/appError.js';
  * EN: Returns user information without password.
  */
 export const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id)
-    .select('-password -twoFASecret')
-    .populate('appointments', 'date description status');
+  const user = await User.findById(req.user._id).select(
+    '-password -twoFASecret',
+  );
 
   if (!user) {
     throw new Error('User not found');
@@ -31,7 +33,6 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         isActive: user.isActive,
         lastLogin: user.lastLogin,
         createdAt: user.createdAt,
-        appointmentsCount: user.appointments?.length || 0,
       },
     },
     'Profile retrieved successfully',
@@ -119,12 +120,44 @@ export const changePassword = asyncHandler(async (req, res) => {
   // Verify current password
   const isMatch = await user.comparePassword(currentPassword);
   if (!isMatch) {
+    auditLog(
+      user._id,
+      AUDIT_EVENTS.PASSWORD_CHANGE,
+      'User',
+      { userId: user._id },
+      'FAILURE',
+      'Incorrect current password',
+    );
     throw new Error('Current password is incorrect');
+  }
+
+  // Validate new password strength
+  const passwordValidation =
+    validationService.validatePasswordStrength(newPassword);
+  if (!passwordValidation.valid) {
+    auditLog(
+      user._id,
+      AUDIT_EVENTS.PASSWORD_CHANGE,
+      'User',
+      { userId: user._id },
+      'FAILURE',
+      'Weak password',
+    );
+    throw new Error(`New password is too weak: ${passwordValidation.error}`);
   }
 
   // Update password (will be hashed by pre-save hook)
   user.password = newPassword;
   await user.save();
+
+  // Audit log successful password change
+  auditLog(
+    user._id,
+    AUDIT_EVENTS.PASSWORD_CHANGE,
+    'User',
+    { userId: user._id },
+    'SUCCESS',
+  );
 
   logger.info('Password changed successfully', { userId: req.user._id });
 
@@ -139,18 +172,50 @@ export const changePassword = asyncHandler(async (req, res) => {
 /**
  * @module deactivateAccount
  * @description Desactiva la cuenta del usuario.
- * ES: Marca la cuenta como inactiva (soft delete).
- * EN: Marks account as inactive (soft delete).
+ * ES: Verifica contraseña y marca la cuenta como inactiva (soft delete).
+ * EN: Verifies password and marks account as inactive (soft delete).
  */
 export const deactivateAccount = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const { password } = req.body;
+
+  if (!password) {
+    throw new Error('Password is required to deactivate account');
+  }
+
+  const user = await User.findById(req.user._id).select('+password');
 
   if (!user) {
     throw new Error('User not found');
   }
 
+  // Verify password before deactivation
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    auditLog(
+      user._id,
+      AUDIT_EVENTS.ACCOUNT_DEACTIVATION,
+      'User',
+      { userId: user._id },
+      'FAILURE',
+      'Incorrect password',
+    );
+    throw new Error('Password is incorrect');
+  }
+
   user.isActive = false;
   await user.save();
+
+  // Audit log account deactivation
+  auditLog(
+    user._id,
+    AUDIT_EVENTS.ACCOUNT_DEACTIVATION,
+    'User',
+    {
+      userId: user._id,
+      email: user.email,
+    },
+    'SUCCESS',
+  );
 
   logger.info('Account deactivated', { userId: req.user._id });
 

@@ -15,6 +15,9 @@ export class ProfileComponent implements OnInit {
     name: new FormControl(''),
     email: new FormControl({ value: '', disabled: true }),
   });
+  deactivationForm = new FormGroup({
+    password: new FormControl(''),
+  });
   message = '';
   error = '';
 
@@ -42,7 +45,33 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  logout() {
-    this.user.deactivate();
+  /**
+   * ES: Desactiva la cuenta del usuario después de confirmar contraseña
+   * EN: Deactivates user account after password confirmation
+   */
+  deactivateAccount() {
+    const password = this.deactivationForm.get('password')?.value;
+
+    if (!password) {
+      this.error = 'Please enter your password to confirm account deactivation';
+      return;
+    }
+
+    if (!confirm('⚠️ Are you sure you want to deactivate your account? This action cannot be undone.')) {
+      return;
+    }
+
+    this.user.deactivate(password).subscribe({
+      next: () => {
+        this.message = 'Account deactivated successfully';
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          this.router.navigate(['/auth/login']);
+        }, 2000);
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Failed to deactivate account';
+        this.deactivationForm.reset(); // Clear password field on error
+      },
+    });
   }
-}

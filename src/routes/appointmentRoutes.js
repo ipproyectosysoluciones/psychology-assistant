@@ -7,7 +7,10 @@ import {
   getUserAppointments,
   updateAppointment,
 } from '../controllers/appointmentController.js';
-import { protect } from '../middlewares/authMiddleware.js';
+import {
+  authorizeAppointmentOwner,
+  protect,
+} from '../middlewares/authMiddleware.js';
 import { validateRequest } from '../utils/validators.js';
 
 const router = express.Router();
@@ -142,6 +145,8 @@ router.get(
  *         description: Cita obtenida exitosamente
  *       401:
  *         description: No autorizado
+ *       403:
+ *         description: No autorizado para acceder a esta cita
  *       404:
  *         description: Cita no encontrada
  */
@@ -150,6 +155,7 @@ router.get(
   protect,
   [param('id').isMongoId().withMessage('Invalid appointment ID')],
   validateRequest,
+  authorizeAppointmentOwner,
   getAppointmentById,
 );
 
@@ -190,6 +196,8 @@ router.get(
  *         description: Datos inválidos
  *       401:
  *         description: No autorizado
+ *       403:
+ *         description: No autorizado para modificar esta cita
  *       404:
  *         description: Cita no encontrada
  */
@@ -213,6 +221,7 @@ router.put(
       .withMessage('Invalid status'),
   ],
   validateRequest,
+  authorizeAppointmentOwner,
   updateAppointment,
 );
 
@@ -235,6 +244,8 @@ router.put(
  *         description: Cita eliminada exitosamente
  *       401:
  *         description: No autorizado
+ *       403:
+ *         description: No autorizado para eliminar esta cita
  *       404:
  *         description: Cita no encontrada
  */
@@ -243,6 +254,7 @@ router.delete(
   protect,
   [param('id').isMongoId().withMessage('Invalid appointment ID')],
   validateRequest,
+  authorizeAppointmentOwner,
   deleteAppointment,
 );
 

@@ -1,4 +1,3 @@
-
 import environment from '../config/environment.js';
 import logger from '../config/logger.js';
 import { ApiResponse } from './apiResponse.js';
@@ -21,7 +20,7 @@ export const errorHandler = (err, req, res, next) => {
     url: req.url,
     method: req.method,
     ip: req.ip,
-    userId: req.user?.id
+    userId: req.user?.id,
   });
 
   // Mongoose bad ObjectId
@@ -39,7 +38,9 @@ export const errorHandler = (err, req, res, next) => {
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors).map(val => val.message).join(', ');
+    const message = Object.values(err.errors)
+      .map((val) => val.message)
+      .join(', ');
     error = new AppError(message, 400);
   }
 
@@ -60,6 +61,11 @@ export const errorHandler = (err, req, res, next) => {
 
   // Send response
   const response = ApiResponse.error(message, statusCode);
+
+  // Add validation errors if they exist
+  if (error.errors && Array.isArray(error.errors)) {
+    response.errors = error.errors;
+  }
 
   // Don't leak error details in production
   if (environment.isProduction()) {

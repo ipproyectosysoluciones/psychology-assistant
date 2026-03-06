@@ -33,6 +33,10 @@ export const authLimiter = rateLimit({
     });
   },
   skip: (req) => {
+    if (process.env.NODE_ENV === 'test') {
+      return true;
+    }
+
     // Skip rate limiting for admin users (if implemented)
     return req.user?.role === 'admin';
   },
@@ -63,6 +67,7 @@ export const apiLimiter = rateLimit({
       retryAfter: '15 minutes',
     });
   },
+  skip: () => process.env.NODE_ENV === 'test',
 });
 
 // Rate limiter estricto para endpoints sensibles
@@ -89,6 +94,7 @@ export const strictLimiter = rateLimit({
       retryAfter: '1 hour',
     });
   },
+  skip: () => process.env.NODE_ENV === 'test',
 });
 
 // Rate limiter para creación de recursos
@@ -115,4 +121,5 @@ export const createLimiter = rateLimit({
       retryAfter: '1 hour',
     });
   },
+  skip: () => process.env.NODE_ENV === 'test',
 });

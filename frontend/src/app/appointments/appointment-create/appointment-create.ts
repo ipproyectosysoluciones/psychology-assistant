@@ -39,7 +39,8 @@ import { AppointmentService } from '../../services/appointment';
 export class AppointmentCreateComponent {
   form = new FormGroup({
     date: new FormControl('', Validators.required),
-    type: new FormControl('', Validators.required),
+    description: new FormControl('', Validators.required),
+    duration: new FormControl(60, [Validators.min(15), Validators.max(180)]),
     notes: new FormControl(''),
   });
 
@@ -47,10 +48,10 @@ export class AppointmentCreateComponent {
   successMessage = '';
 
   appointmentTypes = [
-    { value: 'consultation', label: 'Consulta General' },
-    { value: 'followup', label: 'Seguimiento' },
-    { value: 'psychiatric', label: 'Evaluación Psiquiátrica' },
-    { value: 'therapy', label: 'Sesión de Terapia' },
+    { value: 'Consulta General', label: 'Consulta General' },
+    { value: 'Seguimiento', label: 'Seguimiento' },
+    { value: 'Evaluación Psiquiátrica', label: 'Evaluación Psiquiátrica' },
+    { value: 'Sesión de Terapia', label: 'Sesión de Terapia' },
   ];
 
   constructor(
@@ -71,9 +72,14 @@ export class AppointmentCreateComponent {
 
   submit() {
     if (this.form.valid) {
-      const { date, type, notes } = this.form.value;
+      const { date, description, duration, notes } = this.form.value;
       this.appt
-        .createAppointment({ date: date!, type: type!, notes: notes || '' })
+        .createAppointment({
+          date: date!,
+          description: description!,
+          duration: duration || 60,
+          notes: notes || '',
+        })
         .subscribe({
           next: () => {
             this.successMessage = 'Cita creada exitosamente';
