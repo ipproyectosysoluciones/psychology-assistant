@@ -14,7 +14,7 @@ describe('Auth Controller', () => {
       const userData = {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const response = await request(app)
@@ -23,7 +23,7 @@ describe('Auth Controller', () => {
 
       if (response.status !== 200) {
         throw new Error(
-          `Registration failed: ${JSON.stringify(response.body)}`,
+          `Registration failed: ${JSON.stringify(response.body)}`
         );
       }
 
@@ -40,7 +40,7 @@ describe('Auth Controller', () => {
       const userData = {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password', // Invalid - no uppercase or numbers
+        password: 'password' // Invalid - no uppercase or numbers
       };
 
       const response = await request(app)
@@ -53,8 +53,8 @@ describe('Auth Controller', () => {
       expect(response.body.errors).toContainEqual(
         expect.objectContaining({
           field: 'password',
-          message: 'Password must contain uppercase, lowercase, and numbers',
-        }),
+          message: 'Password must contain uppercase, lowercase, and numbers'
+        })
       );
     });
 
@@ -63,13 +63,13 @@ describe('Auth Controller', () => {
       await User.create({
         name: 'Existing User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       const userData = {
         name: 'Test User',
         email: 'test@example.com', // Same email
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const response = await request(app)
@@ -87,14 +87,14 @@ describe('Auth Controller', () => {
       await User.create({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
     });
 
     it('should login successfully with valid credentials', async () => {
       const loginData = {
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const response = await request(app)
@@ -113,7 +113,7 @@ describe('Auth Controller', () => {
     it('should fail with invalid credentials', async () => {
       const loginData = {
         email: 'test@example.com',
-        password: 'WrongPass@123', // Wrong password for existing user
+        password: 'WrongPass@123' // Wrong password for existing user
       };
 
       const response = await request(app)
@@ -124,7 +124,7 @@ describe('Auth Controller', () => {
       [400, 401, 500].forEach((code) => {
         if (![400, 401, 500].includes(response.status)) {
           throw new Error(
-            `Login failed with unexpected status: ${JSON.stringify(response.body)}`,
+            `Login failed with unexpected status: ${JSON.stringify(response.body)}`
           );
         }
       });
@@ -136,7 +136,7 @@ describe('Auth Controller', () => {
     it('should fail with non-existent user', async () => {
       const loginData = {
         email: 'nonexistent@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const response = await request(app)
@@ -157,13 +157,13 @@ describe('Auth Controller', () => {
       user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       // Login to get token
       const loginResponse = await request(app).post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       token = loginResponse.body.data.accessToken;
@@ -206,12 +206,12 @@ describe('Auth Controller', () => {
       user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       const loginResponse = await request(app).post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       token = loginResponse.body.data.accessToken;
@@ -230,7 +230,7 @@ describe('Auth Controller', () => {
       expect(response.body.data).toHaveProperty('qrCode');
       expect(response.body.data).toHaveProperty('secret');
       expect(response.body.message).toBe(
-        'Scan the QR code with your authenticator app',
+        'Scan the QR code with your authenticator app'
       );
     });
   });
@@ -244,12 +244,12 @@ describe('Auth Controller', () => {
       user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       const loginResponse = await request(app).post('/api/auth/login').send({
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       token = loginResponse.body.data.accessToken;
@@ -276,7 +276,7 @@ describe('Auth Controller', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.twoFAEnabled).toBe(true);
       expect(response.body.message).toBe(
-        'Two-factor authentication enabled successfully',
+        'Two-factor authentication enabled successfully'
       );
     });
 
@@ -300,12 +300,12 @@ describe('Auth Controller', () => {
       await User.create({
         name: 'Test User',
         email: 'refresh@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       const loginResponse = await request(app).post('/api/auth/login').send({
         email: 'refresh@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       refreshToken = loginResponse.body.data.refreshToken;

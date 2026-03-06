@@ -3,7 +3,7 @@ import app from './src/app.js';
 import User from './src/models/user.js';
 import Appointment from './src/models/appointment.js';
 
-async function testGDPR() {
+async function testGDPR () {
   try {
     // Clean up
     await User.deleteMany({});
@@ -13,13 +13,13 @@ async function testGDPR() {
     const user = await User.create({
       name: 'Test User',
       email: 'test@example.com',
-      password: 'MySecurePass@2024',
+      password: 'MySecurePass@2024'
     });
 
     // Login
     const loginRes = await request(app).post('/api/auth/login').send({
       email: 'test@example.com',
-      password: 'MySecurePass@2024',
+      password: 'MySecurePass@2024'
     });
 
     const token = loginRes.body.data.accessToken;
@@ -30,7 +30,7 @@ async function testGDPR() {
       user: user._id,
       date: new Date(Date.now() + 24 * 60 * 60 * 1000),
       description: 'Test',
-      status: 'scheduled',
+      status: 'scheduled'
     });
 
     // Test DELETE

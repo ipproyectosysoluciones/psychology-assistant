@@ -14,13 +14,13 @@ beforeEach(async () => {
   user = await User.create({
     name: 'Test User',
     email: 'test@example.com',
-    password: 'MySecurePass@2024',
+    password: 'MySecurePass@2024'
   });
 
   // Login to get token
   const loginResponse = await request(app).post('/api/auth/login').send({
     email: 'test@example.com',
-    password: 'MySecurePass@2024',
+    password: 'MySecurePass@2024'
   });
 
   token = loginResponse.body.data.accessToken;
@@ -58,7 +58,7 @@ describe('User Controller', () => {
     it('should update user profile successfully', async () => {
       const updateData = {
         name: 'Updated Name',
-        email: 'updated@example.com',
+        email: 'updated@example.com'
       };
 
       const response = await request(app)
@@ -70,14 +70,14 @@ describe('User Controller', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.name).toBe(updateData.name);
       expect(response.body.data.user.email).toBe(
-        updateData.email.toLowerCase(),
+        updateData.email.toLowerCase()
       );
       expect(response.body.message).toBe('Profile updated successfully');
     });
 
     it('should update only name', async () => {
       const updateData = {
-        name: 'Only Name Updated',
+        name: 'Only Name Updated'
       };
 
       const response = await request(app)
@@ -93,7 +93,7 @@ describe('User Controller', () => {
 
     it('should fail with invalid email', async () => {
       const updateData = {
-        email: 'invalid-email',
+        email: 'invalid-email'
       };
 
       const response = await request(app)
@@ -111,11 +111,11 @@ describe('User Controller', () => {
       await User.create({
         name: 'Other User',
         email: 'other@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       const updateData = {
-        email: 'other@example.com',
+        email: 'other@example.com'
       };
 
       const response = await request(app)
@@ -130,7 +130,7 @@ describe('User Controller', () => {
 
     it('should fail with short name', async () => {
       const updateData = {
-        name: 'A',
+        name: 'A'
       };
 
       const response = await request(app)
@@ -147,8 +147,8 @@ describe('User Controller', () => {
   describe('POST /api/users/change-password', () => {
     it('should change password successfully', async () => {
       const changeData = {
-        currentPassword: 'Password123',
-        newPassword: 'NewPassword456',
+        currentPassword: 'MySecurePass@2024',
+        newPassword: 'NewSecure@Pass2025'
       };
 
       const response = await request(app)
@@ -166,7 +166,7 @@ describe('User Controller', () => {
         .post('/api/auth/login')
         .send({
           email: 'test@example.com',
-          password: 'NewPassword456',
+          password: 'NewSecure@Pass2025'
         })
         .expect(200);
 
@@ -176,7 +176,7 @@ describe('User Controller', () => {
     it('should fail with wrong current password', async () => {
       const changeData = {
         currentPassword: 'WrongPassword123',
-        newPassword: 'NewPassword456',
+        newPassword: 'NewPassword456'
       };
 
       const response = await request(app)
@@ -192,7 +192,7 @@ describe('User Controller', () => {
     it('should fail with weak new password', async () => {
       const changeData = {
         currentPassword: 'Password123',
-        newPassword: 'weak',
+        newPassword: 'weak'
       };
 
       const response = await request(app)
@@ -207,7 +207,7 @@ describe('User Controller', () => {
 
     it('should fail without current password', async () => {
       const changeData = {
-        newPassword: 'NewPassword456',
+        newPassword: 'NewPassword456'
       };
 
       const response = await request(app)
@@ -226,6 +226,7 @@ describe('User Controller', () => {
       const response = await request(app)
         .post('/api/users/deactivate')
         .set('Authorization', `Bearer ${token}`)
+        .send({ password: 'MySecurePass@2024' })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -246,20 +247,20 @@ describe('User Controller', () => {
           user: user._id,
           date: new Date(Date.now() + 24 * 60 * 60 * 1000),
           description: 'Scheduled appointment',
-          status: 'scheduled',
+          status: 'scheduled'
         },
         {
           user: user._id,
           date: new Date(Date.now() + 48 * 60 * 60 * 1000),
           description: 'Confirmed appointment',
-          status: 'scheduled',
+          status: 'scheduled'
         },
         {
           user: user._id,
           date: new Date(Date.now() - 24 * 60 * 60 * 1000),
           description: 'Completed appointment',
-          status: 'completed',
-        },
+          status: 'completed'
+        }
       ]);
     });
 
@@ -286,7 +287,7 @@ describe('User Controller', () => {
       expect(response.body.data.stats.account.role).toBe('user');
 
       expect(response.body.message).toBe(
-        'User statistics retrieved successfully',
+        'User statistics retrieved successfully'
       );
     });
   });
@@ -299,14 +300,14 @@ describe('User Controller', () => {
         user: user._id,
         date: new Date(Date.now() + 24 * 60 * 60 * 1000),
         description: 'Test appointment',
-        status: 'scheduled',
+        status: 'scheduled'
       });
 
       const response = await request(app)
         .delete('/api/users/delete-data')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          password: 'MySecurePass@2024',
+          password: 'MySecurePass@2024'
         });
 
       if (response.status === 200) {
@@ -330,7 +331,7 @@ describe('User Controller', () => {
 
       // Verify appointments are deleted
       const appointments = await Appointment.countDocuments({
-        user: user._id,
+        user: user._id
       });
       expect(appointments).toBe(0);
 
@@ -346,7 +347,7 @@ describe('User Controller', () => {
         .delete('/api/users/delete-data')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          password: 'WrongPassword@2024',
+          password: 'WrongPassword@2024'
         });
 
       expect(response.status).toBe(400);
@@ -355,7 +356,7 @@ describe('User Controller', () => {
 
       // Verify user data is NOT deleted
       const appointments = await Appointment.countDocuments({
-        user: user._id,
+        user: user._id
       });
       const updatedUser = await User.findById(user._id);
       expect(updatedUser.isActive).toBe(true);
@@ -375,7 +376,7 @@ describe('User Controller', () => {
       const response = await request(app)
         .delete('/api/users/delete-data')
         .send({
-          password: 'MySecurePass@2024',
+          password: 'MySecurePass@2024'
         })
         .expect(401);
 

@@ -6,12 +6,12 @@ import {
   logout,
   refreshAccessToken,
   register,
-  verify2FA,
+  verify2FA
 } from '../controllers/authController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 import {
   authLimiter,
-  strictLimiter,
+  strictLimiter
 } from '../middlewares/rateLimitMiddleware.js';
 import { validateRequest } from '../utils/validators.js';
 
@@ -68,10 +68,10 @@ router.post(
       .isLength({ min: 8 })
       .withMessage('Password must be at least 8 characters long')
       .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-      .withMessage('Password must contain uppercase, lowercase, and numbers'),
+      .withMessage('Password must contain uppercase, lowercase, and numbers')
   ],
   validateRequest,
-  register,
+  register
 );
 
 /**
@@ -112,10 +112,10 @@ router.post(
       .isEmail()
       .normalizeEmail()
       .withMessage('Must be a valid email address'),
-    body('password').notEmpty().withMessage('Password is required'),
+    body('password').notEmpty().withMessage('Password is required')
   ],
   validateRequest,
-  login,
+  login
 );
 
 /**
@@ -187,10 +187,10 @@ router.post(
     body('token')
       .isLength({ min: 6, max: 6 })
       .isNumeric()
-      .withMessage('2FA token must be exactly 6 digits'),
+      .withMessage('2FA token must be exactly 6 digits')
   ],
   validateRequest,
-  verify2FA,
+  verify2FA
 );
 
 /**
@@ -226,10 +226,10 @@ router.post(
       .notEmpty()
       .withMessage('Refresh token is required')
       .isString()
-      .withMessage('Refresh token must be a string'),
+      .withMessage('Refresh token must be a string')
   ],
   validateRequest,
-  refreshAccessToken,
+  refreshAccessToken
 );
 
 export default router;

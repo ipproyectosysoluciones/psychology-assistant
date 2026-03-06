@@ -22,7 +22,7 @@ export const authValidationRules = () => {
       .optional()
       .trim()
       .isLength({ min: 2, max: 50 })
-      .withMessage('Name must be between 2 and 50 characters'),
+      .withMessage('Name must be between 2 and 50 characters')
   ];
 };
 
@@ -36,7 +36,7 @@ export const appointmentValidationRules = () => {
       .optional()
       .trim()
       .isLength({ max: 500 })
-      .withMessage('Description cannot exceed 500 characters'),
+      .withMessage('Description cannot exceed 500 characters')
   ];
 };
 
@@ -51,7 +51,7 @@ export const userUpdateValidationRules = () => {
       .optional()
       .isEmail()
       .normalizeEmail()
-      .withMessage('Email must be a valid email address'),
+      .withMessage('Email must be a valid email address')
   ];
 };
 
@@ -60,7 +60,7 @@ export const twoFAValidationRules = () => {
     body('token')
       .isLength({ min: 6, max: 6 })
       .isNumeric()
-      .withMessage('2FA token must be exactly 6 digits'),
+      .withMessage('2FA token must be exactly 6 digits')
   ];
 };
 
@@ -77,7 +77,7 @@ export const validateRequest = (req, res, next) => {
     error.statusCode = 400;
     error.errors = errors.array().map((err) => ({
       field: err.path,
-      message: err.msg,
+      message: err.msg
     }));
     return next(error);
   }
@@ -98,8 +98,8 @@ export const validate = (req, res, next) => {
       message: 'Validation failed',
       errors: errors.array().map((err) => ({
         field: err.path,
-        message: err.msg,
-      })),
+        message: err.msg
+      }))
     });
   }
   next();

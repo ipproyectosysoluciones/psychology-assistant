@@ -67,7 +67,7 @@ export const authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       throw new AppError(
         `User role ${req.user.role} is not authorized to access this route`,
-        403,
+        403
       );
     }
 
@@ -112,5 +112,5 @@ export const authorizeAppointmentOwner = asyncHandler(
     // Ownership verification will be done in the controller
     req.appointment = appointment;
     next();
-  },
+  }
 );

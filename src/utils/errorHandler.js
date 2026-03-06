@@ -20,7 +20,7 @@ export const errorHandler = (err, req, res, next) => {
     url: req.url,
     method: req.method,
     ip: req.ip,
-    userId: req.user?.id,
+    userId: req.user?.id
   });
 
   // Mongoose bad ObjectId

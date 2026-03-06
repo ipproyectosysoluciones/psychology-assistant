@@ -8,7 +8,7 @@
 import mongoose from 'mongoose';
 import environment from '../src/config/environment.js';
 
-async function healthCheck() {
+async function healthCheck () {
   try {
     // Test database connection
     await mongoose.connect(environment.MONGO_URI);

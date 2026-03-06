@@ -12,31 +12,31 @@ const refreshTokenSchema = Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User is required'],
-      index: true,
+      index: true
     },
     token: {
       type: String,
       required: [true, 'Token is required'],
       unique: true,
-      index: true,
+      index: true
     },
     expiresAt: {
       type: Date,
       required: true,
       index: true,
-      expires: 2592000, // TTL: 30 días en segundos - MongoDB eliminará automáticamente después de expiresAt
+      expires: 2592000 // TTL: 30 días en segundos - MongoDB eliminará automáticamente después de expiresAt
     },
     ipAddress: String,
     userAgent: String,
     isRevoked: {
       type: Boolean,
       default: false,
-      index: true,
+      index: true
     },
     revokedAt: Date,
-    revokedReason: String,
+    revokedReason: String
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 /**

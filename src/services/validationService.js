@@ -25,7 +25,7 @@ export const validateAppointmentDate = (date) => {
   if (appointmentDate > sixMonthsAhead) {
     return {
       valid: false,
-      error: 'Appointment date cannot be more than 6 months in advance',
+      error: 'Appointment date cannot be more than 6 months in advance'
     };
   }
 
@@ -34,7 +34,7 @@ export const validateAppointmentDate = (date) => {
   if (dayOfWeek === 0 || dayOfWeek === 6) {
     return {
       valid: false,
-      error: 'Appointments cannot be scheduled on weekends',
+      error: 'Appointments cannot be scheduled on weekends'
     };
   }
 
@@ -43,7 +43,7 @@ export const validateAppointmentDate = (date) => {
   if (hours < 8 || hours >= 18) {
     return {
       valid: false,
-      error: 'Appointments must be between 8:00 AM and 6:00 PM',
+      error: 'Appointments must be between 8:00 AM and 6:00 PM'
     };
   }
 
@@ -110,7 +110,7 @@ export const validatePasswordStrength = (password) => {
     valid: score >= 4 && errors.length === 0,
     error: errors.join(', '),
     score: Math.max(0, score),
-    strength: score >= 6 ? 'strong' : score >= 4 ? 'medium' : 'weak',
+    strength: score >= 6 ? 'strong' : score >= 4 ? 'medium' : 'weak'
   };
 };
 
@@ -132,7 +132,7 @@ export const validateEmail = (email, allowedDomains = []) => {
     'tempmail.com',
     '10minutemail.com',
     'guerrillamail.com',
-    'mailinator.com',
+    'mailinator.com'
   ];
 
   const domain = email.split('@')[1].toLowerCase();
@@ -145,7 +145,7 @@ export const validateEmail = (email, allowedDomains = []) => {
   if (allowedDomains.length > 0 && !allowedDomains.includes(domain)) {
     return {
       valid: false,
-      error: `Only emails from ${allowedDomains.join(', ')} are allowed`,
+      error: `Only emails from ${allowedDomains.join(', ')} are allowed`
     };
   }
 
@@ -164,7 +164,7 @@ export const validateAppointmentConflict = async (
   userId,
   date,
   Appointment,
-  excludeId = null,
+  excludeId = null
 ) => {
   const appointmentDate = new Date(date);
 
@@ -175,7 +175,7 @@ export const validateAppointmentConflict = async (
   const query = {
     user: userId,
     date: { $gte: rangeStart, $lte: rangeEnd },
-    status: { $nin: ['cancelled', 'completed'] },
+    status: { $nin: ['cancelled', 'completed'] }
   };
 
   if (excludeId) {
@@ -188,7 +188,7 @@ export const validateAppointmentConflict = async (
     return {
       valid: false,
       error:
-        'You already have an appointment scheduled within 30 minutes of this time',
+        'You already have an appointment scheduled within 30 minutes of this time'
     };
   }
 
@@ -209,7 +209,7 @@ export const validateRateLimit = async (
   action,
   maxAttempts,
   windowMs,
-  cache,
+  cache
 ) => {
   const key = `ratelimit:${userId}:${action}`;
   const now = Date.now();
@@ -227,7 +227,7 @@ export const validateRateLimit = async (
     return {
       valid: false,
       error: `Too many attempts. Please try again in ${timeUntilReset} seconds`,
-      remainingAttempts: 0,
+      remainingAttempts: 0
     };
   }
 
@@ -237,7 +237,7 @@ export const validateRateLimit = async (
 
   return {
     valid: true,
-    remainingAttempts: maxAttempts - attempts.length,
+    remainingAttempts: maxAttempts - attempts.length
   };
 };
 
@@ -246,5 +246,5 @@ export default {
   validatePasswordStrength,
   validateEmail,
   validateAppointmentConflict,
-  validateRateLimit,
+  validateRateLimit
 };

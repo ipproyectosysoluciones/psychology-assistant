@@ -15,11 +15,11 @@ import { AppError, asyncHandler } from '../utils/appError.js';
  */
 export const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select(
-    '-password -twoFASecret',
+    '-password -twoFASecret'
   );
 
   if (!user) {
-    throw new Error('User not found');
+    throw AppError.notFound('User not found');
   }
 
   logger.info('User profile retrieved', { userId: req.user._id });
@@ -34,10 +34,10 @@ export const getUserProfile = asyncHandler(async (req, res) => {
         twoFAEnabled: user.twoFAEnabled,
         isActive: user.isActive,
         lastLogin: user.lastLogin,
-        createdAt: user.createdAt,
-      },
+        createdAt: user.createdAt
+      }
     },
-    'Profile retrieved successfully',
+    'Profile retrieved successfully'
   );
 
   sendResponse(res, response);
@@ -54,20 +54,22 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 
   // Validate input
   if (!name && !email) {
-    throw new Error('At least one field (name or email) must be provided');
+    throw AppError.badRequest(
+      'At least one field (name or email) must be provided'
+    );
   }
 
   const user = await User.findById(req.user._id);
 
   if (!user) {
-    throw new Error('User not found');
+    throw AppError.notFound('User not found');
   }
 
   // Check if email is being changed and if it's already taken
   if (email && email !== user.email) {
     const emailExists = await User.findOne({ email: email.toLowerCase() });
     if (emailExists) {
-      throw new Error('Email already in use');
+      throw AppError.badRequest('Email already in use');
     }
     user.email = email.toLowerCase().trim();
   }
@@ -80,7 +82,7 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 
   logger.info('User profile updated', {
     userId: req.user._id,
-    updates: { name, email },
+    updates: { name, email }
   });
 
   const response = ApiResponse.success(
@@ -91,10 +93,10 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
         email: user.email,
         role: user.role,
         twoFAEnabled: user.twoFAEnabled,
-        updatedAt: user.updatedAt,
-      },
+        updatedAt: user.updatedAt
+      }
     },
-    'Profile updated successfully',
+    'Profile updated successfully'
   );
 
   sendResponse(res, response);
@@ -110,13 +112,13 @@ export const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   if (!currentPassword || !newPassword) {
-    throw new Error('Current password and new password are required');
+    throw AppError.badRequest('Current password and new password are required');
   }
 
   const user = await User.findById(req.user._id).select('+password');
 
   if (!user) {
-    throw new Error('User not found');
+    throw AppError.notFound('User not found');
   }
 
   // Verify current password
@@ -128,9 +130,9 @@ export const changePassword = asyncHandler(async (req, res) => {
       'User',
       { userId: user._id },
       'FAILURE',
-      'Incorrect current password',
+      'Incorrect current password'
     );
-    throw new Error('Current password is incorrect');
+    throw AppError.badRequest('Current password is incorrect');
   }
 
   // Validate new password strength
@@ -143,9 +145,11 @@ export const changePassword = asyncHandler(async (req, res) => {
       'User',
       { userId: user._id },
       'FAILURE',
-      'Weak password',
+      'Weak password'
     );
-    throw new Error(`New password is too weak: ${passwordValidation.error}`);
+    throw AppError.badRequest(
+      `New password is too weak: ${passwordValidation.error}`
+    );
   }
 
   // Update password (will be hashed by pre-save hook)
@@ -158,14 +162,14 @@ export const changePassword = asyncHandler(async (req, res) => {
     AUDIT_EVENTS.PASSWORD_CHANGE,
     'User',
     { userId: user._id },
-    'SUCCESS',
+    'SUCCESS'
   );
 
   logger.info('Password changed successfully', { userId: req.user._id });
 
   const response = ApiResponse.success(
     { passwordChanged: true },
-    'Password changed successfully',
+    'Password changed successfully'
   );
 
   sendResponse(res, response);
@@ -181,13 +185,13 @@ export const deactivateAccount = asyncHandler(async (req, res) => {
   const { password } = req.body;
 
   if (!password) {
-    throw new Error('Password is required to deactivate account');
+    throw AppError.badRequest('Password is required to deactivate account');
   }
 
   const user = await User.findById(req.user._id).select('+password');
 
   if (!user) {
-    throw new Error('User not found');
+    throw AppError.notFound('User not found');
   }
 
   // Verify password before deactivation
@@ -199,9 +203,9 @@ export const deactivateAccount = asyncHandler(async (req, res) => {
       'User',
       { userId: user._id },
       'FAILURE',
-      'Incorrect password',
+      'Incorrect password'
     );
-    throw new Error('Password is incorrect');
+    throw AppError.badRequest('Password is incorrect');
   }
 
   user.isActive = false;
@@ -214,16 +218,16 @@ export const deactivateAccount = asyncHandler(async (req, res) => {
     'User',
     {
       userId: user._id,
-      email: user.email,
+      email: user.email
     },
-    'SUCCESS',
+    'SUCCESS'
   );
 
   logger.info('Account deactivated', { userId: req.user._id });
 
   const response = ApiResponse.success(
     { accountDeactivated: true },
-    'Account deactivated successfully',
+    'Account deactivated successfully'
   );
 
   sendResponse(res, response);
@@ -239,7 +243,7 @@ export const getUserStats = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!user) {
-    throw new Error('User not found');
+    throw AppError.notFound('User not found');
   }
 
   // Get appointment statistics
@@ -249,11 +253,11 @@ export const getUserStats = asyncHandler(async (req, res) => {
   const upcomingAppointments = await user.model('Appointment').countDocuments({
     user: req.user._id,
     date: { $gte: new Date() },
-    status: { $in: ['scheduled', 'confirmed'] },
+    status: { $in: ['scheduled', 'confirmed'] }
   });
   const completedAppointments = await user.model('Appointment').countDocuments({
     user: req.user._id,
-    status: 'completed',
+    status: 'completed'
   });
 
   // Get session statistics
@@ -262,7 +266,7 @@ export const getUserStats = asyncHandler(async (req, res) => {
     .countDocuments({ user: req.user._id });
   const activeSessions = await user.model('Session').countDocuments({
     user: req.user._id,
-    isActive: true,
+    isActive: true
   });
 
   const stats = {
@@ -273,25 +277,25 @@ export const getUserStats = asyncHandler(async (req, res) => {
       completionRate:
         totalAppointments > 0
           ? ((completedAppointments / totalAppointments) * 100).toFixed(1)
-          : 0,
+          : 0
     },
     sessions: {
       total: totalSessions,
-      active: activeSessions,
+      active: activeSessions
     },
     account: {
       createdAt: user.createdAt,
       lastLogin: user.lastLogin,
       twoFAEnabled: user.twoFAEnabled,
-      role: user.role,
-    },
+      role: user.role
+    }
   };
 
   logger.info('User stats retrieved', { userId: req.user._id });
 
   const response = ApiResponse.success(
     { stats },
-    'User statistics retrieved successfully',
+    'User statistics retrieved successfully'
   );
 
   sendResponse(res, response);
@@ -325,20 +329,20 @@ export const deleteAllUserData = asyncHandler(async (req, res) => {
       'User',
       { userId: user._id },
       'FAILURE',
-      'Incorrect password',
+      'Incorrect password'
     );
     throw AppError.badRequest('Password is incorrect');
   }
 
   // Delete user appointments
   const appointmentCount = await Appointment.countDocuments({
-    user: req.user._id,
+    user: req.user._id
   });
   await Appointment.deleteMany({ user: req.user._id });
 
   // Delete user refresh tokens (active sessions)
   const tokenCount = await RefreshToken.countDocuments({
-    user: req.user._id,
+    user: req.user._id
   });
   await RefreshToken.deleteMany({ user: req.user._id });
 
@@ -358,15 +362,15 @@ export const deleteAllUserData = asyncHandler(async (req, res) => {
       userId: user._id,
       appointmentsDeleted: appointmentCount,
       tokensRevoked: tokenCount,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     },
-    'SUCCESS',
+    'SUCCESS'
   );
 
   logger.info('User data deleted (GDPR)', {
     userId: req.user._id,
     appointmentsDeleted: appointmentCount,
-    tokensRevoked: tokenCount,
+    tokensRevoked: tokenCount
   });
 
   const response = ApiResponse.success(
@@ -374,12 +378,12 @@ export const deleteAllUserData = asyncHandler(async (req, res) => {
       dataDeleted: true,
       deletedItems: {
         appointments: appointmentCount,
-        sessions: tokenCount,
+        sessions: tokenCount
       },
       message:
-        'All your personal data has been deleted in accordance with GDPR.',
+        'All your personal data has been deleted in accordance with GDPR.'
     },
-    'User data deleted successfully',
+    'User data deleted successfully'
   );
 
   sendResponse(res, response);

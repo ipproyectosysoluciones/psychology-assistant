@@ -13,7 +13,7 @@ const requiredVars = ['JWT_SECRET', 'MONGO_URI'];
  * ES: Valida que las variables requeridas estén presentes
  * EN: Validates that required variables are present
  */
-export function validateEnvironment() {
+export function validateEnvironment () {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const errors = [];
 
@@ -63,7 +63,7 @@ export function validateEnvironment() {
     });
     console.error('\n📖 See .env.example for documentation\n');
     throw new Error(
-      `Environment validation failed with ${errors.length} error(s)`,
+      `Environment validation failed with ${errors.length} error(s)`
     );
   }
 
@@ -79,7 +79,7 @@ export function validateEnvironment() {
  * ES: Obtiene un resumen de la configuración actual
  * EN: Gets a summary of the current configuration
  */
-export function getEnvironmentSummary() {
+export function getEnvironmentSummary () {
   const nodeEnv = process.env.NODE_ENV || 'development';
   const port = process.env.PORT || 5000;
   const dbType = process.env.DATABASE_URL
@@ -92,6 +92,6 @@ export function getEnvironmentSummary() {
     database: dbType,
     jwtExpire: process.env.JWT_EXPIRE || '7d',
     logLevel: process.env.LOG_LEVEL || 'info',
-    corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000'
   };
 }

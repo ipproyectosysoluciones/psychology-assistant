@@ -1,0 +1,18 @@
+# Backend ESLint ignorelist
+# Use separate eslint configs for backend (root) and frontend (frontend/.eslintrc.cjs)
+
+# Frontend files - linted by frontend/.eslintrc.cjs
+frontend/
+
+# Root level frontend config files
+angular.json
+ngsw-config.json
+
+# Common ignores
+node_modules/
+coverage/
+dist/
+logs/
+.angular/
+.vscode/
+.qodo/

@@ -6,6 +6,26 @@
 
 Una API REST completa para la gestión de citas psicológicas, construida con Node.js, Express y MongoDB. Incluye autenticación JWT, 2FA, validación de datos, logging, testing y documentación automática.
 
+---
+
+## 📚 DOCUMENTACIÓN CENTRALIZADA
+
+**La documentación completa del proyecto está en la carpeta [`docs/`](docs/)**
+
+### Guías Rápidas
+
+| Rol                       | Documentación                                                                               |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| 👨‍💻 **Backend Developer**  | [Backend Guide](docs/backend/README.md) - API, setup, testing                               |
+| 🎨 **Frontend Developer** | [Frontend Guide](frontend/README.md) & [Type Safety](docs/frontend/FRONTEND_TYPE_SAFETY.md) |
+| 🏗️ **Architect**          | [Technical Audit](docs/audit/TECHNICAL_AUDIT.md) - Architecture & security                  |
+| 🧪 **QA/Tester**          | [Testing Guide](docs/backend/features/TESTING.md) - Coverage & test info                    |
+| 🚀 **DevOps**             | [Setup Guides](docs/guides/QUICK_START.md) - Installation & deployment                      |
+
+**→ [Ver índice de documentación completo](docs/README.md)**
+
+---
+
 ## 🚀 Características
 
 - ✅ **Autenticación completa**: JWT + 2FA con TOTP

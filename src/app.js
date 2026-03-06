@@ -32,8 +32,8 @@ app.use('/api/', apiLimiter);
 app.use(
   cors({
     origin: environment.CORS_ORIGIN,
-    credentials: true,
-  }),
+    credentials: true
+  })
 );
 
 app.use(express.json({ limit: '10mb' }));
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader(
     'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains',
+    'max-age=31536000; includeSubDomains'
   );
   next();
 });
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
-    userAgent: req.get('User-Agent'),
+    userAgent: req.get('User-Agent')
   });
   next();
 });
@@ -69,7 +69,7 @@ app.get('/api/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     environment: environment.NODE_ENV,
-    version: '1.0.0',
+    version: '1.0.0'
   });
 });
 
@@ -85,7 +85,7 @@ app.use('/api/appointments', appointmentRoutes);
 app.use('*', (req, res) => {
   res.status(404).json({
     status: 'error',
-    message: `Route ${req.originalUrl} not found`,
+    message: `Route ${req.originalUrl} not found`
   });
 });
 

@@ -44,5 +44,5 @@ export const verify2FACode = (token, secret) => {
 export default {
   generateSecret,
   generate2FACode,
-  verify2FACode,
+  verify2FACode
 };

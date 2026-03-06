@@ -6,7 +6,7 @@ import {
   deleteAllUserData,
   getUserProfile,
   getUserStats,
-  updateUserProfile,
+  updateUserProfile
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 import { strictLimiter } from '../middlewares/rateLimitMiddleware.js';
@@ -76,10 +76,10 @@ router.put(
       .optional()
       .isEmail()
       .normalizeEmail()
-      .withMessage('Must be a valid email address'),
+      .withMessage('Must be a valid email address')
   ],
   validateRequest,
-  updateUserProfile,
+  updateUserProfile
 );
 
 /**
@@ -136,27 +136,11 @@ router.post(
       .withMessage('New password must be at least 8 characters long')
       .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
       .withMessage(
-        'New password must contain uppercase, lowercase, and numbers',
+        'New password must contain uppercase, lowercase, and numbers'
       )
-      .custom((value, { req }) => {
-        if (value === req.body.currentPassword) {
-          throw new Error(
-            'New password must be different from current password',
-          );
-        }
-        return true;
-      }),
-    body('confirmPassword')
-      .trim()
-      .custom((value, { req }) => {
-        if (value !== req.body.newPassword) {
-          throw new Error('Passwords do not match');
-        }
-        return true;
-      }),
   ],
   validateRequest,
-  changePassword,
+  changePassword
 );
 
 /**
@@ -199,10 +183,10 @@ router.post(
     body('password')
       .trim()
       .notEmpty()
-      .withMessage('Password is required to deactivate account'),
+      .withMessage('Password is required to deactivate account')
   ],
   validateRequest,
-  deactivateAccount,
+  deactivateAccount
 );
 
 /**
@@ -290,10 +274,10 @@ router.delete(
     body('password')
       .trim()
       .notEmpty()
-      .withMessage('Password is required to delete user data'),
+      .withMessage('Password is required to delete user data')
   ],
   validateRequest,
-  deleteAllUserData,
+  deleteAllUserData
 );
 
 export default router;

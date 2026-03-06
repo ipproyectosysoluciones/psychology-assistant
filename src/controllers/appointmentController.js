@@ -36,7 +36,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
       'Appointment',
       { date },
       'FAILURE',
-      dateValidation.error,
+      dateValidation.error
     );
     throw new Error(dateValidation.error);
   }
@@ -46,7 +46,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
     await validationService.validateAppointmentConflict(
       req.user._id,
       appointmentDate,
-      Appointment,
+      Appointment
     );
   if (!conflictValidation.valid) {
     auditLog(
@@ -55,7 +55,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
       'Appointment',
       { date },
       'FAILURE',
-      conflictValidation.error,
+      conflictValidation.error
     );
     throw new Error(conflictValidation.error);
   }
@@ -65,7 +65,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
     user: req.user._id,
     date: appointmentDate,
     description: description.trim(),
-    status: 'scheduled',
+    status: 'scheduled'
   });
 
   // Generate QR code with appointment details
@@ -74,7 +74,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
     date: appointment.date,
     description: appointment.description,
     user: req.user.name,
-    status: appointment.status,
+    status: appointment.status
   };
 
   const qrCode = await qrService.generateQR(JSON.stringify(qrData));
@@ -85,15 +85,15 @@ export const createAppointment = asyncHandler(async (req, res) => {
     'Appointment',
     {
       appointmentId: appointment._id,
-      date: appointment.date,
+      date: appointment.date
     },
-    'SUCCESS',
+    'SUCCESS'
   );
 
   logger.info('Appointment created successfully', {
     appointmentId: appointment._id,
     userId: req.user._id,
-    date: appointment.date,
+    date: appointment.date
   });
 
   const response = ApiResponse.success(
@@ -103,11 +103,11 @@ export const createAppointment = asyncHandler(async (req, res) => {
         date: appointment.date,
         description: appointment.description,
         status: appointment.status,
-        createdAt: appointment.createdAt,
+        createdAt: appointment.createdAt
       },
-      qrCode,
+      qrCode
     },
-    'Appointment created successfully',
+    'Appointment created successfully'
   );
 
   sendResponse(res, response);
@@ -142,7 +142,7 @@ export const getUserAppointments = asyncHandler(async (req, res) => {
   logger.info('User appointments retrieved', {
     userId: req.user._id,
     count: appointments.length,
-    total,
+    total
   });
 
   const response = ApiResponse.success(
@@ -153,16 +153,16 @@ export const getUserAppointments = asyncHandler(async (req, res) => {
         description: apt.description,
         status: apt.status,
         createdAt: apt.createdAt,
-        updatedAt: apt.updatedAt,
+        updatedAt: apt.updatedAt
       })),
       pagination: {
         page: parseInt(page),
         limit: parseInt(limit),
         total,
-        pages: Math.ceil(total / parseInt(limit)),
-      },
+        pages: Math.ceil(total / parseInt(limit))
+      }
     },
-    'Appointments retrieved successfully',
+    'Appointments retrieved successfully'
   );
 
   sendResponse(res, response);
@@ -194,7 +194,7 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
 
   logger.info('Appointment retrieved', {
     appointmentId: appointment._id,
-    userId: req.user._id,
+    userId: req.user._id
   });
 
   const response = ApiResponse.success(
@@ -207,13 +207,13 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
         user: {
           id: appointment.user._id,
           name: appointment.user.name,
-          email: appointment.user.email,
+          email: appointment.user.email
         },
         createdAt: appointment.createdAt,
-        updatedAt: appointment.updatedAt,
-      },
+        updatedAt: appointment.updatedAt
+      }
     },
-    'Appointment retrieved successfully',
+    'Appointment retrieved successfully'
   );
 
   sendResponse(res, response);
@@ -265,7 +265,7 @@ export const updateAppointment = asyncHandler(async (req, res) => {
       'confirmed',
       'in-progress',
       'completed',
-      'cancelled',
+      'cancelled'
     ];
     if (!validStatuses.includes(status)) {
       throw new Error('Invalid status');
@@ -278,7 +278,7 @@ export const updateAppointment = asyncHandler(async (req, res) => {
   logger.info('Appointment updated', {
     appointmentId: appointment._id,
     userId: req.user._id,
-    updates: { date, description, status },
+    updates: { date, description, status }
   });
 
   const response = ApiResponse.success(
@@ -288,10 +288,10 @@ export const updateAppointment = asyncHandler(async (req, res) => {
         date: appointment.date,
         description: appointment.description,
         status: appointment.status,
-        updatedAt: appointment.updatedAt,
-      },
+        updatedAt: appointment.updatedAt
+      }
     },
-    'Appointment updated successfully',
+    'Appointment updated successfully'
   );
 
   sendResponse(res, response);
@@ -324,12 +324,12 @@ export const deleteAppointment = asyncHandler(async (req, res) => {
 
   logger.info('Appointment deleted', {
     appointmentId: appointment._id,
-    userId: req.user._id,
+    userId: req.user._id
   });
 
   const response = ApiResponse.success(
     null,
-    'Appointment deleted successfully',
+    'Appointment deleted successfully'
   );
   sendResponse(res, response);
 });

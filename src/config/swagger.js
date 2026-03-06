@@ -100,4 +100,3 @@ const options = {
 const specs = swaggerJSDoc(options);
 
 export { specs, swaggerUi };
-

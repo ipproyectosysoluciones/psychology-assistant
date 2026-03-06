@@ -32,7 +32,7 @@ const connectDB = async () => {
         const mongoUri = mongoServer.getUri();
         const conn = await mongoose.connect(mongoUri);
         console.log(
-          `⚠️  MongoDB Memory Connected (Dev-only): ${conn.connection.host}`,
+          `⚠️  MongoDB Memory Connected (Dev-only): ${conn.connection.host}`
         );
       }
     } else {
@@ -40,7 +40,7 @@ const connectDB = async () => {
       const mongoUri = process.env.MONGO_URI || process.env.DATABASE_URL;
       if (!mongoUri) {
         throw new Error(
-          'MONGO_URI or DATABASE_URL environment variable is required for production',
+          'MONGO_URI or DATABASE_URL environment variable is required for production'
         );
       }
       const conn = await mongoose.connect(mongoUri);

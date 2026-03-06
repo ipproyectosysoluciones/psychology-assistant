@@ -21,7 +21,7 @@ global.console = {
   log: jest.fn(),
   debug: jest.fn(),
   info: jest.fn(),
-  warn: jest.fn(),
+  warn: jest.fn()
 };
 
 /**
@@ -31,7 +31,7 @@ beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(
       process.env.MONGODB_TEST_URI ||
-        'mongodb://localhost:27017/psychology-assistant-test',
+        'mongodb://localhost:27017/psychology-assistant-test'
     );
   }
 });

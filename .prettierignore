@@ -1,0 +1,31 @@
+# Prettier ignore list
+# Ignore generated and dependency files
+
+node_modules/
+coverage/
+dist/
+.angular/
+logs/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+**/*.js.map
+**/*.d.ts
+
+# Environment files
+.env
+.env.test
+
+# Documentation (auto-formatted separately if needed)
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

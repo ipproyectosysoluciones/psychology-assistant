@@ -5,11 +5,11 @@ import {
   deleteAppointment,
   getAppointmentById,
   getUserAppointments,
-  updateAppointment,
+  updateAppointment
 } from '../controllers/appointmentController.js';
 import {
   authorizeAppointmentOwner,
-  protect,
+  protect
 } from '../middlewares/authMiddleware.js';
 import { validateRequest } from '../utils/validators.js';
 
@@ -66,10 +66,10 @@ router.post(
     body('description')
       .trim()
       .isLength({ min: 10, max: 500 })
-      .withMessage('Description must be between 10 and 500 characters'),
+      .withMessage('Description must be between 10 and 500 characters')
   ],
   validateRequest,
-  createAppointment,
+  createAppointment
 );
 
 /**
@@ -120,10 +120,10 @@ router.get(
     query('limit')
       .optional()
       .isInt({ min: 1, max: 100 })
-      .withMessage('Limit must be between 1 and 100'),
+      .withMessage('Limit must be between 1 and 100')
   ],
   validateRequest,
-  getUserAppointments,
+  getUserAppointments
 );
 
 /**
@@ -156,7 +156,7 @@ router.get(
   [param('id').isMongoId().withMessage('Invalid appointment ID')],
   validateRequest,
   authorizeAppointmentOwner,
-  getAppointmentById,
+  getAppointmentById
 );
 
 /**
@@ -218,11 +218,11 @@ router.put(
     body('status')
       .optional()
       .isIn(['scheduled', 'confirmed', 'in-progress', 'completed', 'cancelled'])
-      .withMessage('Invalid status'),
+      .withMessage('Invalid status')
   ],
   validateRequest,
   authorizeAppointmentOwner,
-  updateAppointment,
+  updateAppointment
 );
 
 /**
@@ -255,7 +255,7 @@ router.delete(
   [param('id').isMongoId().withMessage('Invalid appointment ID')],
   validateRequest,
   authorizeAppointmentOwner,
-  deleteAppointment,
+  deleteAppointment
 );
 
 export default router;

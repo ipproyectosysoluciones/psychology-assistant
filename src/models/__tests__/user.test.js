@@ -6,7 +6,7 @@ describe('User Model', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const user = new User(userData);
@@ -24,7 +24,7 @@ describe('User Model', () => {
       const userData = {
         name: 'John Doe',
         email: 'invalid-email',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const user = new User(userData);
@@ -35,7 +35,7 @@ describe('User Model', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: '123',
+        password: '123'
       };
 
       const user = new User(userData);
@@ -46,7 +46,7 @@ describe('User Model', () => {
       const userData = {
         name: 'John Doe',
         email: 'john@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       };
 
       const user = new User(userData);
@@ -65,7 +65,7 @@ describe('User Model', () => {
       user = new User({
         name: 'Jane Doe',
         email: 'jane@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
       await user.save();
     });
@@ -91,7 +91,7 @@ describe('User Model', () => {
     it('should require name', async () => {
       const user = new User({
         email: 'test@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       await expect(user.save()).rejects.toThrow('Name is required');
@@ -100,7 +100,7 @@ describe('User Model', () => {
     it('should require email', async () => {
       const user = new User({
         name: 'Test User',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       });
 
       await expect(user.save()).rejects.toThrow('Email is required');
@@ -109,7 +109,7 @@ describe('User Model', () => {
     it('should require password', async () => {
       const user = new User({
         name: 'Test User',
-        email: 'test@example.com',
+        email: 'test@example.com'
       });
 
       await expect(user.save()).rejects.toThrow('Password is required');
@@ -119,13 +119,13 @@ describe('User Model', () => {
       await new User({
         name: 'User 1',
         email: 'duplicate@example.com',
-        password: 'MySecurePass@2024',
+        password: 'MySecurePass@2024'
       }).save();
 
       const user2 = new User({
         name: 'User 2',
         email: 'duplicate@example.com',
-        password: 'Password456',
+        password: 'Password456'
       });
 
       await expect(user2.save()).rejects.toThrow('Email already exists');

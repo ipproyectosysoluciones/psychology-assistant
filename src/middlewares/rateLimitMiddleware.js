@@ -15,7 +15,7 @@ export const authLimiter = rateLimit({
   message: {
     status: 'error',
     message: 'Too many authentication attempts, please try again later',
-    retryAfter: '15 minutes',
+    retryAfter: '15 minutes'
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -23,13 +23,13 @@ export const authLimiter = rateLimit({
     logger.warn('Rate limit exceeded for auth endpoints', {
       ip: req.ip,
       endpoint: req.path,
-      userAgent: req.get('User-Agent'),
+      userAgent: req.get('User-Agent')
     });
 
     res.status(429).json({
       status: 'error',
       message: 'Too many authentication attempts, please try again later',
-      retryAfter: '15 minutes',
+      retryAfter: '15 minutes'
     });
   },
   skip: (req) => {
@@ -39,7 +39,7 @@ export const authLimiter = rateLimit({
 
     // Skip rate limiting for admin users (if implemented)
     return req.user?.role === 'admin';
-  },
+  }
 });
 
 // Rate limiter general para API
@@ -49,7 +49,7 @@ export const apiLimiter = rateLimit({
   message: {
     status: 'error',
     message: 'Too many requests, please try again later',
-    retryAfter: '15 minutes',
+    retryAfter: '15 minutes'
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -58,16 +58,16 @@ export const apiLimiter = rateLimit({
       ip: req.ip,
       endpoint: req.path,
       userAgent: req.get('User-Agent'),
-      userId: req.user?.id,
+      userId: req.user?.id
     });
 
     res.status(429).json({
       status: 'error',
       message: 'Too many requests, please try again later',
-      retryAfter: '15 minutes',
+      retryAfter: '15 minutes'
     });
   },
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: () => process.env.NODE_ENV === 'test'
 });
 
 // Rate limiter estricto para endpoints sensibles
@@ -77,7 +77,7 @@ export const strictLimiter = rateLimit({
   message: {
     status: 'error',
     message: 'Too many sensitive operations, please try again later',
-    retryAfter: '1 hour',
+    retryAfter: '1 hour'
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -85,16 +85,16 @@ export const strictLimiter = rateLimit({
     logger.warn('Rate limit exceeded for sensitive endpoints', {
       ip: req.ip,
       endpoint: req.path,
-      userId: req.user?.id,
+      userId: req.user?.id
     });
 
     res.status(429).json({
       status: 'error',
       message: 'Too many sensitive operations, please try again later',
-      retryAfter: '1 hour',
+      retryAfter: '1 hour'
     });
   },
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: () => process.env.NODE_ENV === 'test'
 });
 
 // Rate limiter para creación de recursos
@@ -104,7 +104,7 @@ export const createLimiter = rateLimit({
   message: {
     status: 'error',
     message: 'Too many resource creations, please try again later',
-    retryAfter: '1 hour',
+    retryAfter: '1 hour'
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -112,14 +112,14 @@ export const createLimiter = rateLimit({
     logger.warn('Rate limit exceeded for resource creation', {
       ip: req.ip,
       endpoint: req.path,
-      userId: req.user?.id,
+      userId: req.user?.id
     });
 
     res.status(429).json({
       status: 'error',
       message: 'Too many resource creations, please try again later',
-      retryAfter: '1 hour',
+      retryAfter: '1 hour'
     });
   },
-  skip: () => process.env.NODE_ENV === 'test',
+  skip: () => process.env.NODE_ENV === 'test'
 });
