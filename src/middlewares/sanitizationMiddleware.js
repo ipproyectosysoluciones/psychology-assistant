@@ -19,7 +19,7 @@ export const sanitizeString = (str) => {
   return xss(str.trim(), {
     whiteList: {},
     stripIgnoredTag: true,
-    stripLeadingAndTrailingWhitespace: true
+    stripLeadingAndTrailingWhitespace: true,
   });
 };
 
@@ -36,7 +36,7 @@ export const sanitizeObject = (obj) => {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => sanitizeObject(item));
+    return obj.map((item) => sanitizeObject(item));
   }
 
   if (typeof obj === 'object') {
@@ -74,18 +74,18 @@ export const sanitizationMiddleware = (req, res, next) => {
 
     logger.debug('Input sanitized', {
       path: req.path,
-      method: req.method
+      method: req.method,
     });
 
     next();
   } catch (error) {
     logger.error('Sanitization error', {
       error: error.message,
-      path: req.path
+      path: req.path,
     });
     res.status(400).json({
       success: false,
-      message: 'Invalid input detected'
+      message: 'Invalid input detected',
     });
   }
 };
@@ -93,5 +93,5 @@ export const sanitizationMiddleware = (req, res, next) => {
 export default {
   sanitizeString,
   sanitizeObject,
-  sanitizationMiddleware
+  sanitizationMiddleware,
 };

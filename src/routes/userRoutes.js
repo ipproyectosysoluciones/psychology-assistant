@@ -135,11 +135,13 @@ router.post(
       .withMessage('New password must be at least 8 characters long')
       .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
       .withMessage(
-        'New password must contain uppercase, lowercase, and numbers'
+        'New password must contain uppercase, lowercase, and numbers',
       )
       .custom((value, { req }) => {
         if (value === req.body.currentPassword) {
-          throw new Error('New password must be different from current password');
+          throw new Error(
+            'New password must be different from current password',
+          );
         }
         return true;
       }),
@@ -150,10 +152,10 @@ router.post(
           throw new Error('Passwords do not match');
         }
         return true;
-      })
+      }),
   ],
   validateRequest,
-  changePassword
+  changePassword,
 );
 
 /**
@@ -196,10 +198,10 @@ router.post(
     body('password')
       .trim()
       .notEmpty()
-      .withMessage('Password is required to deactivate account')
+      .withMessage('Password is required to deactivate account'),
   ],
   validateRequest,
-  deactivateAccount
+  deactivateAccount,
 );
 
 /**

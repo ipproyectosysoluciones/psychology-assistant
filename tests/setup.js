@@ -29,7 +29,10 @@ global.console = {
  */
 beforeAll(async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/psychology-assistant-test');
+    await mongoose.connect(
+      process.env.MONGODB_TEST_URI ||
+        'mongodb://localhost:27017/psychology-assistant-test',
+    );
   }
 });
 

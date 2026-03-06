@@ -107,7 +107,7 @@ export const auditFailure = (action, reason, req) => {
   };
 
   logger.warn('Audit Failure', auditEntry);
-  
+
   return auditEntry;
 };
 
@@ -117,7 +117,7 @@ export const auditFailure = (action, reason, req) => {
 export const auditMiddleware = (action) => {
   return (req, res, next) => {
     const originalSend = res.send;
-    
+
     res.send = function (data) {
       // Si la respuesta fue exitosa (2xx), auditar
       if (res.statusCode >= 200 && res.statusCode < 300) {
@@ -126,10 +126,10 @@ export const auditMiddleware = (action) => {
         // Si falló, auditar el error
         auditFailure(action, `HTTP ${res.statusCode}`, req);
       }
-      
+
       originalSend.call(this, data);
     };
-    
+
     next();
   };
 };
