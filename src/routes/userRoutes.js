@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import {
   changePassword,
   deactivateAccount,
+  deleteAllUserData,
   getUserProfile,
   getUserStats,
   updateUserProfile,
@@ -219,5 +220,80 @@ router.post(
  *         description: No autorizado
  */
 router.get('/stats', protect, getUserStats);
+
+/**
+ * @swagger
+ * /api/users/delete-data:
+ *   delete:
+ *     summary: Eliminar todos los datos del usuario (GDPR)
+ *     description: |
+ *       Elimina todos los datos personales del usuario incluyendo:
+ *       - Citas agendadas
+ *       - Sesiones activas y refresh tokens
+ *       - Datos de autenticación
+ *
+ *       Requiere confirmación de contraseña.
+ *       ES: Cumplimiento con regulaciones GDPR.
+ *       EN: GDPR compliance - right to be forgotten.
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *                 description: Contraseña para confirmar la eliminación
+ *     responses:
+ *       200:
+ *         description: Datos eliminados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     dataDeleted:
+ *                       type: boolean
+ *                     deletedItems:
+ *                       type: object
+ *                       properties:
+ *                         appointments:
+ *                           type: number
+ *                         sessions:
+ *                           type: number
+ *       400:
+ *         description: Contraseña incorrecta o datos inválidos
+ *       401:
+ *         description: No autorizado
+ *       404:
+ *         description: Usuario no encontrado
+ *       429:
+ *         description: Demasiados intentos
+ */
+router.delete(
+  '/delete-data',
+  protect,
+  strictLimiter,
+  [
+    body('password')
+      .trim()
+      .notEmpty()
+      .withMessage('Password is required to delete user data'),
+  ],
+  validateRequest,
+  deleteAllUserData,
+);
 
 export default router;

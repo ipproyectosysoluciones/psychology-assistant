@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { ApiResponse, TwoFASetupResponse } from '../../models';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -59,9 +60,12 @@ export class TwoFaSetupComponent implements OnInit {
   enable2FA(): void {
     this.loading = true;
     this.authService.enable2FA().subscribe({
-      next: (response) => {
-        this.qrCodeUrl = response.qrCodeUrl;
-        this.secret = response.secret;
+      next: (response: ApiResponse<TwoFASetupResponse>) => {
+        const data = response.data;
+        if (data) {
+          this.qrCodeUrl = data.qrCode || '';
+          this.secret = data.secret || '';
+        }
         this.loading = false;
         this.step = 'setup';
       },

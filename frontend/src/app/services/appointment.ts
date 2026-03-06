@@ -2,6 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import {
+  ApiResponse,
+  Appointment,
+  AppointmentsResponse,
+  CreateAppointmentData,
+} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -11,29 +17,46 @@ export class AppointmentService {
 
   constructor(private http: HttpClient) {}
 
-  getAppointments(page: number = 1, limit: number = 10): Observable<any> {
-    return this.http.get(`${this.apiUrl}/appointments`, {
-      params: { page: page.toString(), limit: limit.toString() },
-    });
+  getAppointments(
+    page: number = 1,
+    limit: number = 10,
+  ): Observable<ApiResponse<AppointmentsResponse>> {
+    return this.http.get<ApiResponse<AppointmentsResponse>>(
+      `${this.apiUrl}/appointments`,
+      {
+        params: { page: page.toString(), limit: limit.toString() },
+      },
+    );
   }
 
-  getAppointment(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/appointments/${id}`);
+  getAppointment(id: string): Observable<ApiResponse<Appointment>> {
+    return this.http.get<ApiResponse<Appointment>>(
+      `${this.apiUrl}/appointments/${id}`,
+    );
   }
 
-  createAppointment(data: {
-    date: string;
-    type: string;
-    notes?: string;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/appointments`, data);
+  createAppointment(
+    data: CreateAppointmentData,
+  ): Observable<ApiResponse<Appointment>> {
+    return this.http.post<ApiResponse<Appointment>>(
+      `${this.apiUrl}/appointments`,
+      data,
+    );
   }
 
-  updateAppointment(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/appointments/${id}`, data);
+  updateAppointment(
+    id: string,
+    data: Partial<CreateAppointmentData>,
+  ): Observable<ApiResponse<Appointment>> {
+    return this.http.put<ApiResponse<Appointment>>(
+      `${this.apiUrl}/appointments/${id}`,
+      data,
+    );
   }
 
-  cancelAppointment(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/appointments/${id}`);
+  cancelAppointment(id: string): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(
+      `${this.apiUrl}/appointments/${id}`,
+    );
   }
 }

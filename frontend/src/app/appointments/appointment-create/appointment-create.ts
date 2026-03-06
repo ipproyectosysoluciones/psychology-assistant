@@ -38,10 +38,19 @@ import { AppointmentService } from '../../services/appointment';
 })
 export class AppointmentCreateComponent {
   form = new FormGroup({
-    date: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-    duration: new FormControl(60, [Validators.min(15), Validators.max(180)]),
-    notes: new FormControl(''),
+    date: new FormControl<string>('', {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
+    description: new FormControl<string>('', {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
+    duration: new FormControl<number>(60, {
+      validators: [Validators.min(15), Validators.max(180)],
+      nonNullable: true,
+    }),
+    notes: new FormControl<string>(''),
   });
 
   errorMessage = '';

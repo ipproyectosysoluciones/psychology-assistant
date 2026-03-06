@@ -2,15 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface TokenRefreshResponse {
-  accessToken: string;
-}
+import {
+  ApiResponse,
+  AuthResponse,
+  RegisterData,
+  TokenRefreshResponse,
+  TwoFASetupResponse,
+} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -20,17 +18,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(data: {
-    name: string;
-    email: string;
-    password: string;
-  }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, data);
+  register(data: RegisterData): Observable<ApiResponse<AuthResponse>> {
+    return this.http.post<ApiResponse<AuthResponse>>(
+      `${this.apiUrl}/auth/register`,
+      data,
+    );
   }
 
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string): Observable<AuthResponse> {
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password })
+      .post<AuthResponse>(`${this.apiUrl}/auth/login`, { email, password })
       .pipe(
         tap((res) => {
           this.setAccessToken(res.accessToken);
@@ -39,13 +36,16 @@ export class AuthService {
       );
   }
 
-  enable2FA(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/enable-2fa`, {});
+  enable2FA(): Observable<ApiResponse<TwoFASetupResponse>> {
+    return this.http.post<ApiResponse<TwoFASetupResponse>>(
+      `${this.apiUrl}/auth/enable-2fa`,
+      {},
+    );
   }
 
-  verify2FA(token: string): Observable<LoginResponse> {
+  verify2FA(token: string): Observable<AuthResponse> {
     return this.http
-      .post<LoginResponse>(`${this.apiUrl}/auth/verify-2fa`, { token })
+      .post<AuthResponse>(`${this.apiUrl}/auth/verify-2fa`, { token })
       .pipe(
         tap((res) => {
           this.setAccessToken(res.accessToken);
@@ -54,9 +54,9 @@ export class AuthService {
       );
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<ApiResponse<void>> {
     this.clearTokens();
-    return this.http.post(`${this.apiUrl}/auth/logout`, {});
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/auth/logout`, {});
   }
 
   refreshToken(): Observable<TokenRefreshResponse> {

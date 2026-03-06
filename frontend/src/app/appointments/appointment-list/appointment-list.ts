@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ApiResponse, Appointment, AppointmentsResponse } from '../../models';
 import { AppointmentService } from '../../services/appointment';
 
 @Component({
@@ -22,7 +23,7 @@ import { AppointmentService } from '../../services/appointment';
   styleUrl: './appointment-list.scss',
 })
 export class AppointmentListComponent implements OnInit {
-  appointments: any[] = [];
+  appointments: Appointment[] = [];
   error = '';
   loading = false;
   displayedColumns: string[] = ['date', 'type', 'notes', 'actions'];
@@ -39,8 +40,8 @@ export class AppointmentListComponent implements OnInit {
   load() {
     this.loading = true;
     this.appt.getAppointments().subscribe({
-      next: (res) => {
-        this.appointments = res.data || [];
+      next: (res: ApiResponse<AppointmentsResponse>) => {
+        this.appointments = res.data?.data || [];
         this.loading = false;
       },
       error: (err) => {
@@ -63,7 +64,7 @@ export class AppointmentListComponent implements OnInit {
   }
 
   getAppointmentTypeLabel(type: string): string {
-    const types: { [key: string]: string } = {
+    const types: Record<string, string> = {
       consultation: 'Consulta General',
       followup: 'Seguimiento',
       psychiatric: 'Evaluación Psiquiátrica',

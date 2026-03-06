@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
+import { ApiResponse, Appointment, AppointmentsResponse } from '../../models';
 import { AppointmentService } from '../../services/appointment';
 import { AppointmentCreateComponent } from '../appointment-create/appointment-create';
 
@@ -27,7 +28,7 @@ import { AppointmentCreateComponent } from '../appointment-create/appointment-cr
   styleUrl: './appointment-calendar.scss',
 })
 export class AppointmentCalendarComponent implements OnInit {
-  appointments: any[] = [];
+  appointments: Appointment[] = [];
   selectedDate: Date | null = null;
   loading = false;
 
@@ -44,8 +45,8 @@ export class AppointmentCalendarComponent implements OnInit {
   loadAppointments(): void {
     this.loading = true;
     this.appointmentService.getAppointments(1, 100).subscribe({
-      next: (response) => {
-        this.appointments = response.data || response;
+      next: (response: ApiResponse<AppointmentsResponse>) => {
+        this.appointments = response.data?.data || [];
         this.loading = false;
       },
       error: (error) => {
@@ -59,7 +60,7 @@ export class AppointmentCalendarComponent implements OnInit {
     this.selectedDate = date;
   }
 
-  getAppointmentsForDate(date: Date): any[] {
+  getAppointmentsForDate(date: Date): Appointment[] {
     return this.appointments.filter((appointment) => {
       const appointmentDate = new Date(appointment.date);
       return (
@@ -88,7 +89,7 @@ export class AppointmentCalendarComponent implements OnInit {
     });
   }
 
-  viewAppointment(appointment: any): void {
+  viewAppointment(appointment: Appointment): void {
     this.router.navigate(['/appointments', appointment.id]);
   }
 

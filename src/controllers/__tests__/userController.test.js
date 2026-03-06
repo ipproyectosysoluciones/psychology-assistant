@@ -290,4 +290,96 @@ describe('User Controller', () => {
       );
     });
   });
+
+  describe('DELETE /api/users/delete-data', () => {
+    it('should delete all user data successfully with correct password', async () => {
+      // TODO: Fix validation issue causing 400
+      // Create some appointments first
+      await Appointment.create({
+        user: user._id,
+        date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        description: 'Test appointment',
+        status: 'scheduled',
+      });
+
+      const response = await request(app)
+        .delete('/api/users/delete-data')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          password: 'MySecurePass@2024',
+        });
+
+      if (response.status === 200) {
+        expect(response.body.success).toBe(true);
+        expect(response.body.data.dataDeleted).toBe(true);
+        expect(response.body.data.deletedItems.appointments).toBe(1);
+        expect(response.body.data.deletedItems.sessions).toBe(1);
+      } else {
+        // Debug: Show error if not 200
+        console.log('GDPR Error Status:', response.status);
+        console.log('GDPR Error Body:', response.body);
+      }
+
+      expect(response.status).toBe(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.dataDeleted).toBe(true);
+      expect(response.body.data.deletedItems.appointments).toBe(1);
+      expect(response.body.data.deletedItems.sessions).toBe(1);
+      expect(response.body.message).toBe('User data deleted successfully');
+
+      // Verify appointments are deleted
+      const appointments = await Appointment.countDocuments({
+        user: user._id,
+      });
+      expect(appointments).toBe(0);
+
+      // Verify user still exists but is marked as inactive
+      const updatedUser = await User.findById(user._id);
+      expect(updatedUser).toBeDefined();
+      expect(updatedUser.isActive).toBe(false);
+    });
+
+    it('should fail with incorrect password', async () => {
+      // TODO: Fix error handling causing 500 instead of 400
+      const response = await request(app)
+        .delete('/api/users/delete-data')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          password: 'WrongPassword@2024',
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.message).toBe('Password is incorrect');
+
+      // Verify user data is NOT deleted
+      const appointments = await Appointment.countDocuments({
+        user: user._id,
+      });
+      const updatedUser = await User.findById(user._id);
+      expect(updatedUser.isActive).toBe(true);
+    });
+
+    it('should fail without password', async () => {
+      const response = await request(app)
+        .delete('/api/users/delete-data')
+        .set('Authorization', `Bearer ${token}`)
+        .send({});
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('should fail without authorization', async () => {
+      const response = await request(app)
+        .delete('/api/users/delete-data')
+        .send({
+          password: 'MySecurePass@2024',
+        })
+        .expect(401);
+
+      expect(response.body.success).toBe(false);
+    });
+  });
 });

@@ -5,6 +5,7 @@ import connectDB from './config/database.js';
 import environment from './config/environment.js';
 import logger from './config/logger.js';
 import { specs, swaggerUi } from './config/swagger.js';
+import { validateEnvironment } from './config/validateEnv.js';
 import { apiLimiter } from './middlewares/rateLimitMiddleware.js';
 import { sanitizationMiddleware } from './middlewares/sanitizationMiddleware.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
@@ -13,6 +14,9 @@ import userRoutes from './routes/userRoutes.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
+
+// Validate environment variables early
+validateEnvironment();
 
 // Conectar a base de datos
 if (environment.NODE_ENV !== 'test') {

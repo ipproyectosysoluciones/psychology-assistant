@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiResponse, UpdateProfileData, UserProfile } from '../../models';
 import { UserService } from '../../services/user';
 
 @Component({
@@ -12,11 +13,11 @@ import { UserService } from '../../services/user';
 })
 export class ProfileComponent implements OnInit {
   form = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl({ value: '', disabled: true }),
+    name: new FormControl<string>(''),
+    email: new FormControl<string>({ value: '', disabled: true }),
   });
   deactivationForm = new FormGroup({
-    password: new FormControl(''),
+    password: new FormControl<string>(''),
   });
   message = '';
   error = '';
@@ -28,8 +29,13 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.user.getProfile().subscribe({
-      next: (res) => {
-        this.form.patchValue(res.data);
+      next: (res: ApiResponse<UserProfile>) => {
+        if (res.data) {
+          this.form.patchValue({
+            name: res.data.name,
+            email: res.data.email,
+          });
+        }
       },
       error: (err) =>
         (this.error = err.error?.message || 'Error fetching profile'),
@@ -38,7 +44,12 @@ export class ProfileComponent implements OnInit {
 
   save() {
     if (this.form.valid) {
-      this.user.updateProfile(this.form.value).subscribe({
+      const value = this.form.value;
+      const updateData: UpdateProfileData = {
+        name: value.name || undefined,
+        email: value.email || undefined,
+      };
+      this.user.updateProfile(updateData).subscribe({
         next: () => (this.message = 'Profile updated'),
         error: (err) => (this.error = err.error?.message || 'Update failed'),
       });
@@ -57,7 +68,11 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    if (!confirm('⚠️ Are you sure you want to deactivate your account? This action cannot be undone.')) {
+    if (
+      !confirm(
+        '⚠️ Are you sure you want to deactivate your account? This action cannot be undone.',
+      )
+    ) {
       return;
     }
 
@@ -75,3 +90,4 @@ export class ProfileComponent implements OnInit {
       },
     });
   }
+}

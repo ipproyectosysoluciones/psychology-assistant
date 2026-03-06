@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponse, Appointment } from '../../models';
 import { AppointmentService } from '../../services/appointment';
 
 @Component({
@@ -21,7 +22,7 @@ import { AppointmentService } from '../../services/appointment';
   styleUrl: './appointment-detail.scss',
 })
 export class AppointmentDetailComponent implements OnInit {
-  appointment: any = null;
+  appointment: Appointment | null = null;
   error = '';
 
   constructor(
@@ -34,17 +35,18 @@ export class AppointmentDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.appt.getAppointment(id).subscribe({
-        next: res => (this.appointment = res.data),
-        error: err => (this.error = err.error?.message || 'Error loading'),
+        next: (res: ApiResponse<Appointment>) =>
+          (this.appointment = res.data || null),
+        error: (err) => (this.error = err.error?.message || 'Error loading'),
       });
     }
   }
 
   cancel() {
     if (this.appointment) {
-      this.appt.cancelAppointment(this.appointment._id).subscribe({
+      this.appt.cancelAppointment(this.appointment.id).subscribe({
         next: () => this.router.navigate(['/appointments']),
-        error: err => (this.error = err.error?.message || 'Cancel failed'),
+        error: (err) => (this.error = err.error?.message || 'Cancel failed'),
       });
     }
   }
