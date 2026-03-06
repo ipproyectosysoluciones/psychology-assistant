@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "github.copilot",
+    "github.copilot-chat",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens",
+    "vivaxy.vscode-conventional-commits",
+    "orta.vscode-jest",
+    "angular.ng-template",
+    "dsznajder.es7-react-js-snippets",
+    "humao.rest-client",
+    "mtxr.sqltools",
+    "mongodb.mongodb-vscode",
+    "aaron-bond.better-comments",
+    "usernamehw.errorlens",
+    "pkief.material-icon-theme"
+  ]
+}

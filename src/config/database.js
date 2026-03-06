@@ -1,24 +1,60 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
 
 dotenv.config();
+
+let mongoServer;
 
 /**
  * @module connectDB
  * @description Función asincrónica para conectarse a la base de datos MongoDB.
- *
- * Intenta establecer una conexión mediante la variable de entorno `MONGO_URI`.
- * Si tiene éxito, registra la información del host de conexión.
- * Si ocurre un error durante el intento de conexión, registra el mensaje de error y sale del proceso con un estado de falla.
+ * ES: En desarrollo usa MongoDB en memoria, en producción usa la URI configurada.
+ * EN: In development uses in-memory MongoDB, in production uses configured URI.
  */
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    if (process.env.NODE_ENV === 'test') {
+      // Use in-memory database for testing
+      mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+      const conn = await mongoose.connect(mongoUri);
+      console.log(`MongoDB Memory Connected: ${conn.connection.host}`);
+    } else if (process.env.NODE_ENV === 'development') {
+      // Use in-memory database for development too (faster startup)
+      mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+      const conn = await mongoose.connect(mongoUri);
+      console.log(`MongoDB Memory Connected: ${conn.connection.host}`);
+    } else {
+      // Use production database
+      const conn = await mongoose.connect(process.env.MONGO_URI);
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    }
   } catch (error) {
     console.error(`Error: ${error.message}`);
-    process.exit(1); // Exit process with failure
+    process.exit(1);
   }
 };
+
+/**
+ * @module disconnectDB
+ * @description Función para desconectar la base de datos y detener el servidor en memoria.
+ * ES: Cierra la conexión de Mongoose y detiene el servidor MongoDB en memoria.
+ * EN: Closes Mongoose connection and stops in-memory MongoDB server.
+ */
+const disconnectDB = async () => {
+  try {
+    await mongoose.connection.close();
+    if (mongoServer) {
+      await mongoServer.stop();
+    }
+    console.log('MongoDB disconnected');
+  } catch (error) {
+    console.error(`Error disconnecting from MongoDB: ${error.message}`);
+  }
+};
+
+export { connectDB, disconnectDB };
 
 export default connectDB;

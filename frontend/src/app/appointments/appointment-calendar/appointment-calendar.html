@@ -1,0 +1,81 @@
+<div class="calendar-container">
+  <div class="header">
+    <h2>Appointment Calendar</h2>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="createAppointment()">
+        <mat-icon>add</mat-icon>
+        New Appointment
+      </button>
+      <button mat-button (click)="goToList()">
+        <mat-icon>list</mat-icon>
+        List View
+      </button>
+    </div>
+  </div>
+
+  <div class="calendar-content">
+    <div class="calendar-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Calendar</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-calendar
+            [dateClass]="dateClass"
+            (selectedChange)="onDateSelected($event)"
+            [selected]="selectedDate">
+          </mat-calendar>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="appointments-section">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            {{ selectedDate ? (selectedDate | date:'fullDate') : 'Select a date' }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="loading" class="loading">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+
+          <div *ngIf="!loading && selectedDate">
+            <mat-list *ngIf="getAppointmentsForDate(selectedDate).length > 0; else noAppointments">
+              <mat-list-item
+                *ngFor="let appointment of getAppointmentsForDate(selectedDate)"
+                (click)="viewAppointment(appointment)"
+                class="appointment-item">
+                <div class="appointment-content">
+                  <div class="appointment-time">
+                    {{ appointment.date | date:'shortTime' }}
+                  </div>
+                  <div class="appointment-details">
+                    <div class="appointment-type">{{ appointment.type }}</div>
+                    <div class="appointment-notes" *ngIf="appointment.notes">
+                      {{ appointment.notes }}
+                    </div>
+                  </div>
+                </div>
+                <mat-icon matListIcon>chevron_right</mat-icon>
+              </mat-list-item>
+            </mat-list>
+
+            <ng-template #noAppointments>
+              <div class="no-appointments">
+                <mat-icon>event_note</mat-icon>
+                <p>No appointments on this date</p>
+              </div>
+            </ng-template>
+          </div>
+
+          <div *ngIf="!selectedDate" class="select-date-prompt">
+            <mat-icon>calendar_today</mat-icon>
+            <p>Select a date to view appointments</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

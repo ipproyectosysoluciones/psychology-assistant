@@ -1,0 +1,27 @@
+{
+  "github.copilot.enable": { "*": true, "markdown": true, "yaml": true },
+  "github.copilot.chat.codeGeneration.instructions": [
+    { "file": ".github/copilot/instructions/orchestrator.md" }
+  ],
+  "github.copilot.chat.testGeneration.instructions": [
+    { "file": ".github/copilot/instructions/qa.md" }
+  ],
+  "github.copilot.chat.reviewSelection.instructions": [
+    { "file": ".github/copilot/instructions/orchestrator.md" }
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.tabSize": 2,
+  "editor.rulers": [100],
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "files.exclude": { "**/node_modules": true, "**/dist": true, "**/.next": true },
+  "search.exclude": { "**/node_modules": true, "**/dist": true, "**/.next": true }
+}

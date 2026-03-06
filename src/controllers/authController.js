@@ -1,109 +1,204 @@
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { totp } from 'otplib';
+import environment from '../config/environment.js';
+import logger from '../config/logger.js';
+import Session from '../models/session.js';
 import User from '../models/user.js';
 import qrService from '../services/qrService.js';
+import twoFAService from '../services/twoFAService.js';
+import { ApiResponse, sendResponse } from '../utils/apiResponse.js';
+import { asyncHandler } from '../utils/appError.js';
 
 /**
  * @module register
- * @description Maneja el registro del usuario creando un nuevo usuario con el nombre, correo electrónico y contraseña proporcionados.
- * Verifica si el usuario ya existe en la base de datos. Si no es así, crea un hash de la contraseña, crea un nuevo usuario,
- * genera un token JWT para autenticación y devuelve el usuario y el token en la respuesta.
- * Si ocurre un error durante el proceso, envía una respuesta de error del servidor.
- *
- * @param { Object } req - El objeto de solicitud que contiene los datos del usuario en el cuerpo
- * @param { Object } res - El objeto de respuesta para enviar el resultado
- * @returns { Object } - Respuesta JSON con el usuario recién creado y el token de autenticación o un mensaje de error
+ * @description Registra un nuevo usuario con validación completa.
+ * ES: Crea usuario con hash de contraseña, validaciones y logging.
+ * EN: Creates user with password hashing, validations and logging.
  */
-export const register = async (req, res) => {
+export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  try {
-    const userExists = await User.findOne({ email });
-    if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({ name, email, password: hashedPassword });
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    res.status(201).json({ user, token });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+  // Check if user exists
+  const userExists = await User.findOne({ email: email.toLowerCase() });
+  if (userExists) {
+    throw new Error('User already exists');
   }
-};
+
+  // Create user (password will be hashed by pre-save hook)
+  const user = await User.create({
+    name: name.trim(),
+    email: email.toLowerCase().trim(),
+    password
+  });
+
+  // Create session
+  await Session.create({
+    user: user._id,
+    ipAddress: req.ip,
+    userAgent: req.get('User-Agent')
+  });
+
+  // Generate token
+  const token = jwt.sign({ id: user._id }, environment.JWT_SECRET, {
+    expiresIn: environment.JWT_EXPIRE
+  });
+
+  logger.info('User registered successfully', { userId: user._id, email: user.email });
+
+  const response = ApiResponse.success(
+    {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
+      token
+    },
+    'User registered successfully'
+  );
+
+  sendResponse(res, response);
+});
 
 /**
  * @module login
- * @description Maneja el inicio de sesión del usuario verificando las credenciales y generando un token JWT.
- *
- * @param { Object } req - el objeto de solicitud que contiene los datos ingresados por el usuario.
- * @param { Object } res - el objeto de respuesta para enviar el resultado.
- * @returns { Object } - objeto JSON con un token JWT si el inicio de sesión es exitoso o un mensaje de error.
+ * @description Maneja el login de usuario con validación y logging.
+ * ES: Verifica credenciales, crea sesión y genera token JWT.
+ * EN: Verifies credentials, creates session and generates JWT token.
  */
-export const login = async (req, res) => {
+export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'User not found' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+  // Check for user
+  const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+  if (!user) {
+    throw new Error('Invalid credentials');
   }
-};
+
+  // Check if account is active
+  if (!user.isActive) {
+    throw new Error('Account is deactivated');
+  }
+
+  // Check password
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new Error('Invalid credentials');
+  }
+
+  // Update last login
+  user.lastLogin = new Date();
+  await user.save();
+
+  // Create session
+  await Session.create({
+    user: user._id,
+    ipAddress: req.ip,
+    userAgent: req.get('User-Agent')
+  });
+
+  // Generate token
+  const token = jwt.sign({ id: user._id }, environment.JWT_SECRET, {
+    expiresIn: environment.JWT_EXPIRE
+  });
+
+  logger.info('User logged in successfully', { userId: user._id, email: user.email });
+
+  const response = ApiResponse.success(
+    {
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        twoFAEnabled: user.twoFAEnabled
+      },
+      token
+    },
+    'Login successful'
+  );
+
+  sendResponse(res, response);
+});
 
 /**
  * @module enable2FA
- * @description Función para habilitar la autenticación de dos factores para un usuario.
- * Genera una clave secreta y una URL de autenticación OTP utilizando el correo electrónico del usuario.
- * Genera un código QR para la URL de autenticación OTP.
- * Actualiza la clave secreta de autenticación de dos factores del usuario en la base de datos.
- * Responde con el código QR generado.
- * Si ocurre un error, envía una respuesta de error del servidor.
- *
- * @param { Object } req - el objeto de la solicitud.
- * @param { Object } res - el objeto de la respuesta.
- * @returns { Object } - respuesta JSON que contiene el código QR generado o un mensaje de error del servidor.
+ * @description Habilita la autenticación de dos factores para el usuario.
+ * ES: Genera secreto TOTP y QR code para configuración 2FA.
+ * EN: Generates TOTP secret and QR code for 2FA setup.
  */
-export const enable2FA = async (req, res) => {
-  try {
-    const secret = totp.generateSecret();
-    const otpAuthUrl = totp.keyuri(req.user.email, 'PsychologyAssistant', secret);
+export const enable2FA = asyncHandler(async (req, res) => {
+  const secret = twoFAService.generate2FACode();
+  const otpAuthUrl = totp.keyuri(req.user.email, 'PsychologyAssistant', secret);
 
-    const qrCode = await qrService.generateQR(otpAuthUrl);
+  const qrCode = await qrService.generateQR(otpAuthUrl);
 
-    req.user.twoFASecret = secret;
-    await req.user.save();
+  req.user.twoFASecret = secret;
+  req.user.twoFAEnabled = false; // Will be enabled after verification
+  await req.user.save();
 
-    res.json({ qrCode });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+  logger.info('2FA setup initiated', { userId: req.user._id });
+
+  const response = ApiResponse.success(
+    { qrCode, secret },
+    'Scan the QR code with your authenticator app'
+  );
+
+  sendResponse(res, response);
+});
 
 /**
  * @module verify2FA
- * @description Verificar el token de autenticación de dos factores proporcionado por el usuario.
- *
- * @param { Object } req - el objeto de solicitud que contiene el token del usuario.
- * @param { Object } res - el objeto de respuesta para enviar el resultado de la verificación.
- * @returns { Object } - Respuesta JSON que indica el resultado de la verificación de 2FA.
- * @throws { Object } - Respuesta JSON con un mensaje de error si la verificación falla.
+ * @description Verifica el código 2FA y habilita la autenticación.
+ * ES: Valida el token TOTP y activa 2FA para el usuario.
+ * EN: Validates TOTP token and enables 2FA for the user.
  */
-export const verify2FA = async (req, res) => {
+export const verify2FA = asyncHandler(async (req, res) => {
   const { token } = req.body;
-  try {
-    const isValid = totp.check(token, req.user.twoFASecret);
-    if (!isValid) return res.status(400).json({ message: 'Invalid 2FA token' });
 
-    res.json({ message: '2FA verified successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+  if (!req.user.twoFASecret) {
+    throw new Error('2FA not initialized');
   }
-};
+
+  const isValid = twoFAService.verify2FACode(token, req.user.twoFASecret);
+
+  if (!isValid) {
+    throw new Error('Invalid 2FA token');
+  }
+
+  req.user.twoFAEnabled = true;
+  await req.user.save();
+
+  logger.info('2FA enabled successfully', { userId: req.user._id });
+
+  const response = ApiResponse.success(
+    { twoFAEnabled: true },
+    'Two-factor authentication enabled successfully'
+  );
+
+  sendResponse(res, response);
+});
+
+/**
+ * @module logout
+ * @description Cierra la sesión del usuario.
+ * ES: Marca la sesión como inactiva y registra el logout.
+ * EN: Marks session as inactive and logs the logout.
+ */
+export const logout = asyncHandler(async (req, res) => {
+  // Find active session
+  const session = await Session.findOne({
+    user: req.user._id,
+    isActive: true
+  }).sort({ loginTime: -1 });
+
+  if (session) {
+    await session.logout();
+  }
+
+  logger.info('User logged out', { userId: req.user._id });
+
+  const response = ApiResponse.success(null, 'Logged out successfully');
+  sendResponse(res, response);
+});

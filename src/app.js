@@ -1,25 +1,85 @@
-import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import express from 'express';
 import connectDB from './config/database.js';
+import environment from './config/environment.js';
+import logger from './config/logger.js';
+import { specs, swaggerUi } from './config/swagger.js';
+import { apiLimiter } from './middlewares/rateLimitMiddleware.js';
+import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import appointmentRoutes from './routes/appointmentRoutes.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
 
+// Conectar a base de datos
 connectDB();
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// Rate limiting general
+app.use('/api/', apiLimiter);
 
+// Middleware de seguridad y configuración
+app.use(
+  cors({
+    origin: environment.CORS_ORIGIN,
+    credentials: true,
+  }),
+);
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains',
+  );
+  next();
+});
+
+// Logging de requests
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.path}`, {
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+  });
+  next();
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    environment: environment.NODE_ENV,
+    version: '1.0.0',
+  });
+});
+
+// Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: `Route ${req.originalUrl} not found`,
+  });
+});
+
+// Error handling middleware
 app.use(errorHandler);
 
 export default app;

@@ -1,0 +1,75 @@
+# ============================================================
+# GLOBAL COPILOT AGENT - ORCHESTRATOR
+# ============================================================
+version: "1.0"
+
+agents:
+  global-orchestrator:
+    name: "🧠 Global Orchestrator"
+    description: |
+      Main orchestrator. Analyzes requests and delegates to sub-agents.
+      Orquestador principal. Analiza solicitudes y delega a sub-agentes.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/orchestrator.md
+    tools: [file_search, code_interpreter, run_terminal]
+    delegates_to:
+      - architect-agent
+      - backend-agent
+      - frontend-agent
+      - devops-agent
+      - qa-agent
+      - docs-agent
+
+  architect-agent:
+    name: "🏛️ Architect Agent"
+    description: |
+      Designs project structure following Clean Architecture / DDD.
+      Diseña la estructura siguiendo Clean Architecture / DDD.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/architect.md
+    tools: [file_search, code_interpreter]
+
+  backend-agent:
+    name: "⚙️ Backend Agent"
+    description: |
+      Generates and reviews NestJS / Express / Node.js backend code.
+      Genera y revisa código backend NestJS / Express / Node.js.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/backend.md
+    tools: [file_search, code_interpreter, run_terminal]
+
+  frontend-agent:
+    name: "🎨 Frontend Agent"
+    description: |
+      Generates and reviews React/Next.js and Angular code.
+      Genera y revisa código React/Next.js y Angular.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/frontend.md
+    tools: [file_search, code_interpreter]
+
+  devops-agent:
+    name: "🐳 DevOps Agent"
+    description: |
+      Configures Docker, Docker Compose and GitHub Actions CI/CD.
+      Configura Docker, Docker Compose y pipelines GitHub Actions.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/devops.md
+    tools: [file_search, code_interpreter, run_terminal]
+
+  qa-agent:
+    name: "🧪 QA Agent"
+    description: |
+      Generates unit, integration and e2e tests. Validates coverage.
+      Genera tests unitarios, integración y e2e. Valida cobertura.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/qa.md
+    tools: [file_search, code_interpreter]
+
+  docs-agent:
+    name: "📚 Docs Agent"
+    description: |
+      Generates README, CHANGELOG, Swagger docs. Bilingual ES+EN.
+      Genera README, CHANGELOG, docs Swagger. Bilingüe ES+EN.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/docs.md
+    tools: [file_search, code_interpreter]

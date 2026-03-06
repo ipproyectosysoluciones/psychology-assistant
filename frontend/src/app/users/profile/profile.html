@@ -1,0 +1,16 @@
+<div class="container">
+  <h2>Mi perfil</h2>
+  <form (ngSubmit)="save()" [formGroup]="form">
+    <div>
+      <label for="name">Nombre</label>
+      <input id="name" formControlName="name" type="text" />
+    </div>
+    <div>
+      <label for="email">Email (no editable)</label>
+      <input id="email" formControlName="email" type="email" readonly />
+    </div>
+    <button type="submit">Guardar cambios</button>
+  </form>
+  <p class="message" *ngIf="message">{{ message }}</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+</div>

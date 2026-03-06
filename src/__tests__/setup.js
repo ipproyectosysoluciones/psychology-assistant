@@ -1,0 +1,49 @@
+import dotenv from 'dotenv';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+
+dotenv.config({ path: '.env.test' });
+
+let mongoServer;
+
+/**
+ * @module setupTests
+ * @description Configuración global para tests con Jest.
+ * ES: Configura base de datos en memoria y limpieza automática.
+ * EN: Sets up in-memory database and automatic cleanup.
+ */
+
+// Configurar Jest
+jest.setTimeout(30000);
+
+// Setup antes de todos los tests
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
+  await mongoose.connect(mongoUri);
+});
+
+// Cleanup después de cada test
+afterEach(async () => {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany({});
+  }
+});
+
+// Cleanup después de todos los tests
+afterAll(async () => {
+  await mongoose.connection.dropDatabase();
+  await mongoose.connection.close();
+  await mongoServer.stop();
+});
+
+// Mock para console.log en tests
+global.console = {
+  ...console,
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn()
+};

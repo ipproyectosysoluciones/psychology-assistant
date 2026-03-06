@@ -1,0 +1,81 @@
+<div class="two-fa-container">
+  <mat-card class="two-fa-card">
+    <mat-card-header>
+      <mat-card-title>Configurar Autenticación de Dos Factores</mat-card-title>
+      <mat-card-subtitle>Protege tu cuenta con un código adicional</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Cargando...</p>
+      </div>
+
+      <div *ngIf="!loading && step === 'setup'" class="setup-step">
+        <div class="instructions">
+          <h3>Paso 1: Instala una aplicación de autenticación</h3>
+          <p>Descarga una aplicación como Google Authenticator, Authy o Microsoft Authenticator en tu teléfono.</p>
+
+          <h3>Paso 2: Escanea el código QR</h3>
+          <p>Abre la aplicación y escanea el siguiente código QR:</p>
+        </div>
+
+        <div class="qr-container" *ngIf="qrCodeUrl">
+          <img [src]="qrCodeUrl" alt="QR Code para 2FA" class="qr-code" />
+        </div>
+
+        <div class="manual-setup" *ngIf="secret">
+          <p><strong>Código secreto (si no puedes escanear):</strong></p>
+          <code>{{ secret }}</code>
+        </div>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="step = 'verify'">
+            Continuar
+          </button>
+          <button mat-button (click)="skip2FA()">
+            Omitir por ahora
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && step === 'verify'" class="verify-step">
+        <div class="instructions">
+          <h3>Paso 3: Ingresa el código de verificación</h3>
+          <p>Ingresa el código de 6 dígitos que aparece en tu aplicación de autenticación:</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="verifyToken()" class="verify-form">
+          <mat-form-field appearance="fill" class="token-field">
+            <mat-label>Código de 6 dígitos</mat-label>
+            <input
+              matInput
+              formControlName="token"
+              maxlength="6"
+              placeholder="000000"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+            />
+            <mat-error *ngIf="form.get('token')?.invalid && form.get('token')?.touched">
+              Ingresa un código válido de 6 dígitos
+            </mat-error>
+          </mat-form-field>
+
+          <div class="actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+              Verificar y Habilitar 2FA
+            </button>
+            <button mat-button type="button" (click)="step = 'setup'">
+              Volver
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

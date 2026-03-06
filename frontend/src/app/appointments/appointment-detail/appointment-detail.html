@@ -1,0 +1,15 @@
+<div class="container" *ngIf="appointment">
+  <h2>Cita</h2>
+  <div>
+    <strong>Fecha:</strong> {{ appointment.date | date:'short' }}
+  </div>
+  <div>
+    <strong>Tipo:</strong> {{ appointment.type }}
+  </div>
+  <div>
+    <strong>Notas:</strong> {{ appointment.notes }}
+  </div>
+  <button (click)="cancel()">Cancelar</button>
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>
+<div *ngIf="!appointment && !error">Cargando...</div>

@@ -1,104 +1,256 @@
-# Psychology Assistant
+# Psychology Assistant API
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Estructura de Archivos
+Una API REST completa para la gestión de citas psicológicas, construida con Node.js, Express y MongoDB. Incluye autenticación JWT, 2FA, validación de datos, logging, testing y documentación automática.
 
-```bash
+## 🚀 Características
+
+- ✅ **Autenticación completa**: JWT + 2FA con TOTP
+- ✅ **Validación robusta**: express-validator en todos los endpoints
+- ✅ **Base de datos optimizada**: MongoDB con índices y validaciones
+- ✅ **Testing completo**: Jest + Supertest con cobertura >70%
+- ✅ **Logging avanzado**: Winston con múltiples transportes
+- ✅ **Documentación automática**: Swagger/OpenAPI
+- ✅ **Docker ready**: Contenedorizado para desarrollo y producción
+- ✅ **CI/CD**: GitHub Actions con testing automático
+- ✅ **Arquitectura limpia**: Separación clara de responsabilidades
+- ✅ **Manejo de errores**: Respuestas estructuradas y logging
+
+## 📁 Estructura del Proyecto
+
+```tree
 psychology-assistant/
 │
 ├── src/
 │   ├── config/
-│   │   └── database.js        # Configuración de conexión a la base de datos
+│   │   ├── database.js        # Conexión MongoDB
+│   │   ├── environment.js     # Variables de entorno centralizadas
+│   │   ├── logger.js          # Configuración Winston
+│   │   └── swagger.js         # Documentación API
 │   ├── controllers/
-│   │   ├── authController.js   # Controlador de autenticación
-│   │   ├── userController.js   # Controlador de usuarios
-│   │   └── appointmentController.js  # Controlador de citas
+│   │   ├── authController.js   # Autenticación y 2FA
+│   │   ├── userController.js   # Gestión de usuarios
+│   │   └── appointmentController.js  # Citas médicas
 │   ├── middlewares/
-│   │   └── authMiddleware.js   # Middlewares para proteger rutas
+│   │   └── authMiddleware.js   # JWT + Autorización por roles
 │   ├── models/
-│   │   ├── user.js             # Modelo de Usuario
-│   │   ├── appointment.js      # Modelo de Citas
-│   │   └── session.js          # Modelo de Sesiones
+│   │   ├── user.js             # Modelo Usuario con validaciones
+│   │   ├── appointment.js      # Modelo Citas con populate
+│   │   └── session.js          # Modelo Sesiones
 │   ├── routes/
-│   │   ├── authRoutes.js       # Rutas de autenticación
-│   │   ├── userRoutes.js       # Rutas de gestión de usuarios
-│   │   └── appointmentRoutes.js # Rutas de citas
+│   │   ├── authRoutes.js       # Rutas autenticación
+│   │   ├── userRoutes.js       # Rutas usuarios
+│   │   └── appointmentRoutes.js # Rutas citas
 │   ├── services/
-│   │   ├── qrService.js        # Servicio de generación de códigos QR
-│   │   └── twoFAService.js     # Servicio de autenticación 2FA
+│   │   ├── qrService.js        # Generación QR codes
+│   │   └── twoFAService.js     # Servicio 2FA
 │   ├── utils/
-│   │   └── errorHandler.js     # Manejador de errores
-│   ├── app.js                  # Configuración de la aplicación
-│   └── server.js               # Punto de entrada del servidor
+│   │   ├── validators.js       # Reglas de validación
+│   │   ├── apiResponse.js      # Respuestas estandarizadas
+│   │   ├── appError.js         # Manejo de errores
+│   │   └── errorHandler.js     # Middleware errores
+│   ├── __tests__/              # Tests unitarios
+│   │   └── setup.js            # Configuración testing
+│   ├── app.js                  # Configuración Express
+│   └── server.js               # Punto de entrada
 │
-├── package.json                # Configuración del proyecto
-├── .env                        # Variables de entorno
-└── README.md                   # Documentación del proyecto
+├── .github/workflows/          # CI/CD pipelines
+├── docker-compose.yml          # Producción
+├── docker-compose.dev.yml      # Desarrollo
+├── Dockerfile                  # Imagen Docker
+├── jest.config.js              # Configuración tests
+├── .env.example                # Variables ejemplo
+├── package.json
+└── README.md
 ```
 
-### Descripción del Funcionamiento
+## 🛠️ Tecnologías
 
-1. **Autenticación y Registro**:
+### Backend
 
-   - Los usuarios podrán registrarse y hacer login utilizando email y contraseña. El sistema usará `bcrypt` para el hashing de contraseñas.
-   - Se integrará `passport` con `passport-local` y `passport-jwt` para manejar sesiones y autenticación con tokens JWT.
+- **Node.js** 18+ con ES Modules
+- **Express.js** - Framework web
+- **MongoDB** - Base de datos NoSQL
+- **Mongoose** - ODM para MongoDB
 
-2. **Autenticación 2FA**:
+### Seguridad
 
-   - Se utilizará `otplib` para la generación y validación de códigos de autenticación de dos factores (2FA).
-   - Se generarán códigos QR que los usuarios podrán escanear con aplicaciones como Google Authenticator para activar el 2FA.
+- **JWT** - Autenticación stateless
+- **bcryptjs** - Hashing de contraseñas
+- **otplib** - 2FA con TOTP
+- **express-validator** - Validación de inputs
 
-3. **Creación de Sesiones e Historial de Usuario**:
+### Testing & Quality
 
-   - Las sesiones de los usuarios se guardarán en una colección de la base de datos (`sessions`) para poder mantener el historial de acceso y la gestión de la sesión activa.
-   - El historial de cada usuario incluirá las citas agendadas y las notas de seguimiento que el psicólogo decida registrar.
+- **Jest** - Framework de testing
+- **Supertest** - Testing HTTP
+- **mongodb-memory-server** - DB en memoria para tests
+- **ESLint** + **Prettier** - Code quality
 
-4. **Generación de Citas y Códigos QR**:
+### DevOps
 
-   - Las citas se almacenarán en la base de datos y se generará un código QR único para cada una de ellas utilizando `qrcode`.
-   - El código QR puede contener información relevante como la fecha y hora de la cita, el ID del usuario, y un enlace para acceder directamente a la sesión.
+- **Docker** + **Docker Compose**
+- **Winston** - Logging estructurado
+- **Swagger/OpenAPI** - Documentación API
+- **GitHub Actions** - CI/CD
 
-5. **Modularización y Buenas Prácticas**:
-   - Todo el código estará modularizado en controladores, modelos, servicios, y utilidades para que sea fácil de mantener y escalar.
-   - El manejo de errores será centralizado para asegurar que los errores se gestionen de manera consistente en toda la aplicación.
+## 🚀 Inicio Rápido
 
-### **Tecnologías Recomendadas y a Instalar**
+### Prerrequisitos
 
-**Backend**:
+- Node.js 18+
+- MongoDB (local o Atlas)
+- pnpm (opcional, pero recomendado)
 
-- `express`: Framework web para Node.js.
-- `mongoose`: ODM para MongoDB.
-- `dotenv`: Para manejar variables de entorno.
-- `bcryptjs`: Para el hashing de contraseñas.
-- `passport`, `passport-local`, `passport-jwt`: Para autenticación local y basada en JWT.
-- `jsonwebtoken`: Para la generación y verificación de JWT.
-- `otplib`: Para autenticación de dos factores (2FA).
-- `qrcode`: Para generar códigos QR.
-- `express-session`: Para manejar sesiones en Express.
-- `cors`: Para manejar Cross-Origin Resource Sharing.
+### Instalación
 
-**Base de Datos**:
+1. **Clonar repositorio**
 
-- MongoDB (puedes utilizar un servicio como MongoDB Atlas para la nube).
+   ```bash
+   git clone https://github.com/ipproyectosysoluciones/psychology-assistant.git
+   cd psychology-assistant
+   ```
 
-**Otros**:
+2. **Instalar dependencias**
 
-- `pnpm`: Gestor de paquetes.
-- `nodemon`: Para reiniciar el servidor automáticamente durante el desarrollo.
+   ```bash
+   pnpm install
+   ```
 
-Asegúrate de instalar todas las dependencias con `pnpm install` antes de ejecutar la aplicación.
+3. **Configurar variables de entorno**
 
-### Markmap del Proyecto
+   ```bash
+   cp .env.example .env
+   # Editar .env con tus valores
+   ```
 
-El markmap del proyecto se puede construir de la siguiente manera:
+4. **Iniciar base de datos**
 
-1. **Estructura General**
+   ```bash
+   # Con Docker
+   docker-compose -f docker-compose.dev.yml up -d mongodb
 
-   - Configuración del servidor
-   - Rutas principales: autenticación, usuarios, citas
-   - Controladores: gestión de usuarios, sesiones y citas
-   - Servicios: generación de códigos QR, autenticación 2FA
+   # O usar MongoDB local/Atlas
+   ```
+
+5. **Ejecutar aplicación**
+
+   ```bash
+   # Desarrollo
+   pnpm run dev
+
+   # Producción
+   pnpm run build && pnpm start
+   ```
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+pnpm test
+
+# Con cobertura
+pnpm run test:coverage
+
+# Tests en modo watch
+pnpm run test:watch
+
+# Tests de CI
+pnpm run test:ci
+```
+
+## 📚 API Documentation
+
+La documentación completa de la API está disponible en `/api-docs` cuando el servidor está ejecutándose.
+
+### Endpoints Principales
+
+#### Autenticación
+
+- `POST /api/auth/register` - Registro de usuario
+- `POST /api/auth/login` - Login
+- `POST /api/auth/enable-2fa` - Habilitar 2FA
+- `POST /api/auth/verify-2fa` - Verificar código 2FA
+- `POST /api/auth/logout` - Logout
+
+#### Usuarios
+
+- `GET /api/users/profile` - Obtener perfil
+- `PUT /api/users/profile` - Actualizar perfil
+
+#### Citas
+
+- `POST /api/appointments/create` - Crear cita
+- `GET /api/appointments/my-appointments` - Listar citas del usuario
+
+## 🐳 Docker
+
+### Desarrollo
+
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+### Producción
+
+```bash
+docker-compose up -d
+```
+
+## 🔧 Scripts Disponibles
+
+```json
+{
+  "lint": "eslint . --fix",
+  "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
+  "test": "jest",
+  "test:watch": "jest --watch",
+  "test:coverage": "jest --coverage",
+  "test:ci": "jest --ci --coverage --watchAll=false",
+  "start": "node src/server.js",
+  "dev": "nodemon src/server.js"
+}
+```
+
+## 🔒 Variables de Entorno
+
+| Variable      | Descripción                | Default                 |
+| ------------- | -------------------------- | ----------------------- |
+| `NODE_ENV`    | Entorno de ejecución       | `development`           |
+| `PORT`        | Puerto del servidor        | `5000`                  |
+| `MONGO_URI`   | URI de conexión MongoDB    | _requerido_             |
+| `JWT_SECRET`  | Clave secreta para JWT     | _requerido_             |
+| `JWT_EXPIRE`  | Expiración del token JWT   | `7d`                    |
+| `LOG_LEVEL`   | Nivel de logging           | `info`                  |
+| `CORS_ORIGIN` | Origen permitido para CORS | `http://localhost:3000` |
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crea tu rama de feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 📞 Contacto
+
+**Psychology Assistant Team**
+
+- Email: <support@psychology-assistant.com>
+- GitHub: [@ipproyectosysoluciones](https://github.com/ipproyectosysoluciones)
+
+---
+
+⭐ Si este proyecto te resulta útil, ¡dale una estrella!
+
+- Servicios: generación de códigos QR, autenticación 2FA
 
 2. **Relaciones**
    - Usuarios ↔ Citas: Relación uno a muchos (un usuario puede tener múltiples citas).

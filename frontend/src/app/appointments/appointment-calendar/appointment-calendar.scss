@@ -1,0 +1,128 @@
+.calendar-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    color: #1976d2;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.calendar-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-section,
+.appointments-section {
+  mat-card {
+    height: 100%;
+  }
+}
+
+.appointment-item {
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.appointment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.appointment-time {
+  font-weight: 500;
+  color: #1976d2;
+  font-size: 14px;
+}
+
+.appointment-details {
+  .appointment-type {
+    font-weight: 500;
+    color: #333;
+  }
+
+  .appointment-notes {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+}
+
+.no-appointments,
+.select-date-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+// Custom calendar styling
+::ng-deep {
+  .mat-calendar {
+    .mat-calendar-body-selected {
+      background-color: #1976d2 !important;
+    }
+
+    .has-appointments {
+      background-color: #e3f2fd;
+      border-radius: 50%;
+
+      &:hover {
+        background-color: #bbdefb;
+      }
+    }
+  }
+}

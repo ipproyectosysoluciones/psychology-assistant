@@ -1,0 +1,72 @@
+<div class="appointments-container">
+  <div class="header">
+    <h2>Mis Citas</h2>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="createAppointment()">
+        <mat-icon>add</mat-icon>
+        Nueva Cita
+      </button>
+      <button mat-button (click)="goToCalendar()">
+        <mat-icon>calendar_view_month</mat-icon>
+        Vista Calendario
+      </button>
+    </div>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <div *ngIf="!loading && !error">
+        <table mat-table [dataSource]="appointments" class="appointments-table">
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Fecha y Hora</th>
+            <td mat-cell *matCellDef="let appointment">
+              {{ appointment.date | date:'short' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Tipo</th>
+            <td mat-cell *matCellDef="let appointment">
+              {{ getAppointmentTypeLabel(appointment.type) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="notes">
+            <th mat-header-cell *matHeaderCellDef>Notas</th>
+            <td mat-cell *matCellDef="let appointment">
+              {{ appointment.notes || '-' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let appointment">
+              <button mat-icon-button (click)="view(appointment._id)" title="Ver detalles">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="appointments.length === 0" class="no-appointments">
+          <mat-icon>event_note</mat-icon>
+          <p>No tienes citas programadas</p>
+          <button mat-raised-button color="primary" (click)="createAppointment()">
+            Agendar Primera Cita
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

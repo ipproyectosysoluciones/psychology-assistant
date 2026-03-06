@@ -1,0 +1,97 @@
+.appointments-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    color: #1976d2;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.appointments-table {
+  width: 100%;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.error-message {
+  color: #f44336;
+  background-color: #ffebee;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.no-appointments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    font-size: 18px;
+  }
+}
+
+// Material table styling
+::ng-deep {
+  .mat-mdc-table {
+    .mat-mdc-header-cell {
+      font-weight: 600;
+      color: #1976d2;
+    }
+
+    .mat-mdc-cell {
+      padding: 12px;
+    }
+  }
+}
+
+table {
+  width: 100%;
+  margin-top: 1rem;
+
+  th {
+    font-weight: 600;
+  }
+}
+
+.mat-error {
+  color: #f44336;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+}

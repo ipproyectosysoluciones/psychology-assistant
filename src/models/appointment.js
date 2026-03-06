@@ -1,18 +1,72 @@
 import { Schema, model } from 'mongoose';
 
-const appointmentSchema = Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const appointmentSchema = Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'User is required'],
+    },
+    psychologist: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+    date: {
+      type: Date,
+      required: [true, 'Appointment date is required'],
+      validate: {
+        validator: function (v) {
+          return v > new Date();
+        },
+        message: 'Appointment date must be in the future',
+      },
+    },
+    duration: {
+      type: Number, // en minutos
+      default: 60,
+      min: [15, 'Duration must be at least 15 minutes'],
+      max: [180, 'Duration cannot exceed 180 minutes'],
+    },
+    description: {
+      type: String,
+      maxlength: [500, 'Description cannot exceed 500 characters'],
+    },
+    notes: {
+      type: String,
+      maxlength: [1000, 'Notes cannot exceed 1000 characters'],
+    },
+    status: {
+      type: String,
+      enum: ['scheduled', 'completed', 'cancelled', 'no-show'],
+      default: 'scheduled',
+    },
+    qrCode: String,
+    reminderSent: {
+      type: Boolean,
+      default: false,
+    },
   },
-  date: {
-    type: Date,
-    required: true
-  },
-  description: {
-    type: String
+  { timestamps: true },
+);
+
+// Índices
+appointmentSchema.index({ user: 1, date: -1 });
+appointmentSchema.index({ psychologist: 1 });
+appointmentSchema.index({ status: 1 });
+appointmentSchema.index({ date: 1 });
+
+// Populate automático
+appointmentSchema.pre(/^find/, function (next) {
+  this.populate('user', 'name email');
+  if (this.options._recursed) {
+    return next();
   }
-}, { timestamps: true });
+  this.populate({
+    path: 'psychologist',
+    select: 'name email role',
+  });
+  next();
+});
 
 export default model('Appointment', appointmentSchema);

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '5000:5000'
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongodb:27017/psychology-assistant-dev
+      - JWT_SECRET=dev_jwt_secret_change_in_production
+      - PORT=5000
+      - LOG_LEVEL=debug
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./logs:/app/logs
+    networks:
+      - psychology-dev-network
+    command: pnpm run dev
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_DATABASE=psychology-assistant-dev
+    volumes:
+      - mongodb_dev_data:/data/db
+    networks:
+      - psychology-dev-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_dev_data:
+
+networks:
+  psychology-dev-network:
+    driver: bridge
