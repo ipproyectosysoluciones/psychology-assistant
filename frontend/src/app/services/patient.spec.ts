@@ -1,8 +1,11 @@
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { PatientService } from './patient';
-import { ApiResponse, Patient } from '../models';
 import { environment } from '../../environments/environment';
+import { ApiResponse, Patient } from '../models';
+import { PatientService } from './patient';
 
 /**
  * ES: Tests para el PatientService
@@ -70,9 +73,7 @@ describe('PatientService', () => {
       expect(response.data).toEqual([mockPatient]);
     });
 
-    const req = httpMock.expectOne(
-      `${apiUrl}/patients?page=1&limit=10`,
-    );
+    const req = httpMock.expectOne(`${apiUrl}/patients?page=1&limit=10`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

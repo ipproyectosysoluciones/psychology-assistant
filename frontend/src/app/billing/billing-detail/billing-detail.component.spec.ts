@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BillingDetailComponent } from './billing-detail.component';
-import { BillingService } from '../../services/billing';
 import { of, throwError } from 'rxjs';
 import { BillingRecord } from '../../models';
+import { BillingService } from '../../services/billing';
+import { BillingDetailComponent } from './billing-detail.component';
 
 /**
  * ES: Tests para el BillingDetailComponent
@@ -65,7 +65,9 @@ describe('BillingDetailComponent', () => {
       ],
     }).compileComponents();
 
-    billingService = TestBed.inject(BillingService) as jasmine.SpyObj<BillingService>;
+    billingService = TestBed.inject(
+      BillingService,
+    ) as jasmine.SpyObj<BillingService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     fixture = TestBed.createComponent(BillingDetailComponent);
     component = fixture.componentInstance;
@@ -118,9 +120,6 @@ describe('BillingDetailComponent', () => {
     component.billing = mockBilling;
     component.onEdit();
 
-    expect(router.navigate).toHaveBeenCalledWith([
-      '/billing/form',
-      '1',
-    ]);
+    expect(router.navigate).toHaveBeenCalledWith(['/billing/form', '1']);
   });
 });

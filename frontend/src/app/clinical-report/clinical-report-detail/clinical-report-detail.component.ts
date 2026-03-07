@@ -7,9 +7,12 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ClinicalReport } from '../../models';
 import { ClinicalReportService } from '../../services/clinical-report';
 
@@ -27,6 +30,8 @@ import { ClinicalReportService } from '../../services/clinical-report';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatDialogModule,
   ],
   templateUrl: './clinical-report-detail.component.html',
   styleUrl: './clinical-report-detail.component.scss',
@@ -36,6 +41,8 @@ export class ClinicalReportDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private clinicalReportService = inject(ClinicalReportService);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   report: ClinicalReport | null = null;
   isLoading = false;
@@ -57,14 +64,16 @@ export class ClinicalReportDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.report = response.data;
         } else {
-          this.errorMessage =
-            response.message || 'Error loading clinical report';
+          this.errorMessage = response.message || 'Error loading clinical report';
+          this.showErrorSnackBar(this.errorMessage);
         }
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage =
+        const message =
           error.error?.message || 'Error loading clinical report data';
+        this.errorMessage = message;
+        this.showErrorSnackBar(message);
         this.isLoading = false;
       },
     });
@@ -72,32 +81,98 @@ export class ClinicalReportDetailComponent implements OnInit {
 
   onEdit(): void {
     if (this.report) {
+      this.showInfoSnackBar('Abriendo formulario de edición...');
       this.router.navigate(['/clinical-report/form', this.report.id]);
     }
   }
 
   onDelete(): void {
-    if (
-      this.report &&
-      confirm(`¿Estás seguro que deseas eliminar este reporte?`)
-    ) {
-      this.isLoading = true;
-      this.clinicalReportService
-        .deleteClinicalReport(this.report.id)
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/clinical-report']);
-          },
-          error: (error) => {
-            this.errorMessage =
-              error.error?.message || 'Error deleting clinical report';
-            this.isLoading = false;
-          },
-        });
-    }
+    if (!this.report) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Eliminar Reporte Clínico',
+        message:
+          '¿Estás seguro que deseas eliminar este reporte clínico? Esta acción no se puede deshacer.',
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar',
+        isDestructive: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.deleteReport();
+      }
+    });
+  }
+
+  /**
+   * ES: Ejecutar eliminación del reporte clínico
+   * EN: Execute clinical report deletion
+   */
+  private deleteReport(): void {
+    if (!this.report) return;
+
+    this.isLoading = true;
+    this.clinicalReportService.deleteClinicalReport(this.report.id).subscribe({
+      next: () => {
+        this.showSuccessSnackBar('Reporte clínico eliminado exitosamente');
+        setTimeout(() => {
+          this.router.navigate(['/clinical-report']);
+        }, 1500);
+      },
+      error: (error) => {
+        const message =
+          error.error?.message || 'Error al eliminar reporte clínico';
+        this.errorMessage = message;
+        this.showErrorSnackBar(message);
+        this.isLoading = false;
+      },
+    });
   }
 
   onBack(): void {
     this.router.navigate(['/clinical-report']);
+  }
+
+  /**
+   * ES: Mostrar notificación de error
+   * EN: Show error snackbar
+   */
+  private showErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar'],
+    });
+  }
+
+  /**
+   * ES: Mostrar notificación de éxito
+   * EN: Show success snackbar
+   */
+  private showSuccessSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar'],
+    });
+  }
+
+  /**
+   * ES: Mostrar notificación informativa
+   * EN: Show info snackbar
+   */
+  private showInfoSnackBar(message: string): void {
+    this.snackBar.open(message, '', {
+      duration: 2000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['info-snackbar'],
+    });
   }
 }

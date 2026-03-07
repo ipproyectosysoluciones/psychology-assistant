@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TherapistDetailComponent } from './therapist-detail.component';
-import { TherapistService } from '../../services/therapist';
 import { of, throwError } from 'rxjs';
 import { Therapist } from '../../models';
+import { TherapistService } from '../../services/therapist';
+import { TherapistDetailComponent } from './therapist-detail.component';
 
 /**
  * ES: Tests para el TherapistDetailComponent

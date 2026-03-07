@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MedicalRecordDetailComponent } from './medical-record-detail.component';
-import { MedicalRecordService } from '../../services/medical-record';
 import { of, throwError } from 'rxjs';
 import { MedicalRecord } from '../../models';
+import { MedicalRecordService } from '../../services/medical-record';
+import { MedicalRecordDetailComponent } from './medical-record-detail.component';
 
 /**
  * ES: Tests para el MedicalRecordDetailComponent
@@ -101,10 +101,7 @@ describe('MedicalRecordDetailComponent', () => {
     component.record = mockRecord;
     component.onEdit();
 
-    expect(router.navigate).toHaveBeenCalledWith([
-      '/medical-record/form',
-      '1',
-    ]);
+    expect(router.navigate).toHaveBeenCalledWith(['/medical-record/form', '1']);
   });
 
   it('should delete medical record', () => {

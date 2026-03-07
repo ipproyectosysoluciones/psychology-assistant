@@ -1,8 +1,11 @@
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ClinicService } from './clinic';
-import { ApiResponse, Clinic } from '../models';
 import { environment } from '../../environments/environment';
+import { ApiResponse, Clinic } from '../models';
+import { ClinicService } from './clinic';
 
 /**
  * ES: Tests para el ClinicService

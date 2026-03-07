@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ClinicalReportDetailComponent } from './clinical-report-detail.component';
-import { ClinicalReportService } from '../../services/clinical-report';
 import { of, throwError } from 'rxjs';
 import { ClinicalReport } from '../../models';
+import { ClinicalReportService } from '../../services/clinical-report';
+import { ClinicalReportDetailComponent } from './clinical-report-detail.component';
 
 /**
  * ES: Tests para el ClinicalReportDetailComponent

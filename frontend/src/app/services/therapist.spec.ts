@@ -1,8 +1,11 @@
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TherapistService } from './therapist';
-import { ApiResponse, Therapist } from '../models';
 import { environment } from '../../environments/environment';
+import { ApiResponse, Therapist } from '../models';
+import { TherapistService } from './therapist';
 
 /**
  * ES: Tests para el TherapistService
@@ -61,9 +64,7 @@ describe('TherapistService', () => {
       expect(Array.isArray(response.data)).toBe(true);
     });
 
-    const req = httpMock.expectOne(
-      `${apiUrl}/therapists?page=1&limit=10`,
-    );
+    const req = httpMock.expectOne(`${apiUrl}/therapists?page=1&limit=10`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

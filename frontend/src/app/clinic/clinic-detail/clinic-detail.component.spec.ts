@@ -1,10 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ClinicDetailComponent } from './clinic-detail.component';
-import { ClinicService } from '../../services/clinic';
 import { of, throwError } from 'rxjs';
 import { Clinic } from '../../models';
+import { ClinicService } from '../../services/clinic';
+import { ClinicDetailComponent } from './clinic-detail.component';
 
 /**
  * ES: Tests para el ClinicDetailComponent
@@ -63,7 +63,9 @@ describe('ClinicDetailComponent', () => {
       ],
     }).compileComponents();
 
-    clinicService = TestBed.inject(ClinicService) as jasmine.SpyObj<ClinicService>;
+    clinicService = TestBed.inject(
+      ClinicService,
+    ) as jasmine.SpyObj<ClinicService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     fixture = TestBed.createComponent(ClinicDetailComponent);
     component = fixture.componentInstance;

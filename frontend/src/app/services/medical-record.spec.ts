@@ -1,8 +1,11 @@
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { MedicalRecordService } from './medical-record';
-import { ApiResponse, MedicalRecord } from '../models';
 import { environment } from '../../environments/environment';
+import { ApiResponse, MedicalRecord } from '../models';
+import { MedicalRecordService } from './medical-record';
 
 /**
  * ES: Tests para el MedicalRecordService
@@ -22,9 +25,7 @@ describe('MedicalRecordService', () => {
     icdCode: 'F41.1',
     symptoms: ['Preocupación', 'Irritabilidad'],
     treatment: 'Psicoterapia',
-    medications: [
-      { name: 'Sertraline', dose: '50mg', frequency: 'Diaria' },
-    ],
+    medications: [{ name: 'Sertraline', dose: '50mg', frequency: 'Diaria' }],
     followUpPlan: 'Seguimiento en 2 semanas',
     notes: 'Paciente muestra mejoría',
     status: 'completed',
@@ -61,9 +62,7 @@ describe('MedicalRecordService', () => {
       expect(response.data.length).toBeGreaterThan(0);
     });
 
-    const req = httpMock.expectOne(
-      `${apiUrl}/medical-records?page=1&limit=10`,
-    );
+    const req = httpMock.expectOne(`${apiUrl}/medical-records?page=1&limit=10`);
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -76,9 +75,7 @@ describe('MedicalRecordService', () => {
     };
 
     service.getMedicalRecord('1').subscribe((response) => {
-      expect(response.data?.primaryDiagnosis).toEqual(
-        'Trastorno de Ansiedad',
-      );
+      expect(response.data?.primaryDiagnosis).toEqual('Trastorno de Ansiedad');
     });
 
     const req = httpMock.expectOne(`${apiUrl}/medical-records/1`);
