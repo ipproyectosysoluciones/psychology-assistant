@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Backend API Service
   app:
     build: .
     ports:
@@ -11,8 +12,10 @@ services:
       - JWT_SECRET=dev_jwt_secret_change_in_production
       - PORT=5000
       - LOG_LEVEL=debug
+      - CORS_ORIGIN=http://localhost:4200
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     volumes:
       - .:/app
       - /app/node_modules
@@ -21,7 +24,34 @@ services:
       - psychology-dev-network
     command: pnpm run dev
     restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'node', 'scripts/healthcheck.js']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
+  # Frontend Angular Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - '4200:4200'
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://localhost:5000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - psychology-dev-network
+    depends_on:
+      - app
+    restart: unless-stopped
+    command: npm start
+
+  # MongoDB Database Service
   mongodb:
     image: mongo:6.0
     ports:
@@ -30,12 +60,20 @@ services:
       - MONGO_INITDB_DATABASE=psychology-assistant-dev
     volumes:
       - mongodb_dev_data:/data/db
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
     networks:
       - psychology-dev-network
     restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', 'db.adminCommand("ping")']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   mongodb_dev_data:
+    driver: local
 
 networks:
   psychology-dev-network:
