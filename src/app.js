@@ -11,6 +11,12 @@ import { sanitizationMiddleware } from './middlewares/sanitizationMiddleware.js'
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import clinicRoutes from './routes/clinicRoutes.js';
+import therapistRoutes from './routes/therapistRoutes.js';
+import patientRoutes from './routes/patientRoutes.js';
+import medicalrecordRoutes from './routes/medicalrecordRoutes.js';
+import billingRoutes from './routes/billingRoutes.js';
+import clinicalreportRoutes from './routes/clinicalreportRoutes.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
@@ -80,6 +86,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/v1/clinics', clinicRoutes);
+app.use('/api/v1/therapists', therapistRoutes);
+app.use('/api/v1/patients', patientRoutes);
+app.use('/api/v1/medical-records', medicalrecordRoutes);
+app.use('/api/v1/billings', billingRoutes);
+app.use('/api/v1/clinical-reports', clinicalreportRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
