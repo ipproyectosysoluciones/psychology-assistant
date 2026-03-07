@@ -92,7 +92,7 @@ export class TherapistDetailComponent implements OnInit {
       width: '400px',
       data: {
         title: 'Eliminar Terapeuta',
-        message: `¿Estás seguro que deseas eliminar a ${this.therapist.name}? Esta acción no se puede deshacer.`,
+        message: `¿Estás seguro que deseas eliminar a ${'este terapeuta'}? Esta acción no se puede deshacer.`,
         confirmText: 'Eliminar',
         cancelText: 'Cancelar',
         isDestructive: true,

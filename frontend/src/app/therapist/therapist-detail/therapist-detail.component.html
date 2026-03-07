@@ -38,23 +38,15 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Nombre:</span>
-              <span class="value">{{ therapist.name }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Email:</span>
-              <span class="value">{{ therapist.email }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Teléfono:</span>
-              <span class="value">{{ therapist.phone }}</span>
+              <span class="value">{{ therapist.user?.name || 'Sin nombre' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Número de Licencia:</span>
               <span class="value">{{ therapist.licenseNumber }}</span>
             </div>
             <div class="info-item">
-              <span class="label">Tipo de Licencia:</span>
-              <span class="value">{{ therapist.licenseType }}</span>
+              <span class="label">Vencimiento Licencia:</span>
+              <span class="value">{{ therapist.licenseExpiry | date: 'dd/MM/yyyy' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Estado:</span>
@@ -71,7 +63,7 @@
         </mat-card-header>
         <mat-card-content>
           <div class="bio-text">
-            <p>{{ therapist.biography }}</p>
+            <p>{{ therapist.bio || 'Sin descripción' }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -100,12 +92,12 @@
           <mat-card-title>Educación y Certificaciones</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (therapist.education && therapist.education.length > 0) {
+          @if (therapist.qualifications && therapist.qualifications.length > 0) {
             <ul class="education-list">
-              @for (edu of therapist.education; track edu) {
+              @for (qual of therapist.qualifications; track qual) {
                 <li>
                   <mat-icon>school</mat-icon>
-                  {{ edu }}
+                  {{ qual }}
                 </li>
               }
             </ul>
@@ -125,7 +117,7 @@
             @for (day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; track day) {
               <div class="schedule-item">
                 <span class="day">{{ day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : 'Viernes' }}</span>
-                <span class="time">{{ therapist.workSchedule[day] }}</span>
+                <span class="time">{{ therapist.availability?.monday || "Consulte disponibilidad" }}</span>
               </div>
             }
           </div>
@@ -138,9 +130,9 @@
           <mat-card-title>Servicios Ofrecidos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (therapist.offeringServices && therapist.offeringServices.length > 0) {
+          @if (therapist.specializations && therapist.specializations.length > 0) {
             <div class="services">
-              @for (service of therapist.offeringServices; track service) {
+              @for (service of therapist.specializations; track service) {
                 <div class="service-item">
                   <mat-icon>check_circle</mat-icon>
                   {{ service }}
@@ -162,11 +154,11 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Pacientes Activos:</span>
-              <span class="value stats">{{ therapist.patientCount }}</span>
+              <span class="value stats">N-A</span>
             </div>
             <div class="info-item">
               <span class="label">Promedio de Calificación:</span>
-              <span class="value stats">{{ therapist.averageRating }}/5.0 ⭐</span>
+              <span class="value stats">N-A/5.0 ⭐</span>
             </div>
           </div>
         </mat-card-content>

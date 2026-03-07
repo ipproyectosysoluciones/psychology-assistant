@@ -127,23 +127,6 @@ export class PatientFormComponent implements OnInit {
 
   private initializeForm(): void {
     this.form = this.fb.group({
-      firstName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(50),
-        ],
-      ],
-      lastName: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(50),
-        ],
-      ],
-      email: ['', [Validators.email]],
       dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required],
       idType: ['', Validators.required],
@@ -153,9 +136,6 @@ export class PatientFormComponent implements OnInit {
         [Validators.required, Validators.pattern(/^\+?[\d\s-()]{10,}$/)],
       ],
       address: ['', [Validators.required, Validators.minLength(5)]],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
-      postalCode: ['', Validators.required],
       insurance: [''],
       insurancePlan: [''],
       employmentStatus: ['employed'],
@@ -179,7 +159,22 @@ export class PatientFormComponent implements OnInit {
 
     this.isSubmitting = true;
     this.errorMessage = null;
-    const patientData = this.form.value;
+    const formValue = this.form.value;
+    
+    // Transform form data to match Patient model
+    const patientData = {
+      ...formValue,
+      emergencyContact: {
+        name: formValue.emergencyContactName,
+        phone: formValue.emergencyContactPhone,
+        relationship: formValue.emergencyContactRelationship,
+      },
+      allergies: formValue.allergies ? formValue.allergies.split(',').map((a: string) => a.trim()) : [],
+      medications: formValue.medications ? formValue.medications.split(',').map((m: string) => m.trim()) : [],
+    };
+    delete patientData.emergencyContactName;
+    delete patientData.emergencyContactPhone;
+    delete patientData.emergencyContactRelationship;
 
     if (this.isEditMode && this.patientId) {
       // Actualizar paciente existente

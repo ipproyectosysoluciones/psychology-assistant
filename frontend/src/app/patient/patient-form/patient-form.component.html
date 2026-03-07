@@ -14,33 +14,6 @@
     <div class="form-section">
       <h2>Información Personal</h2>
       <div class="form-grid">
-        <!-- Nombre -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre(s) *</mat-label>
-          <input matInput formControlName="firstName" type="text" />
-          @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
-            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Apellido -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Apellido(s) *</mat-label>
-          <input matInput formControlName="lastName" type="text" />
-          @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
-            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Email -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Correo Electrónico</mat-label>
-          <input matInput formControlName="email" type="email" />
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <mat-error>{{ getErrorMessage('email') }}</mat-error>
-          }
-        </mat-form-field>
-
         <!-- Fecha de Nacimiento -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Fecha de Nacimiento *</mat-label>
@@ -110,33 +83,6 @@
           <input matInput formControlName="address" type="text" />
           @if (form.get('address')?.invalid && form.get('address')?.touched) {
             <mat-error>{{ getErrorMessage('address') }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Ciudad -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Ciudad *</mat-label>
-          <input matInput formControlName="city" type="text" />
-          @if (form.get('city')?.invalid && form.get('city')?.touched) {
-            <mat-error>{{ getErrorMessage('city') }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- País -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>País *</mat-label>
-          <input matInput formControlName="country" type="text" />
-          @if (form.get('country')?.invalid && form.get('country')?.touched) {
-            <mat-error>{{ getErrorMessage('country') }}</mat-error>
-          }
-        </mat-form-field>
-
-        <!-- Código Postal -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Código Postal *</mat-label>
-          <input matInput formControlName="postalCode" type="text" />
-          @if (form.get('postalCode')?.invalid && form.get('postalCode')?.touched) {
-            <mat-error>{{ getErrorMessage('postalCode') }}</mat-error>
           }
         </mat-form-field>
       </div>

@@ -98,7 +98,7 @@ export class PatientDetailComponent implements OnInit {
       width: '400px',
       data: {
         title: 'Eliminar Paciente',
-        message: `¿Estás seguro que deseas eliminar a ${this.patient.firstName} ${this.patient.lastName}? Esta acción no se puede deshacer.`,
+        message: `¿Estás seguro que deseas eliminar a ${this single patient}? Esta acción no se puede deshacer.`,
         confirmText: 'Eliminar',
         cancelText: 'Cancelar',
         isDestructive: true,

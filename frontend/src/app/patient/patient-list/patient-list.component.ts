@@ -65,24 +65,21 @@ export class PatientListComponent implements OnInit {
     const mockPatients = [
       {
         id: '1',
-        firstName: 'Juan',
-        lastName: 'Pérez García',
+        name: 'Juan Pérez García',
         email: 'juan.perez@example.com',
         phone: '+57 310 123 4567',
         status: 'active',
       },
       {
         id: '2',
-        firstName: 'Ana',
-        lastName: 'Martínez López',
+        name: 'Ana Martínez López',
         email: 'ana.martinez@example.com',
         phone: '+57 312 654 8901',
         status: 'active',
       },
       {
         id: '3',
-        firstName: 'Carlos',
-        lastName: 'Rodríguez Sánchez',
+        name: 'Carlos Rodríguez Sánchez',
         email: 'carlos.rodriguez@example.com',
         phone: '+57 315 789 0123',
         status: 'paused',

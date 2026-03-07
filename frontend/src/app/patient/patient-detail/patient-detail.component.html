@@ -38,11 +38,7 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Nombres:</span>
-              <span class="value">{{ patient.firstName }} {{ patient.lastName }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Email:</span>
-              <span class="value">{{ patient.email }}</span>
+              <span class="value">{{ patient.user?.name || 'Sin nombre' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Teléfono:</span>
@@ -85,18 +81,6 @@
               <span class="label">Dirección:</span>
               <span class="value">{{ patient.address }}</span>
             </div>
-            <div class="info-item">
-              <span class="label">Ciudad:</span>
-              <span class="value">{{ patient.city }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">País:</span>
-              <span class="value">{{ patient.country }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Código Postal:</span>
-              <span class="value">{{ patient.postalCode }}</span>
-            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -131,10 +115,6 @@
               <span class="label">Estado Laboral:</span>
               <span class="value">{{ patient.employmentStatus }}</span>
             </div>
-            <div class="info-item">
-              <span class="label">Ocupación:</span>
-              <span class="value">{{ patient.occupation }}</span>
-            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -148,15 +128,15 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Nombre:</span>
-              <span class="value">{{ patient.emergencyContactName }}</span>
+              <span class="value">{{ patient.emergencyContact?.name || 'No especificado' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Teléfono:</span>
-              <span class="value">{{ patient.emergencyContactPhone }}</span>
+              <span class="value">{{ patient.emergencyContact?.phone || 'No especificado' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Relación:</span>
-              <span class="value">{{ patient.emergencyContactRelationship }}</span>
+              <span class="value">{{ patient.emergencyContact?.relationship || 'No especificado' }}</span>
             </div>
           </div>
         </mat-card-content>

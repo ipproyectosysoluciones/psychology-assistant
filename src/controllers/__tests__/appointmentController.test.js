@@ -30,13 +30,14 @@ beforeEach(async () => {
 describe('Appointment Controller', () => {
   describe('POST /api/appointments', () => {
     it('should create appointment successfully', async () => {
-      // Get next weekday (skip weekends)
+      // Get next weekday at 10 AM (skip weekends)
       const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
       const dayOfWeek = tomorrow.getDay();
       const daysToAdd = dayOfWeek === 6 ? 2 : dayOfWeek === 0 ? 1 : 1; // Skip Saturday/Sunday
       const appointmentDate = new Date(
         Date.now() + (daysToAdd + 1) * 24 * 60 * 60 * 1000
       );
+      appointmentDate.setHours(10, 0, 0, 0); // Set to 10 AM
 
       const appointmentData = {
         date: appointmentDate.toISOString(),
@@ -164,13 +165,13 @@ describe('Appointment Controller', () => {
 
     it('should filter appointments by status', async () => {
       const response = await request(app)
-        .get('/api/appointments?status=confirmed')
+        .get('/api/appointments?status=scheduled')
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.data.appointments).toHaveLength(1);
-      expect(response.body.data.appointments[0].status).toBe('confirmed');
+      expect(response.body.data.appointments).toHaveLength(2);
+      expect(response.body.data.appointments[0].status).toBe('scheduled');
     });
 
     it('should paginate appointments', async () => {

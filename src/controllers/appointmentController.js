@@ -4,7 +4,7 @@ import { Appointment } from '../models/appointment.js';
 import qrService from '../services/qrService.js';
 import validationService from '../services/validationService.js';
 import { ApiResponse, sendResponse } from '../utils/apiResponse.js';
-import { asyncHandler } from '../utils/appError.js';
+import { AppError, asyncHandler } from '../utils/appError.js';
 
 /**
  * @module createAppointment
@@ -242,14 +242,14 @@ export const updateAppointment = asyncHandler(async (req, res) => {
   if (date) {
     const appointmentDate = new Date(date);
     if (isNaN(appointmentDate.getTime())) {
-      throw new Error('Invalid date format');
+      throw new AppError('Invalid date format', 400);
     }
     if (
       appointmentDate <= new Date() &&
       status !== 'completed' &&
       status !== 'cancelled'
     ) {
-      throw new Error('Appointment date must be in the future');
+      throw new AppError('Appointment date must be in the future', 400);
     }
     appointment.date = appointmentDate;
   }

@@ -185,9 +185,11 @@ router.post(
   strictLimiter,
   [
     body('token')
+      .trim()
       .isLength({ min: 6, max: 6 })
+      .withMessage('Invalid 2FA token')
       .isNumeric()
-      .withMessage('2FA token must be exactly 6 digits')
+      .withMessage('Invalid 2FA token')
   ],
   validateRequest,
   verify2FA
