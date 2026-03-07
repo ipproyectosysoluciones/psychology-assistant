@@ -1,0 +1,259 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Registro de Paciente</h1>
+    <p>Complete todos los campos obligatorios para registrar un nuevo paciente</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <h2>Información Personal</h2>
+      <div class="form-grid">
+        <!-- Nombre -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre(s) *</mat-label>
+          <input matInput formControlName="firstName" type="text" />
+          @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
+            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Apellido -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Apellido(s) *</mat-label>
+          <input matInput formControlName="lastName" type="text" />
+          @if (form.get('lastName')?.invalid && form.get('lastName')?.touched) {
+            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput formControlName="email" type="email" />
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Fecha de Nacimiento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de Nacimiento *</mat-label>
+          <input matInput formControlName="dateOfBirth" type="date" />
+          @if (form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched) {
+            <mat-error>{{ getErrorMessage('dateOfBirth') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Género -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Género *</mat-label>
+          <mat-select formControlName="gender">
+            @for (gender of genderOptions; track gender) {
+              <mat-option [value]="gender">{{ gender }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('gender')?.invalid && form.get('gender')?.touched) {
+            <mat-error>{{ getErrorMessage('gender') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Identificación</h2>
+      <div class="form-grid">
+        <!-- Tipo de ID -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Identificación *</mat-label>
+          <mat-select formControlName="idType">
+            @for (type of idTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('idType')?.invalid && form.get('idType')?.touched) {
+            <mat-error>{{ getErrorMessage('idType') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Número de ID -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Número de Identificación *</mat-label>
+          <input matInput formControlName="idNumber" type="text" />
+          @if (form.get('idNumber')?.invalid && form.get('idNumber')?.touched) {
+            <mat-error>{{ getErrorMessage('idNumber') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Contacto</h2>
+      <div class="form-grid">
+        <!-- Teléfono -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teléfono *</mat-label>
+          <input matInput formControlName="phone" type="tel" />
+          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+            <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Dirección -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Dirección *</mat-label>
+          <input matInput formControlName="address" type="text" />
+          @if (form.get('address')?.invalid && form.get('address')?.touched) {
+            <mat-error>{{ getErrorMessage('address') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Ciudad -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ciudad *</mat-label>
+          <input matInput formControlName="city" type="text" />
+          @if (form.get('city')?.invalid && form.get('city')?.touched) {
+            <mat-error>{{ getErrorMessage('city') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- País -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>País *</mat-label>
+          <input matInput formControlName="country" type="text" />
+          @if (form.get('country')?.invalid && form.get('country')?.touched) {
+            <mat-error>{{ getErrorMessage('country') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Código Postal -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Código Postal *</mat-label>
+          <input matInput formControlName="postalCode" type="text" />
+          @if (form.get('postalCode')?.invalid && form.get('postalCode')?.touched) {
+            <mat-error>{{ getErrorMessage('postalCode') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Información de Empleo</h2>
+      <div class="form-grid">
+        <!-- Estado de Empleo -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Estado de Empleo</mat-label>
+          <mat-select formControlName="employmentStatus">
+            @for (status of employmentStatuses; track status) {
+              <mat-option [value]="status">{{ status }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Información de Seguro</h2>
+      <div class="form-grid">
+        <!-- Seguro -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Compañía de Seguros</mat-label>
+          <input matInput formControlName="insurance" type="text" />
+        </mat-form-field>
+
+        <!-- Plan de Seguro -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Plan de Seguro</mat-label>
+          <input matInput formControlName="insurancePlan" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Contacto de Emergencia</h2>
+      <div class="form-grid">
+        <!-- Nombre Contacto de Emergencia -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="emergencyContactName" type="text" />
+        </mat-form-field>
+
+        <!-- Teléfono Contacto de Emergencia -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="emergencyContactPhone" type="tel" />
+        </mat-form-field>
+
+        <!-- Relación -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Relación</mat-label>
+          <input matInput formControlName="emergencyContactRelationship" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Información Médica</h2>
+      <div class="form-grid">
+        <!-- Historial Médico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Historial Médico</mat-label>
+          <textarea matInput formControlName="medicalHistory" rows="3"></textarea>
+        </mat-form-field>
+
+        <!-- Alergias -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Alergias</mat-label>
+          <input matInput formControlName="allergies" type="text" />
+        </mat-form-field>
+
+        <!-- Medicamentos -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Medicamentos Actuales</mat-label>
+          <input matInput formControlName="medications" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Estado y Notas</h2>
+      <div class="form-grid">
+        <!-- Estado -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Estado del Paciente</mat-label>
+          <mat-select formControlName="status">
+            @for (stat of patientStatuses; track stat) {
+              <mat-option [value]="stat">{{ stat }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Notas -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notas Adicionales</mat-label>
+          <textarea matInput formControlName="notes" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Registrando...
+        } @else {
+          Guardar Paciente
+        }
+      </button>
+    </div>
+  </form>
+</div>

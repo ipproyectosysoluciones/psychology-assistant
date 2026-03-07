@@ -1,0 +1,168 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Registro de Historia Clínica</h1>
+    <p>Complete todos los campos obligatorios para documentar el registro médico del paciente</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <h2>Información General</h2>
+      <div class="form-grid">
+        <!-- Fecha del Registro -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha del Registro</mat-label>
+          <input matInput formControlName="recordDate" type="date" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Diagnóstico</h2>
+      <div class="form-grid">
+        <!-- Diagnóstico Primario -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Diagnóstico Primario *</mat-label>
+          <input matInput formControlName="primaryDiagnosis" type="text" placeholder="Ej: Trastorno de Ansiedad Generalizada" />
+          @if (form.get('primaryDiagnosis')?.invalid && form.get('primaryDiagnosis')?.touched) {
+            <mat-error>{{ getErrorMessage('primaryDiagnosis') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Código CIE-10 -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Código CIE-10</mat-label>
+          <input matInput formControlName="diagnosisCIE10" type="text" placeholder="Ej: F41.1" />
+        </mat-form-field>
+
+        <!-- Diagnóstico Secundario -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Diagnóstico Secundario</mat-label>
+          <input matInput formControlName="secondaryDiagnosis" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Síntomas y Manifestaciones</h2>
+      <div class="form-grid">
+        <!-- Síntomas -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Síntomas Reportados *</mat-label>
+          <textarea matInput formControlName="symptoms" rows="3" placeholder="Ej: Ansiedad, insomnio, fatiga..."></textarea>
+          @if (form.get('symptoms')?.invalid && form.get('symptoms')?.touched) {
+            <mat-error>{{ getErrorMessage('symptoms') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Plan de Tratamiento</h2>
+      <div class="form-grid">
+        <!-- Plan de Tratamiento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Plan de Tratamiento</mat-label>
+          <textarea matInput formControlName="treatmentPlan" rows="3"></textarea>
+        </mat-form-field>
+
+        <!-- Intervenciones -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Intervenciones Realizadas</mat-label>
+          <textarea matInput formControlName="interventions" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Notas Clínicas</h2>
+      <div class="form-grid">
+        <!-- Notas Clínicas -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notas Clínicas Detalladas *</mat-label>
+          <textarea matInput formControlName="clinicalNotes" rows="4"></textarea>
+          @if (form.get('clinicalNotes')?.invalid && form.get('clinicalNotes')?.touched) {
+            <mat-error>{{ getErrorMessage('clinicalNotes') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Evaluación del Progreso</h2>
+      <div class="form-grid">
+        <!-- Puntuación de Progreso -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Calificación de Progreso (1-10)</mat-label>
+          <input matInput formControlName="progressRating" type="number" min="1" max="10" />
+          @if (form.get('progressRating')?.invalid && form.get('progressRating')?.touched) {
+            <mat-error>{{ getErrorMessage('progressRating') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Próximos Pasos</h2>
+      <div class="form-grid">
+        <!-- Próximos Pasos -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Próximos Pasos Recomendados</mat-label>
+          <textarea matInput formControlName="nextSteps" rows="2"></textarea>
+        </mat-form-field>
+
+        <!-- Medicamentos -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Medicamentos Prescritos</mat-label>
+          <input matInput formControlName="medications" type="text" placeholder="Ej: Sertraline 50mg, once al día" />
+        </mat-form-field>
+
+        <!-- Referencias -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Referencias/Derivaciones</mat-label>
+          <input matInput formControlName="referrals" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Configuración del Registro</h2>
+      <div class="form-actions-inline">
+        <div>
+          <mat-checkbox formControlName="isConfidential">
+            Marcar como Confidencial
+          </mat-checkbox>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Estado del Registro</mat-label>
+          <mat-select formControlName="status">
+            @for (stat of statuses; track stat) {
+              <mat-option [value]="stat">{{ stat }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Guardando...
+        } @else {
+          Guardar Historia Clínica
+        }
+      </button>
+    </div>
+  </form>
+</div>

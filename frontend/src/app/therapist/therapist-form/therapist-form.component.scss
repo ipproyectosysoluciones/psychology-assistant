@@ -1,0 +1,177 @@
+// Therapist Form Component Styles
+$primary-color: #1976d2;
+$error-color: #d32f2f;
+$success-color: #388e3c;
+$border-radius: 4px;
+$transition: all 0.3s ease;
+$spacing-unit: 1rem;
+
+.form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f5f5f5;
+  border-radius: $border-radius;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+.error-banner {
+  background-color: #ffebee;
+  border-left: 4px solid $error-color;
+  color: $error-color;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: $border-radius;
+  font-weight: 500;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+form {
+  background: white;
+  padding: 2rem;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+::ng-deep .mdc-text-field {
+  width: 100% !important;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    min-width: 120px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    mat-spinner {
+      display: inline-block;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+// Material Form Field Customization
+::ng-deep {
+  .mat-mdc-form-field {
+    width: 100%;
+
+    &.mat-focused {
+      .mdc-floating-label {
+        color: $primary-color !important;
+      }
+    }
+
+    .mat-mdc-text-field-wrapper {
+      padding-bottom: 1.25em;
+    }
+  }
+
+  .mdc-text-field--filled {
+    background-color: #fafafa;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .mat-mdc-form-field-error {
+    font-size: 0.75rem;
+  }
+
+  .mat-mdc-option {
+    font-size: 0.95rem;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  .form-header {
+    margin-bottom: 1.5rem;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  form {
+    padding: 1.5rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 0.5rem;
+  }
+
+  .form-header {
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+
+  form {
+    padding: 1rem;
+  }
+}

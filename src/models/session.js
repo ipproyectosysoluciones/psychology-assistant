@@ -1,30 +1,33 @@
 import { Schema, model } from 'mongoose';
 
-const sessionSchema = Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'User is required']
+const sessionSchema = Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'User is required'],
+    },
+    appointment: {
+      type: Schema.Types.ObjectId,
+      ref: 'Appointment',
+      required: false,
+    },
+    loginTime: {
+      type: Date,
+      default: Date.now,
+    },
+    logoutTime: Date,
+    ipAddress: String,
+    userAgent: String,
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
+    duration: Number, // en segundos
+    notes: String,
   },
-  appointment: {
-    type: Schema.Types.ObjectId,
-    ref: 'Appointment',
-    required: false
-  },
-  loginTime: {
-    type: Date,
-    default: Date.now
-  },
-  logoutTime: Date,
-  ipAddress: String,
-  userAgent: String,
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  duration: Number, // en segundos
-  notes: String
-}, { timestamps: true });
+  { timestamps: true },
+);
 
 // Índices
 sessionSchema.index({ user: 1, loginTime: -1 });

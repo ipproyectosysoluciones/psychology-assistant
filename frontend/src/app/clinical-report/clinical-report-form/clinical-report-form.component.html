@@ -1,0 +1,221 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Crear Reporte Clínico</h1>
+    <p>Complete todos los campos obligatorios para generar un reporte clínico del paciente</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <h2>Información del Reporte</h2>
+      <div class="form-grid">
+        <!-- Tipo de Reporte -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Reporte *</mat-label>
+          <mat-select formControlName="reportType">
+            @for (type of reportTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+          @if (form.get('reportType')?.invalid && form.get('reportType')?.touched) {
+            <mat-error>{{ getErrorMessage('reportType') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Fecha del Reporte -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha del Reporte</mat-label>
+          <input matInput formControlName="reportDate" type="date" />
+        </mat-form-field>
+
+        <!-- Período: Desde -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Período Desde *</mat-label>
+          <input matInput formControlName="fromDate" type="date" />
+          @if (form.get('fromDate')?.invalid && form.get('fromDate')?.touched) {
+            <mat-error>{{ getErrorMessage('fromDate') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Período: Hasta -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Período Hasta *</mat-label>
+          <input matInput formControlName="toDate" type="date" />
+          @if (form.get('toDate')?.invalid && form.get('toDate')?.touched) {
+            <mat-error>{{ getErrorMessage('toDate') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Título y Resumen</h2>
+      <div class="form-grid">
+        <!-- Título -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título del Reporte *</mat-label>
+          <input matInput formControlName="title" type="text" placeholder="Ej: Reporte de Progreso - Marzo 2024" />
+          @if (form.get('title')?.invalid && form.get('title')?.touched) {
+            <mat-error>{{ getErrorMessage('title') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Resumen -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Resumen Ejecutivo *</mat-label>
+          <textarea matInput formControlName="summary" rows="3"></textarea>
+          @if (form.get('summary')?.invalid && form.get('summary')?.touched) {
+            <mat-error>{{ getErrorMessage('summary') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Diagnóstico</h2>
+      <div class="form-grid">
+        <!-- Diagnóstico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Diagnóstico Principal *</mat-label>
+          <input matInput formControlName="diagnosis" type="text" />
+          @if (form.get('diagnosis')?.invalid && form.get('diagnosis')?.touched) {
+            <mat-error>{{ getErrorMessage('diagnosis') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Pronóstico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Pronóstico</mat-label>
+          <textarea matInput formControlName="prognosis" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Hallazgos Clave</h2>
+      <div class="form-grid">
+        <!-- Hallazgos Clave -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hallazgos Principales</mat-label>
+          <textarea matInput formControlName="keyFindings" rows="2" placeholder="Separados por comas o viñetas"></textarea>
+        </mat-form-field>
+
+        <!-- Mejoras -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mejoras Observadas</mat-label>
+          <textarea matInput formControlName="improvements" rows="2"></textarea>
+        </mat-form-field>
+
+        <!-- Áreas de Preocupación -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Áreas de Preocupación</mat-label>
+          <textarea matInput formControlName="areasOfConcern" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Sesiones y Asistencia</h2>
+      <div class="form-grid">
+        <!-- Cantidad de Sesiones -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Número de Sesiones</mat-label>
+          <input matInput formControlName="sessionCount" type="number" min="0" />
+        </mat-form-field>
+
+        <!-- Tasa de Asistencia -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tasa de Asistencia (%)</mat-label>
+          <input matInput formControlName="attackanceRate" type="number" min="0" max="100" />
+          @if (form.get('attackanceRate')?.invalid && form.get('attackanceRate')?.touched) {
+            <mat-error>{{ getErrorMessage('attackanceRate') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Progreso General -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Progreso General (1-10)</mat-label>
+          <input matInput formControlName="overallProgress" type="number" min="1" max="10" />
+          @if (form.get('overallProgress')?.invalid && form.get('overallProgress')?.touched) {
+            <mat-error>{{ getErrorMessage('overallProgress') }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Observaciones Clínicas</h2>
+      <div class="form-grid">
+        <!-- Observaciones -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observaciones Clínicas Detalladas</mat-label>
+          <textarea matInput formControlName="clinicalObservations" rows="3"></textarea>
+        </mat-form-field>
+
+        <!-- Objetivos de Tratamiento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Objetivos de Tratamiento</mat-label>
+          <textarea matInput formControlName="treatmentGoals" rows="2"></textarea>
+        </mat-form-field>
+
+        <!-- Recomendaciones -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Recomendaciones</mat-label>
+          <textarea matInput formControlName="recommendations" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Seguimiento</h2>
+      <div class="form-grid">
+        <!-- Seguimiento Sugerido -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Seguimiento Sugerido</mat-label>
+          <mat-select formControlName="suggestedFollowUp">
+            @for (option of followUpOptions; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Próxima Cita -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Próxima Fecha de Cita</mat-label>
+          <input matInput formControlName="nextAppointmentDate" type="date" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Configuración del Reporte</h2>
+      <div class="form-actions-inline">
+        <div>
+          <mat-checkbox formControlName="isConfidential">
+            Marcar como Confidencial
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Guardando...
+        } @else {
+          Guardar Reporte Clínico
+        }
+      </button>
+    </div>
+  </form>
+</div>

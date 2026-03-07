@@ -12,6 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -19,11 +20,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 
 /**
- * Clinic Form Component
- * Formulario para crear/editar una clínica
+ * Therapist Form Component
+ * Formulario para crear/editar un terapeuta/psicólogo
  */
 @Component({
-  selector: 'app-clinic-form',
+  selector: 'app-therapist-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,12 +34,13 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatCheckboxModule,
   ],
-  templateUrl: './clinic-form.component.html',
-  styleUrl: './clinic-form.component.scss',
+  templateUrl: './therapist-form.component.html',
+  styleUrl: './therapist-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClinicFormComponent implements OnInit {
+export class TherapistFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -47,15 +49,23 @@ export class ClinicFormComponent implements OnInit {
   isLoading = false;
   errorMessage: string | null = null;
 
-  readonly currencyOptions = ['USD', 'EUR', 'COP', 'ARG', 'MXN', 'BRL'];
-  readonly countryOptions = [
-    'Colombia',
-    'Argentina',
-    'España',
-    'México',
-    'Brasil',
-    'Chile',
-    'Perú',
+  readonly licenseTypes = [
+    'Psicólogo',
+    'Psiquiatra',
+    'Trabajador Social',
+    'Consejero',
+    'Terapeuta Ocupacional',
+  ];
+
+  readonly specializations = [
+    'Psicología Clínica',
+    'Psicología Infantil',
+    'Terapia Familiar',
+    'Psicología Forense',
+    'Psicología Laboral',
+    'Neuropsicología',
+    'Terapia Cognitivo-Conductual',
+    'Mindfulness y Meditación',
   ];
 
   errorMessages = {
@@ -81,20 +91,30 @@ export class ClinicFormComponent implements OnInit {
         ],
       ],
       email: ['', [Validators.required, Validators.email]],
+      password: [
+        '',
+        [Validators.required, Validators.minLength(8)],
+      ],
       phone: [
         '',
         [Validators.required, Validators.pattern(/^\+?[\d\s-()]{10,}$/)],
       ],
-      website: [
+      licenseType: ['', Validators.required],
+      licenseNumber: ['', Validators.required],
+      specializations: [[], Validators.required],
+      hourlyRate: [
         '',
-        [Validators.pattern(/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}$/)],
+        [Validators.required, Validators.min(0)],
       ],
-      address: ['', [Validators.required, Validators.minLength(5)]],
-      city: ['', Validators.required],
-      country: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      currency: ['', Validators.required],
-      description: ['', Validators.maxLength(1000)],
+      bio: ['', [Validators.maxLength(1000)]],
+      languages: ['', Validators.required],
+      yearsExperience: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(70)],
+      ],
+      certifications: ['', Validators.maxLength(500)],
+      availability: ['', Validators.required],
+      twoFAEnabled: [false],
     });
   }
 
@@ -107,42 +127,34 @@ export class ClinicFormComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    const clinicData = this.form.value;
-    console.log('Sumitting clinic:', clinicData);
+    const therapistData = this.form.value;
+    console.log('Submitting therapist:', therapistData);
 
     // Simulate API call
     setTimeout(() => {
       this.isLoading = false;
-      alert('¡Clínica creada exitosamente!');
-      this.router.navigate(['/clinic']);
-    }, 1000);
+      alert('¡Terapeuta registrado exitosamente!');
+      this.router.navigate(['/therapists']);
+    }, 1500);
   }
 
   onCancel(): void {
-    this.router.navigate(['/clinic']);
+    this.router.navigate(['/therapists']);
   }
 
   getErrorMessage(fieldName: string): string {
     const control = this.form.get(fieldName);
-    if (!control || !control.errors || !control.touched) {
-      return '';
-    }
+    if (!control || !control.errors) return '';
 
-    const errorKey = Object.keys(control.errors)[0];
-    let message =
-      this.errorMessages[errorKey as keyof typeof this.errorMessages] ||
-      'Campo inválido';
+    const errors = control.errors;
+    if (errors['required']) return this.errorMessages.required;
+    if (errors['email']) return this.errorMessages.email;
+    if (errors['minlength'])
+      return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
+    if (errors['pattern']) return this.errorMessages.pattern;
+    if (errors['min'])
+      return `El valor debe ser mayor a ${errors['min'].min}`;
 
-    if (errorKey === 'minlength') {
-      message = message.replace(
-        '{{requiredLength}}',
-        control.errors['minlength'].requiredLength,
-      );
-    }
-    if (errorKey === 'min') {
-      message = message.replace('{{min}}', control.errors['min'].min);
-    }
-
-    return message;
+    return 'Error de validación';
   }
 }

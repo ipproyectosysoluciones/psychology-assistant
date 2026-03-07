@@ -1,0 +1,148 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Registro de Terapeuta/Psicólogo</h1>
+    <p>Complete todos los campos obligatorios para registrar un nuevo terapeuta</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <!-- Nombre -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre Completo *</mat-label>
+        <input matInput formControlName="name" type="text" />
+        @if (form.get('name')?.invalid && form.get('name')?.touched) {
+          <mat-error>{{ getErrorMessage('name') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo Electrónico *</mat-label>
+        <input matInput formControlName="email" type="email" />
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña *</mat-label>
+        <input matInput formControlName="password" type="password" />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Teléfono -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono *</mat-label>
+        <input matInput formControlName="phone" type="tel" />
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <mat-error>{{ getErrorMessage('phone') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Tipo de Licencia -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tipo de Licencia *</mat-label>
+        <mat-select formControlName="licenseType">
+          <mat-optgroup label="Profesionales de Salud Mental">
+            @for (type of licenseTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-optgroup>
+        </mat-select>
+        @if (form.get('licenseType')?.invalid && form.get('licenseType')?.touched) {
+          <mat-error>{{ getErrorMessage('licenseType') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Número de Licencia -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Número de Licencia Profesional *</mat-label>
+        <input matInput formControlName="licenseNumber" type="text" />
+        @if (form.get('licenseNumber')?.invalid && form.get('licenseNumber')?.touched) {
+          <mat-error>{{ getErrorMessage('licenseNumber') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Especializaciones -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Especializaciones *</mat-label>
+        <input matInput formControlName="specializations" type="text" placeholder="Ej: Psicología Clínica, Terapia Familiar" />
+        @if (form.get('specializations')?.invalid && form.get('specializations')?.touched) {
+          <mat-error>{{ getErrorMessage('specializations') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Tarifa Horaria -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tarifa Horaria (USD) *</mat-label>
+        <input matInput formControlName="hourlyRate" type="number" />
+        @if (form.get('hourlyRate')?.invalid && form.get('hourlyRate')?.touched) {
+          <mat-error>{{ getErrorMessage('hourlyRate') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Biografía -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Biografía/Experiencia</mat-label>
+        <textarea matInput formControlName="bio" rows="3"></textarea>
+      </mat-form-field>
+
+      <!-- Idiomas -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Idiomas *</mat-label>
+        <input matInput formControlName="languages" type="text" placeholder="Ej: Español, Inglés, Portugués" />
+        @if (form.get('languages')?.invalid && form.get('languages')?.touched) {
+          <mat-error>{{ getErrorMessage('languages') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Años de Experiencia -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Años de Experiencia *</mat-label>
+        <input matInput formControlName="yearsExperience" type="number" />
+        @if (form.get('yearsExperience')?.invalid && form.get('yearsExperience')?.touched) {
+          <mat-error>{{ getErrorMessage('yearsExperience') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Certificaciones -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Certificaciones Adicionales</mat-label>
+        <textarea matInput formControlName="certifications" rows="2"></textarea>
+      </mat-form-field>
+
+      <!-- Disponibilidad -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Disponibilidad *</mat-label>
+        <input matInput formControlName="availability" type="text" placeholder="Ej: Lunes a Viernes 8am-6pm" />
+        @if (form.get('availability')?.invalid && form.get('availability')?.touched) {
+          <mat-error>{{ getErrorMessage('availability') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Registrando...
+        } @else {
+          Guardar Terapeuta
+        }
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,192 @@
+<div class="form-container">
+  <div class="form-header">
+    <h1>Crear/Editar Facura</h1>
+    <p>Complete todos los campos obligatorios para crear una nueva factura de cobro</p>
+  </div>
+
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-section">
+      <h2>Información de la Factura</h2>
+      <div class="form-grid">
+        <!-- Número de Factura -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Número de Factura *</mat-label>
+          <input matInput formControlName="invoiceNumber" type="text" placeholder="Ej: INV-2024-001" />
+          @if (form.get('invoiceNumber')?.invalid && form.get('invoiceNumber')?.touched) {
+            <mat-error>{{ getErrorMessage('invoiceNumber') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Fecha de Factura -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de Factura</mat-label>
+          <input matInput formControlName="invoiceDate" type="date" />
+        </mat-form-field>
+
+        <!-- Fecha de Vencimiento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de Vencimiento</mat-label>
+          <input matInput formControlName="dueDate" type="date" />
+        </mat-form-field>
+
+        <!-- Estado -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Estado de la Factura</mat-label>
+          <mat-select formControlName="status">
+            @for (stat of statuses; track stat) {
+              <mat-option [value]="stat">{{ stat }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Detalles de la Factura</h2>
+      <div class="form-grid">
+        <!-- Descripción -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción del Servicio *</mat-label>
+          <textarea matInput formControlName="description" rows="2" placeholder="Ej: Sesión de psicoterapia individual"></textarea>
+          @if (form.get('description')?.invalid && form.get('description')?.touched) {
+            <mat-error>{{ getErrorMessage('description') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Monto -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Monto Total *</mat-label>
+          <input matInput formControlName="amount" type="number" min="0" />
+          @if (form.get('amount')?.invalid && form.get('amount')?.touched) {
+            <mat-error>{{ getErrorMessage('amount') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Moneda -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Moneda</mat-label>
+          <mat-select formControlName="currency">
+            @for (curr of currencies; track curr) {
+              <mat-option [value]="curr">{{ curr }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Líneas de Artículo</h2>
+      <div class="form-grid">
+        <!-- Artículo 1 -->
+        <div class="line-item">
+          <h3>Artículo 1</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <input matInput formControlName="lineItem1Description" type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad</mat-label>
+            <input matInput formControlName="lineItem1Quantity" type="number" min="1" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Precio Unitario</mat-label>
+            <input matInput formControlName="lineItem1UnitPrice" type="number" min="0" />
+          </mat-form-field>
+        </div>
+
+        <!-- Artículo 2 -->
+        <div class="line-item">
+          <h3>Artículo 2</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <input matInput formControlName="lineItem2Description" type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad</mat-label>
+            <input matInput formControlName="lineItem2Quantity" type="number" min="1" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Precio Unitario</mat-label>
+            <input matInput formControlName="lineItem2UnitPrice" type="number" min="0" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Cálculos y Ajustes</h2>
+      <div class="form-grid">
+        <!-- Descuento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descuento</mat-label>
+          <input matInput formControlName="discount" type="number" min="0" />
+        </mat-form-field>
+
+        <!-- Impuesto -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Impuesto (%)</mat-label>
+          <input matInput formControlName="tax" type="number" min="0" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Pago</h2>
+      <div class="form-grid">
+        <!-- Método de Pago -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Método de Pago</mat-label>
+          <mat-select formControlName="paymentMethod">
+            @for (method of paymentMethods; track method) {
+              <mat-option [value]="method">{{ method }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Fecha de Pago -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de Pago</mat-label>
+          <input matInput formControlName="paymentDate" type="date" />
+        </mat-form-field>
+
+        <!-- Seguro -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Información de Seguro</mat-label>
+          <input matInput formControlName="insurance" type="text" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Notas</h2>
+      <div class="form-grid">
+        <!-- Notas -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Notas Adicionales</mat-label>
+          <textarea matInput formControlName="notes" rows="2"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions">
+      <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        Cancelar
+      </button>
+      <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <mat-spinner diameter="20"></mat-spinner>
+          Guardando...
+        } @else {
+          Guardar Factura
+        }
+      </button>
+    </div>
+  </form>
+</div>

@@ -174,7 +174,9 @@ $bg-light: #f5f5f5;
   border: 1px solid $border-color;
   border-radius: 8px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 
   &:hover {
     transform: translateY(-5px);
