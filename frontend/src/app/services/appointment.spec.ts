@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Appointment } from './appointment';
+import { AppointmentService } from './appointment';
 
-describe('Appointment', () => {
-  let service: Appointment;
+describe('AppointmentService', () => {
+  let service: AppointmentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

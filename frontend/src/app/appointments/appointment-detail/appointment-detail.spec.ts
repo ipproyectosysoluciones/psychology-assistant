@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppointmentDetail } from './appointment-detail';
+import { AppointmentDetailComponent } from './appointment-detail';
 
-describe('AppointmentDetail', () => {
-  let component: AppointmentDetail;
-  let fixture: ComponentFixture<AppointmentDetail>;
+describe('AppointmentDetailComponent', () => {
+  let component: AppointmentDetailComponent;
+  let fixture: ComponentFixture<AppointmentDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
