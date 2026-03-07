@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PatientService } from '../../services/patient';
+import { Patient } from '../../models';
 
 /**
  * Patient Detail Component
@@ -35,53 +37,42 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PatientDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private patientService = inject(PatientService);
 
-  patient: any = null;
+  patient: Patient | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.loadpatient(id);
+      this.loadPatient(id);
     }
   }
 
-  private loadpatient(id: string): void {
+  /**
+   * ES: Cargar datos del paciente desde el API
+   * EN: Load patient data from the API
+   */
+  private loadPatient(id: string): void {
     this.isLoading = true;
-    // Mock data - será reemplazado con API call
-    const mockPatient = {
-      id: id,
-      firstName: 'Juan',
-      lastName: 'Pérez García',
-      email: 'juan.perez@example.com',
-      phone: '+57 310 123 4567',
-      idType: 'CC',
-      idNumber: '1234567890',
-      dateOfBirth: '1990-05-15',
-      gender: 'M',
-      address: 'Calle 123 # 45-67',
-      city: 'Bogotá',
-      country: 'Colombia',
-      postalCode: '110111',
-      insurance: 'EPS Salud',
-      insurancePlan: 'Plan Premium',
-      employmentStatus: 'employed',
-      occupation: 'Ingeniero de Software',
-      emergencyContactName: 'María Pérez',
-      emergencyContactPhone: '+57 301 987 6543',
-      emergencyContactRelationship: 'Spouse',
-      medicalHistory: ['Hipertensión', 'Ansiedad'],
-      allergies: ['Penicilina'],
-      status: 'active',
-      createdAt: '2024-01-15',
-      updatedAt: '2024-02-28',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.patient = mockPatient;
-      this.isLoading = false;
-    }, 500);
+    this.patientService.getPatient(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.patient = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading patient';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading patient data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -94,12 +85,20 @@ export class PatientDetailComponent implements OnInit {
     if (
       this.patient &&
       confirm(
-        `¿Estás seguro que deseas eliminar al paciente ${this.patient.firstName}?`
+        `¿Estás seguro que deseas eliminar al paciente ${this.patient.firstName}?`,
       )
     ) {
-      // API call will be made here
-      console.log('Deleting patient:', this.patient.id);
-      this.router.navigate(['/patient']);
+      this.isLoading = true;
+      this.patientService.deletePatient(this.patient.id).subscribe({
+        next: () => {
+          this.router.navigate(['/patient']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting patient';
+          this.isLoading = false;
+        },
+      });
     }
   }
 

@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MedicalRecordService } from '../../services/medical-record';
+import { MedicalRecord } from '../../models';
 
 /**
  * Medical Record Detail Component
@@ -33,8 +35,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class MedicalRecordDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private medicalRecordService = inject(MedicalRecordService);
 
-  record: any = null;
+  record: MedicalRecord | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -47,38 +50,23 @@ export class MedicalRecordDetailComponent implements OnInit {
 
   private loadRecord(id: string): void {
     this.isLoading = true;
-    // Mock data
-    const mockRecord = {
-      id: id,
-      patientName: 'Juan Pérez García',
-      recordDate: '2024-02-28',
-      primaryDiagnosis: 'Trastorno de Ansiedad Generalizada (TAG)',
-      secondaryDiagnosis: 'Depresión leve',
-      icdCode: 'F41.1',
-      symptoms: [
-        'Preocupación excesiva',
-        'Irritabilidad',
-        'Problemas de sueño',
-        'Fatiga',
-      ],
-      treatment: 'Psicoterapia cognitivo-conductual + Medicación',
-      medications: [
-        { name: 'Sertraline', dose: '50mg', frequency: 'Una vez al día' },
-        { name: 'Alprazolam', dose: '0.5mg', frequency: 'Según sea necesario' },
-      ],
-      followUpPlan: 'Cita de seguimiento en 2 semanas',
-      notes:
-        'Paciente muestra mejoría en síntomas de ansiedad. Continuar con terapia.',
-      therapist: 'Dra. María López',
-      status: 'completed',
-      createdAt: '2024-02-28',
-      updatedAt: '2024-02-28',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.record = mockRecord;
-      this.isLoading = false;
-    }, 500);
+    this.medicalRecordService.getMedicalRecord(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.record = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading medical record';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading medical record data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -92,8 +80,17 @@ export class MedicalRecordDetailComponent implements OnInit {
       this.record &&
       confirm('¿Estás seguro que deseas eliminar este registro médico?')
     ) {
-      console.log('Deleting medical record:', this.record.id);
-      this.router.navigate(['/medical-record']);
+      this.isLoading = true;
+      this.medicalRecordService.deleteMedicalRecord(this.record.id).subscribe({
+        next: () => {
+          this.router.navigate(['/medical-record']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting medical record';
+          this.isLoading = false;
+        },
+      });
     }
   }
 

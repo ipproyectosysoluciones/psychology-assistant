@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClinicalReportService } from '../../services/clinical-report';
+import { ClinicalReport } from '../../models';
 
 /**
  * Clinical Report Detail Component
@@ -33,8 +35,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ClinicalReportDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private clinicalReportService = inject(ClinicalReportService);
 
-  report: any = null;
+  report: ClinicalReport | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -47,42 +50,23 @@ export class ClinicalReportDetailComponent implements OnInit {
 
   private loadReport(id: string): void {
     this.isLoading = true;
-    // Mock data
-    const mockReport = {
-      id: id,
-      title: 'Reporte de Progreso - Febrero 2024',
-      reportType: 'progress',
-      reportDate: '2024-02-28',
-      therapist: 'Dra. María López',
-      patient: 'Juan Pérez García',
-      sessionCount: 8,
-      overallProgress: 8,
-      sessionsSummary:
-        'Paciente ha mostrado avances significativos en manejo de síntomas de ansiedad durante las últimas 8 sesiones.',
-      therapeuticApproach: 'Terapia Cognitivo-Conductual (TCC)',
-      keyAchievements: [
-        'Identificación y desafío de pensamientos automáticos negativos',
-        'Desarrollo de estrategias de manejo del estrés',
-        'Mejora en habilidades de comunicación asertiva',
-        'Aumento en actividades de autocuidado',
-      ],
-      challengesAndObstacles:
-        'Resistencia inicial a cambios de hábitos. Mejora notable después de psicoeducación.',
-      nextSteps:
-        'Continuar con sesiones quincenales. Enfoque en prevención de recaídas y consolidación de logros.',
-      recommendations:
-        'Se recomienda mantener las sesiones de terapia y complementar con técnicas de mindfulness. Revisión de medicación con médico prescriptor.',
-      clinicalRating: 'Buena progresión',
-      status: 'completed',
-      reviewedBy: 'Dr. Carlos Rodríguez (Supervisor)',
-      createdAt: '2024-02-28',
-      updatedAt: '2024-02-28',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.report = mockReport;
-      this.isLoading = false;
-    }, 500);
+    this.clinicalReportService.getClinicalReport(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.report = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading clinical report';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading clinical report data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -96,8 +80,17 @@ export class ClinicalReportDetailComponent implements OnInit {
       this.report &&
       confirm(`¿Estás seguro que deseas eliminar este reporte?`)
     ) {
-      console.log('Deleting clinical report:', this.report.id);
-      this.router.navigate(['/clinical-report']);
+      this.isLoading = true;
+      this.clinicalReportService.deleteClinicalReport(this.report.id).subscribe({
+        next: () => {
+          this.router.navigate(['/clinical-report']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting clinical report';
+          this.isLoading = false;
+        },
+      });
     }
   }
 

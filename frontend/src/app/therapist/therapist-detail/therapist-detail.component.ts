@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TherapistService } from '../../services/therapist';
+import { Therapist } from '../../models';
 
 /**
  * Therapist Detail Component
@@ -33,8 +35,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TherapistDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private therapistService = inject(TherapistService);
 
-  therapist: any = null;
+  therapist: Therapist | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -47,44 +50,23 @@ export class TherapistDetailComponent implements OnInit {
 
   private loadTherapist(id: string): void {
     this.isLoading = true;
-    // Mock data
-    const mockTherapist = {
-      id: id,
-      name: 'Dra. María López',
-      email: 'maria.lopez@psico.com',
-      phone: '+57 320 456 7890',
-      licenseNumber: 'PSY-2024-001',
-      licenseType: 'Psicología Clínica',
-      specializations: [
-        'Terapia Cognitivo-Conductual',
-        'Terapia Familiar',
-        'Psicología Infantil',
-      ],
-      biography:
-        'Terapista con más de 10 años de experiencia en tratamiento de ansiedad y depresión.',
-      education: [
-        'Doctorado en Psicología Clínica - Universidad Nacional',
-        'Certificado en Psicoterapia - Instituto de Salud Mental',
-      ],
-      workSchedule: {
-        monday: '9:00 AM - 5:00 PM',
-        tuesday: '9:00 AM - 5:00 PM',
-        wednesday: '9:00 AM - 5:00 PM',
-        thursday: '9:00 AM - 5:00 PM',
-        friday: '9:00 AM - 3:00 PM',
-      },
-      offeringServices: ['Consulta Individual', 'Terapia Familiar', 'Grupos'],
-      patientCount: 25,
-      averageRating: 4.8,
-      status: 'active',
-      createdAt: '2024-01-15',
-      updatedAt: '2024-02-28',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.therapist = mockTherapist;
-      this.isLoading = false;
-    }, 500);
+    this.therapistService.getTherapist(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.therapist = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading therapist';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading therapist data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -98,8 +80,17 @@ export class TherapistDetailComponent implements OnInit {
       this.therapist &&
       confirm(`¿Estás seguro que deseas eliminar a ${this.therapist.name}?`)
     ) {
-      console.log('Deleting therapist:', this.therapist.id);
-      this.router.navigate(['/therapist']);
+      this.isLoading = true;
+      this.therapistService.deleteTherapist(this.therapist.id).subscribe({
+        next: () => {
+          this.router.navigate(['/therapist']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting therapist';
+          this.isLoading = false;
+        },
+      });
     }
   }
 

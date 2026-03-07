@@ -197,6 +197,192 @@ export interface ApiError {
   details?: Record<string, unknown>;
 }
 
+// ==================== Patients ====================
+
+/**
+ * ES: Datos de un paciente
+ * EN: Patient data
+ */
+export interface Patient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  idType: string;
+  idNumber: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  city: string;
+  country: string;
+  postalCode: string;
+  insurance?: string;
+  insurancePlan?: string;
+  employmentStatus: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== Medical Records ====================
+
+/**
+ * ES: Registro médico de un paciente
+ * EN: Patient medical record
+ */
+export interface MedicalRecord {
+  id: string;
+  patientId: string;
+  recordDate: string;
+  primaryDiagnosis: string;
+  secondaryDiagnosis?: string;
+  icdCode: string;
+  symptoms: string[];
+  treatment: string;
+  medications: Array<{
+    name: string;
+    dose: string;
+    frequency: string;
+  }>;
+  followUpPlan: string;
+  notes: string;
+  therapistId?: string;
+  status: 'draft' | 'completed' | 'reviewed';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== Therapists ====================
+
+/**
+ * ES: Perfil de un terapeuta
+ * EN: Therapist profile
+ */
+export interface Therapist {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  licenseNumber: string;
+  licenseType: string;
+  specializations: string[];
+  biography: string;
+  education: string[];
+  workSchedule: Record<string, string>;
+  offeringServices: string[];
+  patientCount: number;
+  averageRating: number;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== Clinics ====================
+
+/**
+ * ES: Información de una clínica
+ * EN: Clinic information
+ */
+export interface Clinic {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  website: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  services: string[];
+  specialties: string[];
+  therapistCount: number;
+  operatingHours: Record<string, string>;
+  insuranceAccepted: string[];
+  licenseNumber: string;
+  accreditation: string;
+  status: 'active' | 'inactive';
+  averageRating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== Billing ====================
+
+/**
+ * ES: Factura o registro de cobro
+ * EN: Invoice/billing record
+ */
+export interface BillingRecord {
+  id: string;
+  invoiceNumber: string;
+  patientId?: string;
+  patientName: string;
+  therapistId?: string;
+  therapist: string;
+  clinic?: string;
+  issueDate: string;
+  dueDate: string;
+  paymentDate?: string;
+  subtotal: number;
+  tax: number;
+  discount: number;
+  totalAmount: number;
+  amountPaid: number;
+  remainingBalance: number;
+  status: 'draft' | 'sent' | 'pending' | 'paid' | 'overdue';
+  paymentMethod?: string;
+  insurance?: string;
+  insurancePlan?: string;
+  insurancePayment?: number;
+  patientPayment?: number;
+  lineItems: Array<{
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ==================== Clinical Reports ====================
+
+/**
+ * ES: Reporte clínico de un paciente
+ * EN: Clinical report for a patient
+ */
+export interface ClinicalReport {
+  id: string;
+  title: string;
+  reportType:
+    | 'progress'
+    | 'discharge'
+    | 'assessment'
+    | 'evaluation'
+    | 'summary';
+  reportDate: string;
+  therapistId?: string;
+  therapist: string;
+  patientId?: string;
+  patient: string;
+  sessionCount: number;
+  overallProgress: number;
+  sessionsSummary: string;
+  therapeuticApproach: string;
+  keyAchievements: string[];
+  challengesAndObstacles: string;
+  nextSteps: string;
+  recommendations: string;
+  clinicalRating: string;
+  status: 'draft' | 'completed' | 'reviewed';
+  reviewedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // ==================== Forms ====================
 
 /**

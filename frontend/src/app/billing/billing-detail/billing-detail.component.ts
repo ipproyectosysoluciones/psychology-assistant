@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BillingService } from '../../services/billing';
+import { BillingRecord } from '../../models';
 
 /**
  * Billing Detail Component
@@ -33,8 +35,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class BillingDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private billingService = inject(BillingService);
 
-  billing: any = null;
+  billing: BillingRecord | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -47,45 +50,23 @@ export class BillingDetailComponent implements OnInit {
 
   private loadBilling(id: string): void {
     this.isLoading = true;
-    // Mock data
-    const mockBilling = {
-      id: id,
-      invoiceNumber: 'INV-2024-001',
-      patientName: 'Juan Pérez García',
-      issueDate: '2024-02-28',
-      dueDate: '2024-03-14',
-      paymentDate: '2024-03-10',
-      therapist: 'Dra. María López',
-      clinic: 'Centro Psicológico del Sur',
-      subtotal: 300000,
-      tax: 57000,
-      discount: 0,
-      totalAmount: 357000,
-      amountPaid: 357000,
-      remainingBalance: 0,
-      status: 'paid',
-      paymentMethod: 'Transfer Bancario',
-      insurance: 'EPS Salud',
-      insurancePlan: 'Plan Premium',
-      insurancePayment: 150000,
-      patientPayment: 207000,
-      lineItems: [
-        {
-          description: 'Consulta Individual - 3 sesiones',
-          quantity: 3,
-          unitPrice: 100000,
-          total: 300000,
-        },
-      ],
-      notes: 'Consultas completadas. Próximas citas en abril 2024.',
-      createdAt: '2024-02-28',
-      updatedAt: '2024-03-10',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.billing = mockBilling;
-      this.isLoading = false;
-    }, 500);
+    this.billingService.getBillingRecord(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.billing = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading billing record';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading billing record data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -97,10 +78,21 @@ export class BillingDetailComponent implements OnInit {
   onDelete(): void {
     if (
       this.billing &&
-      confirm(`¿Estás seguro que deseas eliminar la factura ${this.billing.invoiceNumber}?`)
+      confirm(
+        `¿Estás seguro que deseas eliminar la factura ${this.billing.invoiceNumber}?`,
+      )
     ) {
-      console.log('Deleting billing:', this.billing.id);
-      this.router.navigate(['/billing']);
+      this.isLoading = true;
+      this.billingService.deleteBillingRecord(this.billing.id).subscribe({
+        next: () => {
+          this.router.navigate(['/billing']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting billing record';
+          this.isLoading = false;
+        },
+      });
     }
   }
 

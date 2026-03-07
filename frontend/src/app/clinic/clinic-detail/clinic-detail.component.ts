@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClinicService } from '../../services/clinic';
+import { Clinic } from '../../models';
 
 /**
  * Clinic Detail Component
@@ -33,8 +35,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ClinicDetailComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private clinicService = inject(ClinicService);
 
-  clinic: any = null;
+  clinic: Clinic | null = null;
   isLoading = false;
   errorMessage: string | null = null;
 
@@ -47,52 +50,23 @@ export class ClinicDetailComponent implements OnInit {
 
   private loadClinic(id: string): void {
     this.isLoading = true;
-    // Mock data
-    const mockClinic = {
-      id: id,
-      name: 'Centro Psicológico del Sur',
-      email: 'info@psicosur.com',
-      phone: '+57 330 123 4567',
-      website: 'www.psicosur.com',
-      address: 'Carrera 10 # 20-30',
-      city: 'Bogotá',
-      state: 'Cundinamarca',
-      postalCode: '110111',
-      country: 'Colombia',
-      services: [
-        'Psicoterapia Individual',
-        'Terapia Familiar',
-        'Evaluación Psicológica',
-        'Terapia de Grupo',
-      ],
-      specialties: [
-        'Ansiedad y Depresión',
-        'Problemas de Pareja',
-        'Traumas',
-        'Psicología Infantil',
-      ],
-      therapistCount: 8,
-      operatingHours: {
-        monday: '8:00 AM - 6:00 PM',
-        tuesday: '8:00 AM - 6:00 PM',
-        wednesday: '8:00 AM - 6:00 PM',
-        thursday: '8:00 AM - 6:00 PM',
-        friday: '8:00 AM - 5:00 PM',
-        saturday: '9:00 AM - 1:00 PM',
-      },
-      insuranceAccepted: ['EPS Salud', 'Seguros Medicina', 'Integral'],
-      licenseNumber: 'CLI-2024-001',
-      accreditation: 'Acreditada por Ministerio de Salud',
-      status: 'active',
-      averageRating: 4.7,
-      createdAt: '2023-06-15',
-      updatedAt: '2024-02-28',
-    };
+    this.errorMessage = null;
 
-    setTimeout(() => {
-      this.clinic = mockClinic;
-      this.isLoading = false;
-    }, 500);
+    this.clinicService.getClinic(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.clinic = response.data;
+        } else {
+          this.errorMessage = response.message || 'Error loading clinic';
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.errorMessage =
+          error.error?.message || 'Error loading clinic data';
+        this.isLoading = false;
+      },
+    });
   }
 
   onEdit(): void {
@@ -106,8 +80,17 @@ export class ClinicDetailComponent implements OnInit {
       this.clinic &&
       confirm(`¿Estás seguro que deseas eliminar ${this.clinic.name}?`)
     ) {
-      console.log('Deleting clinic:', this.clinic.id);
-      this.router.navigate(['/clinic']);
+      this.isLoading = true;
+      this.clinicService.deleteClinic(this.clinic.id).subscribe({
+        next: () => {
+          this.router.navigate(['/clinic']);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Error deleting clinic';
+          this.isLoading = false;
+        },
+      });
     }
   }
 
