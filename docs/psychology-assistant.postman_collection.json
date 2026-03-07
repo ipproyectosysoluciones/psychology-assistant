@@ -1,0 +1,306 @@
+{
+  "info": {
+    "_postman_id": "psychology-assistant-api",
+    "name": "Psychology Assistant API",
+    "description": "Complete API collection for Psychology Assistant Platform\nPlataforma integral para consultorios psicológicos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"role\": \"psychologist\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clinics (v1)",
+      "item": [
+        {
+          "name": "Create Clinic",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Clínica Psicología Integral\",\n  \"email\": \"info@clinica.com\",\n  \"phone\": \"+57 1 234 5678\",\n  \"address\": \"Cra. 5 #45-27\",\n  \"city\": \"Bogotá\",\n  \"country\": \"Colombia\",\n  \"postalCode\": \"110111\",\n  \"currency\": \"COP\",\n  \"website\": \"https://www.clinica.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinics"]
+            }
+          }
+        },
+        {
+          "name": "Get Clinic",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinics/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinics", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Therapists (v1)",
+      "item": [
+        {
+          "name": "Create Therapist",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": \"user_id_here\",\n  \"licenseNumber\": \"12345-PSI\",\n  \"licenseExpiry\": \"2026-12-31\",\n  \"specializations\": [\"Terapia Cognitivo Conductual\", \"Mindfulness\"],\n  \"hourlyRate\": 150,\n  \"bio\": \"Specialista en ansiedad y depresión\",\n  \"clinic\": \"clinic_id_here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/therapists",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "therapists"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients (v1)",
+      "item": [
+        {
+          "name": "Create Patient",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"González\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"+57 301 234 5678\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"male\",\n  \"idType\": \"CC\",\n  \"idNumber\": \"123456789\",\n  \"clinic\": \"clinic_id_here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medical Records (v1)",
+      "item": [
+        {
+          "name": "Create Medical Record",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"appointmentDate\": \"2026-03-10\",\n  \"diagnosis\": \"F41.1\",\n  \"symptoms\": [\"Ansiedad\", \"Insomnio\"],\n  \"treatmentPlan\": \"Terapia semanal + ejercicios de relajación\",\n  \"nextSteps\": \"Seguimiento en 2 semanas\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/medical-records",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "medical-records"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Billing (v1)",
+      "item": [
+        {
+          "name": "Create Invoice",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"clinic\": \"clinic_id_here\",\n  \"therapist\": \"therapist_id_here\",\n  \"appointmentId\": \"appointment_id_here\",\n  \"amount\": 150,\n  \"description\": \"Sesión de terapia individual\",\n  \"paymentMethod\": \"card\",\n  \"lineItems\": [\n    {\n      \"description\": \"Sesión 60 min\",\n      \"quantity\": 1,\n      \"unitPrice\": 150,\n      \"total\": 150\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/billings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "billings"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clinical Reports (v1)",
+      "item": [
+        {
+          "name": "Create Report",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"therapist\": \"therapist_id_here\",\n  \"reportType\": \"progress\",\n  \"reportDate\": \"2026-03-07\",\n  \"diagnosis\": \"F41.1 - Trastorno de Ansiedad\",\n  \"findings\": \"Paciente muestra mejoría significativa en síntomas de ansiedad\",\n  \"recommendations\": \"Continuar con sesiones semanales y práctica de técnicas aprendidas\",\n  \"status\": \"completed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinical-reports",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinical-reports"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

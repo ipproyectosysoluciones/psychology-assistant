@@ -1,0 +1,138 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand">
+      <h1>🧠 Psychology Assistant</h1>
+    </div>
+    <div class="navbar-menu">
+      <a (click)="scrollTo('features')" class="nav-link">Características</a>
+      <a (click)="scrollTo('testimonials')" class="nav-link">Testimonios</a>
+      <a href="#contact" class="nav-link">Contacto</a>
+    </div>
+    <div class="navbar-actions">
+      <button mat-raised-button (click)="navigateTo('/auth/login')">Ingresar</button>
+      <button mat-raised-button color="primary" (click)="navigateTo('/auth/register')">
+        Registrarse
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h2 class="hero-title">
+        Gestión Integral de tu Consultorio Psicológico
+      </h2>
+      <p class="hero-subtitle">
+        La plataforma completa para organizar citas, pacientes, historiales médicos y facturación.
+        Enfócate en lo que importa: el bienestar de tus pacientes.
+      </p>
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" size="large" (click)="navigateTo('/auth/register')">
+          Comenzar 14 Días Gratis
+        </button>
+        <button mat-stroked-button size="large">
+          Ver Demostración
+        </button>
+      </div>
+      <div class="hero-trust">
+        <p>✓ Sin tarjeta de crédito • ✓ Configuración en 5 minutos • ✓ Soporte 24/7</p>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="placeholder-image">
+        <mat-icon>dashboard</mat-icon>
+        <p>Panel de Control</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-header">
+      <h2>¿Por qué Psychology Assistant?</h2>
+      <p>Todo lo que necesitas para profesionalizar tu consultorio</p>
+    </div>
+    <div class="features-grid">
+      <div *ngFor="let feature of features" class="feature-card">
+        <div class="feature-icon">
+          <mat-icon>{{ feature.icon }}</mat-icon>
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <h2>¿Listo para llevar tu consultorio al siguiente nivel?</h2>
+    <p>Únete a cientos de psicólogos que ya confían en Psychology Assistant</p>
+    <div class="cta-actions">
+      <button mat-raised-button color="primary" size="large" (click)="navigateTo('/auth/register')">
+        Crear Cuenta Gratis
+      </button>
+      <button mat-stroked-button size="large">
+        Hablar con Ventas
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <h2>Lo que dicen nuestros usuarios</h2>
+      <p>Historias reales de psicólogos que transformaron su práctica</p>
+    </div>
+    <div class="testimonials-grid">
+      <div *ngFor="let testimonial of testimonials" class="testimonial-card">
+        <div class="testimonial-avatar">{{ testimonial.avatar }}</div>
+        <blockquote>{{ testimonial.text }}</blockquote>
+        <div class="testimonial-author">
+          <strong>{{ testimonial.name }}</strong>
+          <span>{{ testimonial.role }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Psychology Assistant</h4>
+        <p>Solución integral para consultorio psicológicos modernos.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Enlaces</h4>
+        <ul>
+          <li><a href="#">Términos de Servicio</a></li>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Documentación</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <ul>
+          <li>📧 info@psychologyassistant.com</li>
+          <li>📞 +57 (1) 234-5678</li>
+          <li>📍 Bogotá, Colombia</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {{ currentYear }} Psychology Assistant. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

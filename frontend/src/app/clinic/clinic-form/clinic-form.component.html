@@ -1,0 +1,120 @@
+<div class="clinic-form-container">
+  <div class="form-header">
+    <h1>Nueva Clínica</h1>
+    <p>Ingresa los datos de tu consultorio psicológico</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="clinic-form">
+    <div class="form-section">
+      <h2>Información General</h2>
+      
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre de la Clínica</mat-label>
+        <input matInput formControlName="name" placeholder="Consultorio Psicológico XYZ">
+        <mat-error *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+          {{ getErrorMessage('name') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="info@clinica.com">
+        <mat-error *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+          {{ getErrorMessage('email') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="phone" placeholder="+57 1 234 5678">
+        <mat-error *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
+          {{ getErrorMessage('phone') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Sitio Web (Opcional)</mat-label>
+        <input matInput formControlName="website" placeholder="https://www.clinica.com">
+        <mat-error *ngIf="form.get('website')?.invalid && form.get('website')?.touched">
+          {{ getErrorMessage('website') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description" placeholder="Describe tu consultorio" rows="4"></textarea>
+        <mat-hint>Máximo 1000 caracteres</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <h2>Ubicación</h2>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="address" placeholder="Calle Principal 123, Apartamento 4B">
+        <mat-error *ngIf="form.get('address')?.invalid && form.get('address')?.touched">
+          {{ getErrorMessage('address') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Ciudad</mat-label>
+        <input matInput formControlName="city" placeholder="Bogotá">
+        <mat-error *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
+          {{ getErrorMessage('city') }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Código Postal</mat-label>
+        <input matInput formControlName="postalCode" placeholder="110111">
+        <mat-error *ngIf="form.get('postalCode')?.invalid && form.get('postalCode')?.touched">
+          {{ getErrorMessage('postalCode') }}
+         </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>País</mat-label>
+        <mat-select formControlName="country">
+          <mat-option *ngFor="let country of countryOptions" [value]="country">
+            {{ country }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('country')?.invalid && form.get('country')?.touched">
+          {{ getErrorMessage('country') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-section">
+      <h2>Configuración</h2>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Moneda</mat-label>
+        <mat-select formControlName="currency">
+          <mat-option *ngFor="let currency of currencyOptions" [value]="currency">
+            {{ currency }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('currency')?.invalid && form.get('currency')?.touched">
+          {{ getErrorMessage('currency') }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button type="button" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid || isLoading">
+        <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+        {{ isLoading ? 'Guardando...' : 'Guardar Clínica' }}
+      </button>
+    </div>
+  </form>
+</div>
