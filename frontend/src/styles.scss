@@ -36,4 +36,58 @@ body {
   margin: 0;
   height: 100%;
 }
+
 /* You can add global styles to this file, and also import other style files */
+
+/**
+ * ES: Estilos globales para notificaciones Snackbar
+ * EN: Global styles for Snackbar notifications
+ */
+
+/* Success Snackbar */
+.success-snackbar {
+  ::ng-deep .mdc-snackbar__surface {
+    background-color: #4caf50 !important;
+  }
+
+  ::ng-deep .mat-mdc-snack-bar-label {
+    color: #ffffff !important;
+    font-weight: 500;
+  }
+
+  ::ng-deep .mdc-button__label {
+    color: #ffffff !important;
+  }
+}
+
+/* Error Snackbar */
+.error-snackbar {
+  ::ng-deep .mdc-snackbar__surface {
+    background-color: #f44336 !important;
+  }
+
+  ::ng-deep .mat-mdc-snack-bar-label {
+    color: #ffffff !important;
+    font-weight: 500;
+  }
+
+  ::ng-deep .mdc-button__label {
+    color: #ffffff !important;
+  }
+}
+
+/* Info Snackbar */
+.info-snackbar {
+  ::ng-deep .mdc-snackbar__surface {
+    background-color: #2196f3 !important;
+  }
+
+  ::ng-deep .mat-mdc-snack-bar-label {
+    color: #ffffff !important;
+    font-weight: 500;
+  }
+
+  ::ng-deep .mdc-button__label {
+    color: #ffffff !important;
+  }
+}

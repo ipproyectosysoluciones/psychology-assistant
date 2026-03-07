@@ -1,0 +1,31 @@
+<div class="dialog-container">
+  <!-- ES: Encabezado del diálogo
+       EN: Dialog header -->
+  <div class="dialog-header">
+    <h2>{{ data.title }}</h2>
+  </div>
+
+  <!-- ES: Contenido del diálogo
+       EN: Dialog content -->
+  <div class="dialog-content">
+    {{ data.message }}
+  </div>
+
+  <!-- ES: Botones de acción
+       EN: Action buttons -->
+  <div class="dialog-actions">
+    <button
+      mat-stroked-button
+      (click)="onCancel()"
+      data-testid="cancel-button">
+      {{ data.cancelText || 'Cancelar' }}
+    </button>
+    <button
+      mat-raised-button
+      [color]="data.isDestructive ? 'warn' : 'primary'"
+      (click)="onConfirm()"
+      data-testid="confirm-button">
+      {{ data.confirmText || 'Confirmar' }}
+    </button>
+  </div>
+</div>
