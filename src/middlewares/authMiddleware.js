@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import environment from '../config/environment.js';
-import User from '../models/user.js';
+import { User } from '../models/user.js';
 import { AppError, asyncHandler } from '../utils/appError.js';
 
 /**
@@ -97,7 +97,7 @@ export const require2FA = (req, res, next) => {
 export const authorizeAppointmentOwner = asyncHandler(
   async (req, res, next) => {
     // Dynamically import Appointment model to avoid circular dependencies
-    const { default: Appointment } = await import('../models/appointment.js');
+    const { Appointment } = await import('../models/appointment.js');
 
     const { id } = req.params;
 
@@ -114,3 +114,6 @@ export const authorizeAppointmentOwner = asyncHandler(
     next();
   }
 );
+
+// Alias for backward compatibility
+export const verifyToken = protect;

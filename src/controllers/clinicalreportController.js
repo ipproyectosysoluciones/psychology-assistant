@@ -4,7 +4,8 @@
  */
 
 import { ClinicalReport } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/clinical-reports
@@ -63,7 +64,7 @@ export const createClinicalReport = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, report, 'Reporte clínico creado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -80,14 +81,14 @@ export const getClinicalReport = async (req, res, next) => {
       .populate('reviewedBy', 'firstName lastName');
 
     if (!report) {
-      return next(new appError('Reporte no encontrado', 404));
+      return next(new AppError('Reporte no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, report, 'Reporte obtenido'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -120,7 +121,7 @@ export const getPatientClinicalReports = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -133,12 +134,12 @@ export const updateClinicalReport = async (req, res, next) => {
     const report = await ClinicalReport.findById(req.params.id);
 
     if (!report) {
-      return next(new appError('Reporte no encontrado', 404));
+      return next(new AppError('Reporte no encontrado', 404));
     }
 
     if (!report.canEdit()) {
       return next(
-        new appError('No se puede editar un reporte completado', 400),
+        new AppError('No se puede editar un reporte completado', 400),
       );
     }
 
@@ -151,7 +152,7 @@ export const updateClinicalReport = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, report, 'Reporte actualizado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -164,7 +165,7 @@ export const reviewClinicalReport = async (req, res, next) => {
     const report = await ClinicalReport.findById(req.params.id);
 
     if (!report) {
-      return next(new appError('Reporte no encontrado', 404));
+      return next(new AppError('Reporte no encontrado', 404));
     }
 
     await report.markAsReviewed(req.user.id);
@@ -173,7 +174,7 @@ export const reviewClinicalReport = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, report, 'Reporte marcado como revisado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -186,14 +187,14 @@ export const deleteClinicalReport = async (req, res, next) => {
     const report = await ClinicalReport.findByIdAndDelete(req.params.id);
 
     if (!report) {
-      return next(new appError('Reporte no encontrado', 404));
+      return next(new AppError('Reporte no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Reporte eliminado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -227,6 +228,6 @@ export const getClinicClinicalReports = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

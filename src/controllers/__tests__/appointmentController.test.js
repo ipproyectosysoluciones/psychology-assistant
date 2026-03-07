@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../../app.js';
-import Appointment from '../../models/appointment.js';
-import User from '../../models/user.js';
+import { Appointment } from '../../models/appointment.js';
+import { User } from '../../models/user.js';
 
 let token;
 let user;

@@ -4,7 +4,8 @@
  */
 
 import { Clinic } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/clinics
@@ -39,7 +40,7 @@ export const createClinic = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, clinic, 'Clínica creada exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -52,14 +53,14 @@ export const getClinic = async (req, res, next) => {
     const clinic = await Clinic.findById(req.params.id);
 
     if (!clinic) {
-      return next(new appError('Clínica no encontrada', 404));
+      return next(new AppError('Clínica no encontrada', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, clinic, 'Clínica obtenida exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -75,7 +76,7 @@ export const getClinicsByUser = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, clinics, 'Clínicas obtenidas exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -88,12 +89,12 @@ export const updateClinic = async (req, res, next) => {
     const clinic = await Clinic.findById(req.params.id);
 
     if (!clinic) {
-      return next(new appError('Clínica no encontrada', 404));
+      return next(new AppError('Clínica no encontrada', 404));
     }
 
     if (!clinic.isAdmin(req.user.id)) {
       return next(
-        new appError('No tienes permisos para actualizar esta clínica', 403),
+        new AppError('No tienes permisos para actualizar esta clínica', 403),
       );
     }
 
@@ -123,7 +124,7 @@ export const updateClinic = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, clinic, 'Clínica actualizada exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -136,14 +137,14 @@ export const deleteClinic = async (req, res, next) => {
     const clinic = await Clinic.findByIdAndDelete(req.params.id);
 
     if (!clinic) {
-      return next(new appError('Clínica no encontrada', 404));
+      return next(new AppError('Clínica no encontrada', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Clínica eliminada exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -156,11 +157,11 @@ export const addClinicAdmin = async (req, res, next) => {
     const clinic = await Clinic.findById(req.params.id);
 
     if (!clinic) {
-      return next(new appError('Clínica no encontrada', 404));
+      return next(new AppError('Clínica no encontrada', 404));
     }
 
     if (!clinic.isAdmin(req.user.id)) {
-      return next(new appError('No tienes permisos', 403));
+      return next(new AppError('No tienes permisos', 403));
     }
 
     await clinic.addAdmin(req.params.userId);
@@ -169,7 +170,7 @@ export const addClinicAdmin = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, clinic, 'Admin agregado exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -182,11 +183,11 @@ export const removeClinicAdmin = async (req, res, next) => {
     const clinic = await Clinic.findById(req.params.id);
 
     if (!clinic) {
-      return next(new appError('Clínica no encontrada', 404));
+      return next(new AppError('Clínica no encontrada', 404));
     }
 
     if (!clinic.isAdmin(req.user.id)) {
-      return next(new appError('No tienes permisos', 403));
+      return next(new AppError('No tienes permisos', 403));
     }
 
     await clinic.removeAdmin(req.params.userId);
@@ -195,7 +196,7 @@ export const removeClinicAdmin = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, clinic, 'Admin removido exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -228,6 +229,6 @@ export const getAllClinics = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

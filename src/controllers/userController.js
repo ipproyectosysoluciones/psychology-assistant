@@ -1,8 +1,8 @@
 import logger from '../config/logger.js';
 import { AUDIT_EVENTS, auditLog } from '../middlewares/auditMiddleware.js';
-import Appointment from '../models/appointment.js';
+import { Appointment } from '../models/appointment.js';
 import RefreshToken from '../models/refreshToken.js';
-import User from '../models/user.js';
+import { User } from '../models/user.js';
 import validationService from '../services/validationService.js';
 import { ApiResponse, sendResponse } from '../utils/apiResponse.js';
 import { AppError, asyncHandler } from '../utils/appError.js';

@@ -4,7 +4,8 @@
  */
 
 import { MedicalRecord } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/medical-records
@@ -47,7 +48,7 @@ export const createMedicalRecord = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, record, 'Historial clínico creado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -63,14 +64,14 @@ export const getMedicalRecord = async (req, res, next) => {
       .populate('clinic', 'name');
 
     if (!record) {
-      return next(new appError('Historial no encontrado', 404));
+      return next(new AppError('Historial no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, record, 'Historial obtenido'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -102,7 +103,7 @@ export const getPatientMedicalRecords = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -115,12 +116,12 @@ export const updateMedicalRecord = async (req, res, next) => {
     const record = await MedicalRecord.findById(req.params.id);
 
     if (!record) {
-      return next(new appError('Historial no encontrado', 404));
+      return next(new AppError('Historial no encontrado', 404));
     }
 
     if (!record.canEdit()) {
       return next(
-        new appError('No se puede editar un historial completado', 400),
+        new AppError('No se puede editar un historial completado', 400),
       );
     }
 
@@ -133,7 +134,7 @@ export const updateMedicalRecord = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, record, 'Historial actualizado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -146,14 +147,14 @@ export const deleteMedicalRecord = async (req, res, next) => {
     const record = await MedicalRecord.findByIdAndDelete(req.params.id);
 
     if (!record) {
-      return next(new appError('Historial no encontrado', 404));
+      return next(new AppError('Historial no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Historial eliminado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -186,6 +187,6 @@ export const getClinicMedicalRecords = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

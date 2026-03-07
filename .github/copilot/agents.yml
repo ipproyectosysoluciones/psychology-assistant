@@ -73,3 +73,21 @@ agents:
     model: gpt-4o
     instructions: .github/copilot/instructions/docs.md
     tools: [file_search, code_interpreter]
+
+  frontend-builder-agent:
+    name: "🚀 Frontend Builder"
+    description: |
+      Specialized in building production-ready Angular forms, landing pages, and marketing.
+      Expert in CRUD validation, SEO, copywriting, and Material Design.
+      Especializado en formularios Angular, landing pages y marketing.
+      Experto en validación, SEO, copywriting y Material Design.
+    model: gpt-4o
+    instructions: .github/copilot/instructions/frontend-builder.md
+    tools: [file_search, code_interpreter]
+    skills:
+      - angular-forms
+      - material-design
+      - advanced-validation
+      - marketing-copywriting
+      - seo-optimization
+      - responsive-design

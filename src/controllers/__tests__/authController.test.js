@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../app.js';
-import Session from '../../models/session.js';
-import User from '../../models/user.js';
+import { Session } from '../../models/session.js';
+import { User } from '../../models/user.js';
 
 beforeEach(async () => {
   await User.deleteMany({});

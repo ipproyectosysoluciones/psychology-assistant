@@ -4,7 +4,8 @@
  */
 
 import { Patient } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/patients
@@ -27,7 +28,7 @@ export const createPatient = async (req, res, next) => {
 
     const existingPatient = await Patient.findOne({ clinic, idNumber });
     if (existingPatient) {
-      return next(new appError('El paciente ya existe en esta clínica', 400));
+      return next(new AppError('El paciente ya existe en esta clínica', 400));
     }
 
     const patient = await Patient.create({
@@ -47,7 +48,7 @@ export const createPatient = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, patient, 'Paciente creado exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -63,14 +64,14 @@ export const getPatient = async (req, res, next) => {
       .populate('preferredTherapist', 'user');
 
     if (!patient) {
-      return next(new appError('Paciente no encontrado', 404));
+      return next(new AppError('Paciente no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, patient, 'Paciente obtenido'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -103,7 +104,7 @@ export const getPatientsByClinic = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -140,14 +141,14 @@ export const updatePatient = async (req, res, next) => {
     );
 
     if (!patient) {
-      return next(new appError('Paciente no encontrado', 404));
+      return next(new AppError('Paciente no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, patient, 'Paciente actualizado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -160,14 +161,14 @@ export const deletePatient = async (req, res, next) => {
     const patient = await Patient.findByIdAndDelete(req.params.id);
 
     if (!patient) {
-      return next(new appError('Paciente no encontrado', 404));
+      return next(new AppError('Paciente no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Paciente eliminado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -180,7 +181,7 @@ export const getPatientMedicalHistory = async (req, res, next) => {
     const patient = await Patient.findById(req.params.id);
 
     if (!patient) {
-      return next(new appError('Paciente no encontrado', 404));
+      return next(new AppError('Paciente no encontrado', 404));
     }
 
     return res.status(200).json(
@@ -195,6 +196,6 @@ export const getPatientMedicalHistory = async (req, res, next) => {
       ),
     );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

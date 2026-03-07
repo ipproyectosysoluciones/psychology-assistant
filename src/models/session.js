@@ -39,4 +39,4 @@ sessionSchema.methods.logout = function () {
   return this.save();
 };
 
-export default model('Session', sessionSchema);
+export const Session = model('Session', sessionSchema);

@@ -4,7 +4,8 @@
  */
 
 import { Billing } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/billings
@@ -48,7 +49,7 @@ export const createBilling = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, billing, 'Factura creada'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -64,14 +65,14 @@ export const getBilling = async (req, res, next) => {
       .populate('clinic', 'name');
 
     if (!billing) {
-      return next(new appError('Factura no encontrada', 404));
+      return next(new AppError('Factura no encontrada', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, billing, 'Factura obtenida'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -104,7 +105,7 @@ export const getPatientBillings = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -117,11 +118,11 @@ export const updateBilling = async (req, res, next) => {
     const billing = await Billing.findById(req.params.id);
 
     if (!billing) {
-      return next(new appError('Factura no encontrada', 404));
+      return next(new AppError('Factura no encontrada', 404));
     }
 
     if (billing.isPaid()) {
-      return next(new appError('No se puede editar una factura pagada', 400));
+      return next(new AppError('No se puede editar una factura pagada', 400));
     }
 
     const {
@@ -148,7 +149,7 @@ export const updateBilling = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, billing, 'Factura actualizada'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -161,7 +162,7 @@ export const markBillingAsPaid = async (req, res, next) => {
     const billing = await Billing.findById(req.params.id);
 
     if (!billing) {
-      return next(new appError('Factura no encontrada', 404));
+      return next(new AppError('Factura no encontrada', 404));
     }
 
     await billing.markAsPaid();
@@ -170,7 +171,7 @@ export const markBillingAsPaid = async (req, res, next) => {
       .status(200)
       .json(new ApiResponse(200, billing, 'Factura marcada como pagada'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -183,14 +184,14 @@ export const deleteBilling = async (req, res, next) => {
     const billing = await Billing.findByIdAndDelete(req.params.id);
 
     if (!billing) {
-      return next(new appError('Factura no encontrada', 404));
+      return next(new AppError('Factura no encontrada', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Factura eliminada'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -223,6 +224,6 @@ export const getClinicBillings = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

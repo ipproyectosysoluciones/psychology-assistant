@@ -70,4 +70,4 @@ appointmentSchema.pre(/^find/, function (next) {
   next();
 });
 
-export default model('Appointment', appointmentSchema);
+export const Appointment = model('Appointment', appointmentSchema);

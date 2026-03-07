@@ -1,6 +1,6 @@
 import logger from '../config/logger.js';
 import { AUDIT_EVENTS, auditLog } from '../middlewares/auditMiddleware.js';
-import Appointment from '../models/appointment.js';
+import { Appointment } from '../models/appointment.js';
 import qrService from '../services/qrService.js';
 import validationService from '../services/validationService.js';
 import { ApiResponse, sendResponse } from '../utils/apiResponse.js';

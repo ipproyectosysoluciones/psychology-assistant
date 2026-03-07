@@ -4,7 +4,8 @@
  */
 
 import { Therapist } from '../models/index.js';
-import { ApiResponse, appError } from '../utils/apiResponse.js';
+import { ApiResponse } from '../utils/apiResponse.js';
+import { AppError } from '../utils/appError.js';
 
 /**
  * POST /api/v1/therapists
@@ -24,7 +25,7 @@ export const createTherapist = async (req, res, next) => {
 
     const existingTherapist = await Therapist.findOne({ licenseNumber });
     if (existingTherapist) {
-      return next(new appError('El número de licencia ya existe', 400));
+      return next(new AppError('El número de licencia ya existe', 400));
     }
 
     const therapist = await Therapist.create({
@@ -41,7 +42,7 @@ export const createTherapist = async (req, res, next) => {
       .status(201)
       .json(new ApiResponse(201, therapist, 'Terapeuta creado exitosamente'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -56,14 +57,14 @@ export const getTherapist = async (req, res, next) => {
       .populate('clinic', 'name');
 
     if (!therapist) {
-      return next(new appError('Terapeuta no encontrado', 404));
+      return next(new AppError('Terapeuta no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, therapist, 'Terapeuta obtenido'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -99,7 +100,7 @@ export const getTherapistsByClinic = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -118,14 +119,14 @@ export const updateTherapist = async (req, res, next) => {
     );
 
     if (!therapist) {
-      return next(new appError('Terapeuta no encontrado', 404));
+      return next(new AppError('Terapeuta no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, therapist, 'Terapeuta actualizado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -138,14 +139,14 @@ export const deleteTherapist = async (req, res, next) => {
     const therapist = await Therapist.findByIdAndDelete(req.params.id);
 
     if (!therapist) {
-      return next(new appError('Terapeuta no encontrado', 404));
+      return next(new AppError('Terapeuta no encontrado', 404));
     }
 
     return res
       .status(200)
       .json(new ApiResponse(200, null, 'Terapeuta eliminado'));
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -158,7 +159,7 @@ export const getTherapistAvailability = async (req, res, next) => {
     const therapist = await Therapist.findById(req.params.id);
 
     if (!therapist) {
-      return next(new appError('Terapeuta no encontrado', 404));
+      return next(new AppError('Terapeuta no encontrado', 404));
     }
 
     return res
@@ -167,7 +168,7 @@ export const getTherapistAvailability = async (req, res, next) => {
         new ApiResponse(200, therapist.availability, 'Disponibilidad obtenida'),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };
 
@@ -184,7 +185,7 @@ export const updateTherapistAvailability = async (req, res, next) => {
     );
 
     if (!therapist) {
-      return next(new appError('Terapeuta no encontrado', 404));
+      return next(new AppError('Terapeuta no encontrado', 404));
     }
 
     return res
@@ -197,6 +198,6 @@ export const updateTherapistAvailability = async (req, res, next) => {
         ),
       );
   } catch (error) {
-    return next(new appError(error.message, 400));
+    return next(new AppError(error.message, 400));
   }
 };

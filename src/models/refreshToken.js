@@ -72,4 +72,4 @@ refreshTokenSchema.methods.revoke = function (reason = 'Logout') {
   return this.save();
 };
 
-export default model('RefreshToken', refreshTokenSchema);
+export const RefreshToken = model('RefreshToken', refreshTokenSchema);
