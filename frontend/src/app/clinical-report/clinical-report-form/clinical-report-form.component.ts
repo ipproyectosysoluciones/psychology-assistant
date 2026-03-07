@@ -148,20 +148,22 @@ export class ClinicalReportFormComponent implements OnInit {
     const reportData = this.form.value;
 
     if (this.isEditMode && this.reportId) {
-      this.clinicalReportService.updateClinicalReport(this.reportId, reportData).subscribe({
-        next: () => {
-          this.showSuccessSnackBar('Reporte actualizado exitosamente');
-          setTimeout(() => {
-            this.router.navigate(['/clinical-report', this.reportId]);
-          }, 1500);
-        },
-        error: (error) => {
-          const message = error.error?.message || 'Error al actualizar';
-          this.errorMessage = message;
-          this.showErrorSnackBar(message);
-          this.isSubmitting = false;
-        },
-      });
+      this.clinicalReportService
+        .updateClinicalReport(this.reportId, reportData)
+        .subscribe({
+          next: () => {
+            this.showSuccessSnackBar('Reporte actualizado exitosamente');
+            setTimeout(() => {
+              this.router.navigate(['/clinical-report', this.reportId]);
+            }, 1500);
+          },
+          error: (error) => {
+            const message = error.error?.message || 'Error al actualizar';
+            this.errorMessage = message;
+            this.showErrorSnackBar(message);
+            this.isSubmitting = false;
+          },
+        });
     } else {
       this.clinicalReportService.createClinicalReport(reportData).subscribe({
         next: () => {

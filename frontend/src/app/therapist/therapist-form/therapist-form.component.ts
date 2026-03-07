@@ -105,7 +105,9 @@ export class TherapistFormComponent implements OnInit {
         if (response.success && response.data) {
           this.form.patchValue(response.data);
         } else {
-          this.showErrorSnackBar(response.message || 'Error al cargar terapeuta');
+          this.showErrorSnackBar(
+            response.message || 'Error al cargar terapeuta',
+          );
         }
         this.isLoading = false;
       },
@@ -160,20 +162,22 @@ export class TherapistFormComponent implements OnInit {
     const therapistData = this.form.value;
 
     if (this.isEditMode && this.therapistId) {
-      this.therapistService.updateTherapist(this.therapistId, therapistData).subscribe({
-        next: () => {
-          this.showSuccessSnackBar('Terapeuta actualizado exitosamente');
-          setTimeout(() => {
-            this.router.navigate(['/therapist', this.therapistId]);
-          }, 1500);
-        },
-        error: (error) => {
-          const message = error.error?.message || 'Error al actualizar';
-          this.errorMessage = message;
-          this.showErrorSnackBar(message);
-          this.isSubmitting = false;
-        },
-      });
+      this.therapistService
+        .updateTherapist(this.therapistId, therapistData)
+        .subscribe({
+          next: () => {
+            this.showSuccessSnackBar('Terapeuta actualizado exitosamente');
+            setTimeout(() => {
+              this.router.navigate(['/therapist', this.therapistId]);
+            }, 1500);
+          },
+          error: (error) => {
+            const message = error.error?.message || 'Error al actualizar';
+            this.errorMessage = message;
+            this.showErrorSnackBar(message);
+            this.isSubmitting = false;
+          },
+        });
     } else {
       this.therapistService.createTherapist(therapistData).subscribe({
         next: () => {

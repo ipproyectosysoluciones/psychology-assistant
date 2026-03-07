@@ -8,38 +8,38 @@ import { RegisterComponent } from './auth/register/register';
 import { TwoFaSetupComponent } from './auth/two-fa-setup/two-fa-setup';
 
 // Billing Components
+import { BillingDetailComponent } from './billing/billing-detail/billing-detail.component';
 import { BillingFormComponent } from './billing/billing-form/billing-form.component';
 import { BillingListComponent } from './billing/billing-list/billing-list.component';
-import { BillingDetailComponent } from './billing/billing-detail/billing-detail.component';
 
 // Clinic Components
+import { ClinicDetailComponent } from './clinic/clinic-detail/clinic-detail.component';
 import { ClinicFormComponent } from './clinic/clinic-form/clinic-form.component';
 import { ClinicListComponent } from './clinic/clinic-list/clinic-list.component';
-import { ClinicDetailComponent } from './clinic/clinic-detail/clinic-detail.component';
 
 // Clinical Report Components
+import { ClinicalReportDetailComponent } from './clinical-report/clinical-report-detail/clinical-report-detail.component';
 import { ClinicalReportFormComponent } from './clinical-report/clinical-report-form/clinical-report-form.component';
 import { ClinicalReportListComponent } from './clinical-report/clinical-report-list/clinical-report-list.component';
-import { ClinicalReportDetailComponent } from './clinical-report/clinical-report-detail/clinical-report-detail.component';
 
 import { DashboardComponent } from './dashboard/dashboard';
 import { authGuard } from './guards/auth-guard';
 import { LandingComponent } from './landing/landing.component';
 
 // Medical Record Components
+import { MedicalRecordDetailComponent } from './medical-record/medical-record-detail/medical-record-detail.component';
 import { MedicalRecordFormComponent } from './medical-record/medical-record-form/medical-record-form.component';
 import { MedicalRecordListComponent } from './medical-record/medical-record-list/medical-record-list.component';
-import { MedicalRecordDetailComponent } from './medical-record/medical-record-detail/medical-record-detail.component';
 
 // Patient Components
+import { PatientDetailComponent } from './patient/patient-detail/patient-detail.component';
 import { PatientFormComponent } from './patient/patient-form/patient-form.component';
 import { PatientListComponent } from './patient/patient-list/patient-list.component';
-import { PatientDetailComponent } from './patient/patient-detail/patient-detail.component';
 
 // Therapist Components
+import { TherapistDetailComponent } from './therapist/therapist-detail/therapist-detail.component';
 import { TherapistFormComponent } from './therapist/therapist-form/therapist-form.component';
 import { TherapistListComponent } from './therapist/therapist-list/therapist-list.component';
-import { TherapistDetailComponent } from './therapist/therapist-detail/therapist-detail.component';
 
 import { ProfileComponent } from './users/profile/profile';
 

@@ -1,0 +1,168 @@
+/**
+ * ES: Estilos - Lista de Reportes Clínicos
+ * EN: Styles - Clinical Reports List
+ */
+
+:host {
+  display: block;
+}
+
+.container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.list-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &.empty {
+    padding: 48px 24px;
+    text-align: center;
+
+    p {
+      color: #666;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background: #f5f5f5;
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+
+    &:last-child {
+      text-align: right;
+    }
+  }
+
+  tr:hover {
+    background: #fafafa;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.draft {
+    background: #e8f4fd;
+    color: #0288d1;
+  }
+
+  &.completed {
+    background: #e8f5e9;
+    color: #388e3c;
+  }
+
+  &.reviewed {
+    background: #f3e5f5;
+    color: #7b1fa2;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 24px;
+  min-height: 400px;
+}
+
+.error-message {
+  padding: 16px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid #ddd;
+
+  button {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover:not(:disabled) {
+      background: #f5f5f5;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background: #0288d1;
+      color: white;
+      border-color: #0288d1;
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  padding: 48px 24px;
+  color: #999;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+    display: block;
+    margin: 0 auto 16px;
+  }
+}

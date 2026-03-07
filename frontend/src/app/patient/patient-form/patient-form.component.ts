@@ -111,7 +111,9 @@ export class PatientFormComponent implements OnInit {
         if (response.success && response.data) {
           this.form.patchValue(response.data);
         } else {
-          this.showErrorSnackBar(response.message || 'Error al cargar paciente');
+          this.showErrorSnackBar(
+            response.message || 'Error al cargar paciente',
+          );
         }
         this.isLoading = false;
       },

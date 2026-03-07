@@ -47,6 +47,9 @@ export class BillingDetailComponent implements OnInit {
   billing: BillingRecord | null = null;
   isLoading = false;
   errorMessage: string | null = null;
+  patientName: string | null = null;
+  therapistName: string | null = null;
+  clinicName: string | null = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -137,6 +140,21 @@ export class BillingDetailComponent implements OnInit {
 
   onBack(): void {
     this.router.navigate(['/billing']);
+  }
+
+  /**
+   * ES: Obtener etiqueta de estado
+   * EN: Get status label
+   */
+  getStatusLabel(status: string): string {
+    const statusLabels: Record<string, string> = {
+      draft: 'Borrador',
+      sent: 'Enviado',
+      paid: 'Pagado',
+      overdue: 'Vencido',
+      cancelled: 'Cancelado',
+    };
+    return statusLabels[status] || status;
   }
 
   /**

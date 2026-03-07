@@ -134,20 +134,22 @@ export class BillingFormComponent implements OnInit {
     const billingData = this.form.value;
 
     if (this.isEditMode && this.billingId) {
-      this.billingService.updateBillingRecord(this.billingId, billingData).subscribe({
-        next: () => {
-          this.showSuccessSnackBar('Factura actualizada exitosamente');
-          setTimeout(() => {
-            this.router.navigate(['/billing', this.billingId]);
-          }, 1500);
-        },
-        error: (error) => {
-          const message = error.error?.message || 'Error al actualizar';
-          this.errorMessage = message;
-          this.showErrorSnackBar(message);
-          this.isSubmitting = false;
-        },
-      });
+      this.billingService
+        .updateBillingRecord(this.billingId, billingData)
+        .subscribe({
+          next: () => {
+            this.showSuccessSnackBar('Factura actualizada exitosamente');
+            setTimeout(() => {
+              this.router.navigate(['/billing', this.billingId]);
+            }, 1500);
+          },
+          error: (error) => {
+            const message = error.error?.message || 'Error al actualizar';
+            this.errorMessage = message;
+            this.showErrorSnackBar(message);
+            this.isSubmitting = false;
+          },
+        });
     } else {
       this.billingService.createBillingRecord(billingData).subscribe({
         next: () => {

@@ -93,7 +93,11 @@ export type AppointmentType =
  * ES: Estado de la cita
  * EN: Appointment status
  */
-export type AppointmentStatus = 'scheduled' | 'completed' | 'cancelled';
+export type AppointmentStatus =
+  | 'scheduled'
+  | 'completed'
+  | 'cancelled'
+  | 'no-show';
 
 /**
  * ES: Cita del usuario
@@ -101,15 +105,16 @@ export type AppointmentStatus = 'scheduled' | 'completed' | 'cancelled';
  */
 export interface Appointment {
   id: string;
-  userId: string;
-  date: string;
-  time?: string;
-  type: AppointmentType;
+  user?: string; // Reference to User
+  psychologist?: string; // Reference to User (Therapist)
+  date: string; // ISO datetime
+  duration?: number; // minutes, default 60
+  type?: AppointmentType; // Optional: consultation, followup, therapy, psychiatric
   description?: string;
   notes?: string;
-  status: AppointmentStatus;
-  duration?: number;
+  status: 'scheduled' | 'completed' | 'cancelled' | 'no-show';
   qrCode?: string;
+  reminderSent?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -119,12 +124,10 @@ export interface Appointment {
  * EN: Appointment creation/update data
  */
 export interface CreateAppointmentData {
-  date: string;
-  time?: string;
-  type: AppointmentType;
+  date: string; // ISO datetime
   description?: string;
-  notes?: string;
   duration?: number;
+  notes?: string;
 }
 
 /**
@@ -205,22 +208,33 @@ export interface ApiError {
  */
 export interface Patient {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  idType: string;
-  idNumber: string;
+  user?: string; // Reference to User
+  clinic?: string; // Reference to Clinic
   dateOfBirth: string;
-  gender: string;
+  gender: 'M' | 'F' | 'Other' | 'Prefer not to say';
+  idType: 'CC' | 'TI' | 'CE' | 'PA' | 'RC';
+  idNumber: string;
   address: string;
-  city: string;
-  country: string;
-  postalCode: string;
+  phone: string;
   insurance?: string;
   insurancePlan?: string;
-  employmentStatus: string;
-  status: 'active' | 'inactive';
+  employmentStatus:
+    | 'employed'
+    | 'self-employed'
+    | 'student'
+    | 'unemployed'
+    | 'retired';
+  emergencyContact?: {
+    name?: string;
+    relationship?: string;
+    phone?: string;
+  };
+  medicalHistory?: string;
+  allergies?: string[];
+  medications?: string[];
+  status: 'active' | 'inactive' | 'paused';
+  preferredTherapist?: string; // Reference to Therapist
+  notes?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -233,21 +247,23 @@ export interface Patient {
  */
 export interface MedicalRecord {
   id: string;
-  patientId: string;
+  patient?: string; // Reference to Patient
+  clinic?: string; // Reference to Clinic
+  therapist?: string; // Reference to Therapist
+  appointment?: string; // Reference to Appointment
   recordDate: string;
+  diagnosisCIE10?: string[];
   primaryDiagnosis: string;
-  secondaryDiagnosis?: string;
-  icdCode: string;
-  symptoms: string[];
-  treatment: string;
-  medications: Array<{
-    name: string;
-    dose: string;
-    frequency: string;
-  }>;
-  followUpPlan: string;
-  notes: string;
-  therapistId?: string;
+  secondaryDiagnosis?: string[];
+  symptoms?: string[];
+  treatmentPlan?: string;
+  interventions?: string[];
+  clinicalNotes: string;
+  progressRating?: number; // 1-10
+  nextSteps?: string;
+  medications?: string[];
+  referrals?: string[];
+  attachments?: string[];
   status: 'draft' | 'completed' | 'reviewed';
   createdAt: string;
   updatedAt: string;
@@ -261,19 +277,27 @@ export interface MedicalRecord {
  */
 export interface Therapist {
   id: string;
-  name: string;
-  email: string;
-  phone: string;
+  user?: string; // Reference to User
+  clinic?: string; // Reference to Clinic
+  specializations?: string[];
   licenseNumber: string;
-  licenseType: string;
-  specializations: string[];
-  biography: string;
-  education: string[];
-  workSchedule: Record<string, string>;
-  offeringServices: string[];
-  patientCount: number;
-  averageRating: number;
-  status: 'active' | 'inactive';
+  licenseExpiry: string; // Date
+  bio?: string;
+  qualifications?: string[];
+  hourlyRate: number;
+  availability?: {
+    monday?: Array<{ start: string; end: string }>;
+    tuesday?: Array<{ start: string; end: string }>;
+    wednesday?: Array<{ start: string; end: string }>;
+    thursday?: Array<{ start: string; end: string }>;
+    friday?: Array<{ start: string; end: string }>;
+    saturday?: Array<{ start: string; end: string }>;
+    sunday?: Array<{ start: string; end: string }>;
+  };
+  status: 'active' | 'inactive' | 'on_leave';
+  isVerified?: boolean;
+  languages?: string[];
+  profileImage?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -287,23 +311,22 @@ export interface Therapist {
 export interface Clinic {
   id: string;
   name: string;
-  email: string;
-  phone: string;
-  website: string;
+  description?: string;
   address: string;
-  city: string;
-  state: string;
-  postalCode: string;
+  phone: string;
+  email: string;
+  website?: string;
   country: string;
-  services: string[];
-  specialties: string[];
-  therapistCount: number;
-  operatingHours: Record<string, string>;
-  insuranceAccepted: string[];
-  licenseNumber: string;
-  accreditation: string;
-  status: 'active' | 'inactive';
-  averageRating: number;
+  currency: 'COP' | 'USD' | 'ARS' | 'MXN' | 'CLP' | 'PEN';
+  owner?: string; // Reference to User
+  admins?: string[]; // References to Users
+  status: 'active' | 'inactive' | 'suspended';
+  isVerified?: boolean;
+  logo?: string;
+  appointmentDuration?: number; // minutes, default 60
+  cancellationPolicy?: string;
+  acceptedPaymentMethods?: string[];
+  taxId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -316,33 +339,27 @@ export interface Clinic {
  */
 export interface BillingRecord {
   id: string;
+  patient?: string; // Reference to Patient
+  clinic?: string; // Reference to Clinic
+  therapist?: string; // Reference to Therapist
+  appointment?: string; // Reference to Appointment
   invoiceNumber: string;
-  patientId?: string;
-  patientName: string;
-  therapistId?: string;
-  therapist: string;
-  clinic?: string;
-  issueDate: string;
-  dueDate: string;
-  paymentDate?: string;
-  subtotal: number;
-  tax: number;
-  discount: number;
-  totalAmount: number;
-  amountPaid: number;
-  remainingBalance: number;
-  status: 'draft' | 'sent' | 'pending' | 'paid' | 'overdue';
-  paymentMethod?: string;
-  insurance?: string;
-  insurancePlan?: string;
-  insurancePayment?: number;
-  patientPayment?: number;
-  lineItems: Array<{
+  invoiceDate: string; // Date
+  dueDate?: string; // Date
+  amount: number;
+  currency: string; // COP, USD, etc
+  description: string;
+  lineItems?: Array<{
     description: string;
     quantity: number;
     unitPrice: number;
     total: number;
   }>;
+  discount?: number;
+  tax?: number;
+  paymentMethod?: 'cash' | 'card' | 'transfer' | 'check' | 'insurance';
+  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled';
+  paymentDate?: string; // Date
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -356,29 +373,30 @@ export interface BillingRecord {
  */
 export interface ClinicalReport {
   id: string;
+  patient?: string; // Reference to Patient
+  clinic?: string; // Reference to Clinic
+  therapist?: string; // Reference to Therapist
+  reportType: 'progress' | 'discharge' | 'assessment' | 'evaluation' | 'summary';
+  reportDate: string; // Date
+  fromDate: string; // Date
+  toDate: string; // Date
   title: string;
-  reportType:
-    | 'progress'
-    | 'discharge'
-    | 'assessment'
-    | 'evaluation'
-    | 'summary';
-  reportDate: string;
-  therapistId?: string;
-  therapist: string;
-  patientId?: string;
-  patient: string;
-  sessionCount: number;
-  overallProgress: number;
-  sessionsSummary: string;
-  therapeuticApproach: string;
-  keyAchievements: string[];
-  challengesAndObstacles: string;
-  nextSteps: string;
-  recommendations: string;
-  clinicalRating: string;
+  summary: string;
+  keyFindings?: string[];
+  improvements?: string[];
+  areasOfConcern?: string[];
+  recommendations?: string[];
+  treatmentGoals?: string[];
+  sessionCount?: number;
+  attackanceRate?: number; // 0-100
+  overallProgress?: number; // 1-10
+  clinicalObservations?: string;
+  diagnosis?: string;
+  prognosis?: string;
+  suggestedFollowUp?: string;
+  nextAppointmentDate?: string; // Date
   status: 'draft' | 'completed' | 'reviewed';
-  reviewedBy?: string;
+  reviewedBy?: string; // Reference to User
   createdAt: string;
   updatedAt: string;
 }

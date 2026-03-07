@@ -85,7 +85,9 @@ export class MedicalRecordFormComponent implements OnInit {
         if (response.success && response.data) {
           this.form.patchValue(response.data);
         } else {
-          this.showErrorSnackBar(response.message || 'Error al cargar registro');
+          this.showErrorSnackBar(
+            response.message || 'Error al cargar registro',
+          );
         }
         this.isLoading = false;
       },
@@ -127,20 +129,22 @@ export class MedicalRecordFormComponent implements OnInit {
     const recordData = this.form.value;
 
     if (this.isEditMode && this.recordId) {
-      this.medicalRecordService.updateMedicalRecord(this.recordId, recordData).subscribe({
-        next: () => {
-          this.showSuccessSnackBar('Registro actualizado exitosamente');
-          setTimeout(() => {
-            this.router.navigate(['/medical-record', this.recordId]);
-          }, 1500);
-        },
-        error: (error) => {
-          const message = error.error?.message || 'Error al actualizar';
-          this.errorMessage = message;
-          this.showErrorSnackBar(message);
-          this.isSubmitting = false;
-        },
-      });
+      this.medicalRecordService
+        .updateMedicalRecord(this.recordId, recordData)
+        .subscribe({
+          next: () => {
+            this.showSuccessSnackBar('Registro actualizado exitosamente');
+            setTimeout(() => {
+              this.router.navigate(['/medical-record', this.recordId]);
+            }, 1500);
+          },
+          error: (error) => {
+            const message = error.error?.message || 'Error al actualizar';
+            this.errorMessage = message;
+            this.showErrorSnackBar(message);
+            this.isSubmitting = false;
+          },
+        });
     } else {
       this.medicalRecordService.createMedicalRecord(recordData).subscribe({
         next: () => {

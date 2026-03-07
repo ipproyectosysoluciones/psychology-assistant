@@ -42,7 +42,7 @@
             </div>
             <div class="info-item">
               <span class="label">Fecha de Emisión:</span>
-              <span class="value">{{ billing.issueDate | date: 'dd/MM/yyyy' }}</span>
+              <span class="value">{{ billing.invoiceDate | date: 'dd/MM/yyyy' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Fecha de Vencimiento:</span>
@@ -51,7 +51,7 @@
             <div class="info-item">
               <span class="label">Estado de Pago:</span>
               <span class="value badge" [ngClass]="'status-' + billing.status">
-                {{ billing.status === 'paid' ? 'Pagado' : billing.status === 'pending' ? 'Pendiente' : 'Diferido' }}
+                {{ getStatusLabel(billing.status) }}
               </span>
             </div>
           </div>
@@ -67,15 +67,15 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Paciente:</span>
-              <span class="value">{{ billing.patientName }}</span>
+              <span class="value">{{ patientName || 'N/A' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Terapeuta:</span>
-              <span class="value">{{ billing.therapist }}</span>
+              <span class="value">{{ therapistName || 'N/A' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Clínica:</span>
-              <span class="value">{{ billing.clinic }}</span>
+              <span class="value">{{ clinicName || 'N/A' }}</span>
             </div>
           </div>
         </mat-card-content>
@@ -110,32 +110,7 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Información de Seguro -->
-      <mat-card class="info-card">
-        <mat-card-header>
-          <mat-card-title>Información de Seguro</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="label">Aseguradora:</span>
-              <span class="value">{{ billing.insurance }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Plan:</span>
-              <span class="value">{{ billing.insurancePlan }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Pago del Seguro:</span>
-              <span class="value money">{{ billing.insurancePayment | currency }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">Pago del Paciente:</span>
-              <span class="value money">{{ billing.patientPayment | currency }}</span>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+
 
       <!-- Resumen Financiero -->
       <mat-card class="summary-card">
@@ -144,34 +119,22 @@
         </mat-card-header>
         <mat-card-content>
           <div class="summary-grid">
-            <div class="summary-row">
-              <span class="summary-label">Subtotal:</span>
-              <span class="summary-value">${{ billing.subtotal | number }}</span>
-            </div>
-            <div class="summary-row">
-              <span class="summary-label">Impuesto (IVA):</span>
-              <span class="summary-value">${{ billing.tax | number }}</span>
-            </div>
-            @if (billing.discount > 0) {
+            @if (billing.discount && billing.discount > 0) {
               <div class="summary-row discount">
                 <span class="summary-label">Descuento:</span>
                 <span class="summary-value">-${{ billing.discount | number }}</span>
               </div>
             }
-            <div class="summary-row total">
-              <span class="summary-label">Total:</span>
-              <span class="summary-value">${{ billing.totalAmount | number }}</span>
-            </div>
-            <div class="summary-row paid">
-              <span class="summary-label">Pagado:</span>
-              <span class="summary-value">${{ billing.amountPaid | number }}</span>
-            </div>
-            @if (billing.remainingBalance > 0) {
-              <div class="summary-row pending">
-                <span class="summary-label">Saldo Pendiente:</span>
-                <span class="summary-value">${{ billing.remainingBalance | number }}</span>
+            @if (billing.tax && billing.tax > 0) {
+              <div class="summary-row">
+                <span class="summary-label">Impuesto:</span>
+                <span class="summary-value">${{ billing.tax | number }}</span>
               </div>
             }
+            <div class="summary-row total">
+              <span class="summary-label">Total:</span>
+              <span class="summary-value">${{ billing.amount | number }}</span>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
@@ -185,7 +148,7 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Método de Pago:</span>
-              <span class="value">{{ billing.paymentMethod }}</span>
+              <span class="value">{{ billing.paymentMethod || 'N/A' }}</span>
             </div>
             @if (billing.paymentDate) {
               <div class="info-item">
