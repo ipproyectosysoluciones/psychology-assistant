@@ -13,9 +13,17 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
 export const createBilling = async (req, res, next) => {
   try {
     const {
-      patient, clinic, therapist, appointment,
-      amount, description, lineItems, discount,
-      tax, paymentMethod, insurance
+      patient,
+      clinic,
+      therapist,
+      appointment,
+      amount,
+      description,
+      lineItems,
+      discount,
+      tax,
+      paymentMethod,
+      insurance,
     } = req.body;
 
     const invoiceNumber = `INV-${Date.now()}`;
@@ -33,14 +41,12 @@ export const createBilling = async (req, res, next) => {
       tax: tax || 0,
       paymentMethod,
       insurance,
-      status: 'draft'
+      status: 'draft',
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      billing,
-      'Factura creada'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, billing, 'Factura creada'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -61,11 +67,9 @@ export const getBilling = async (req, res, next) => {
       return next(new appError('Factura no encontrada', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      billing,
-      'Factura obtenida'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, billing, 'Factura obtenida'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -80,7 +84,7 @@ export const getPatientBillings = async (req, res, next) => {
     const { page = 1, limit = 10, status } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = { patient: req.params.patientId };
+    const query = { patient: req.params.patientId };
     if (status) query.status = status;
 
     const billings = await Billing.find(query)
@@ -90,11 +94,15 @@ export const getPatientBillings = async (req, res, next) => {
 
     const total = await Billing.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { billings, total, page, pages: Math.ceil(total / limit) },
-      'Facturas obtenidas'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { billings, total, page, pages: Math.ceil(total / limit) },
+          'Facturas obtenidas',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -116,7 +124,15 @@ export const updateBilling = async (req, res, next) => {
       return next(new appError('No se puede editar una factura pagada', 400));
     }
 
-    const { amount, description, lineItems, discount, tax, paymentMethod, status } = req.body;
+    const {
+      amount,
+      description,
+      lineItems,
+      discount,
+      tax,
+      paymentMethod,
+      status,
+    } = req.body;
 
     if (amount) billing.amount = amount;
     if (description) billing.description = description;
@@ -128,11 +144,9 @@ export const updateBilling = async (req, res, next) => {
 
     await billing.save();
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      billing,
-      'Factura actualizada'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, billing, 'Factura actualizada'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -152,11 +166,9 @@ export const markBillingAsPaid = async (req, res, next) => {
 
     await billing.markAsPaid();
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      billing,
-      'Factura marcada como pagada'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, billing, 'Factura marcada como pagada'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -174,11 +186,9 @@ export const deleteBilling = async (req, res, next) => {
       return next(new appError('Factura no encontrada', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Factura eliminada'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Factura eliminada'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -193,7 +203,7 @@ export const getClinicBillings = async (req, res, next) => {
     const { page = 1, limit = 10, status } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = { clinic: req.params.clinicId };
+    const query = { clinic: req.params.clinicId };
     if (status) query.status = status;
 
     const billings = await Billing.find(query)
@@ -203,11 +213,15 @@ export const getClinicBillings = async (req, res, next) => {
 
     const total = await Billing.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { billings, total, page, pages: Math.ceil(total / limit) },
-      'Facturas obtenidas'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { billings, total, page, pages: Math.ceil(total / limit) },
+          'Facturas obtenidas',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

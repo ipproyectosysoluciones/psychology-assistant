@@ -13,10 +13,18 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
 export const createMedicalRecord = async (req, res, next) => {
   try {
     const {
-      patient, clinic, therapist, appointment,
-      primaryDiagnosis, secondaryDiagnosis, symptoms,
-      treatmentPlan, interventions, clinicalNotes,
-      progressRating, nextSteps
+      patient,
+      clinic,
+      therapist,
+      appointment,
+      primaryDiagnosis,
+      secondaryDiagnosis,
+      symptoms,
+      treatmentPlan,
+      interventions,
+      clinicalNotes,
+      progressRating,
+      nextSteps,
     } = req.body;
 
     const record = await MedicalRecord.create({
@@ -32,14 +40,12 @@ export const createMedicalRecord = async (req, res, next) => {
       clinicalNotes,
       progressRating,
       nextSteps,
-      status: 'completed'
+      status: 'completed',
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      record,
-      'Historial clínico creado'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, record, 'Historial clínico creado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -60,11 +66,9 @@ export const getMedicalRecord = async (req, res, next) => {
       return next(new appError('Historial no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      record,
-      'Historial obtenido'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, record, 'Historial obtenido'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -84,13 +88,19 @@ export const getPatientMedicalRecords = async (req, res, next) => {
       .limit(limit)
       .sort({ recordDate: -1 });
 
-    const total = await MedicalRecord.countDocuments({ patient: req.params.patientId });
+    const total = await MedicalRecord.countDocuments({
+      patient: req.params.patientId,
+    });
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { records, total, page, pages: Math.ceil(total / limit) },
-      'Historiales obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { records, total, page, pages: Math.ceil(total / limit) },
+          'Historiales obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -109,7 +119,9 @@ export const updateMedicalRecord = async (req, res, next) => {
     }
 
     if (!record.canEdit()) {
-      return next(new appError('No se puede editar un historial completado', 400));
+      return next(
+        new appError('No se puede editar un historial completado', 400),
+      );
     }
 
     const updateData = { ...req.body };
@@ -117,11 +129,9 @@ export const updateMedicalRecord = async (req, res, next) => {
 
     await record.save();
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      record,
-      'Historial actualizado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, record, 'Historial actualizado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -139,11 +149,9 @@ export const deleteMedicalRecord = async (req, res, next) => {
       return next(new appError('Historial no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Historial eliminado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Historial eliminado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -158,7 +166,7 @@ export const getClinicMedicalRecords = async (req, res, next) => {
     const { page = 1, limit = 10, therapistId } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = { clinic: req.params.clinicId };
+    const query = { clinic: req.params.clinicId };
     if (therapistId) query.therapist = therapistId;
 
     const records = await MedicalRecord.find(query)
@@ -168,11 +176,15 @@ export const getClinicMedicalRecords = async (req, res, next) => {
 
     const total = await MedicalRecord.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { records, total, page, pages: Math.ceil(total / limit) },
-      'Historiales obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { records, total, page, pages: Math.ceil(total / limit) },
+          'Historiales obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

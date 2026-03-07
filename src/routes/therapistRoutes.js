@@ -5,12 +5,12 @@
 import express from 'express';
 import {
   createTherapist,
+  deleteTherapist,
   getTherapist,
+  getTherapistAvailability,
   getTherapistsByClinic,
   updateTherapist,
-  deleteTherapist,
-  getTherapistAvailability,
-  updateTherapistAvailability
+  updateTherapistAvailability,
 } from '../controllers/therapistController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 

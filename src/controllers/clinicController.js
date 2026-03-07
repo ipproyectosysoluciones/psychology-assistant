@@ -12,7 +12,16 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
  */
 export const createClinic = async (req, res, next) => {
   try {
-    const { name, description, address, phone, email, website, country, currency } = req.body;
+    const {
+      name,
+      description,
+      address,
+      phone,
+      email,
+      website,
+      country,
+      currency,
+    } = req.body;
 
     const clinic = await Clinic.create({
       name,
@@ -23,14 +32,12 @@ export const createClinic = async (req, res, next) => {
       website,
       country,
       currency,
-      owner: req.user.id
+      owner: req.user.id,
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      clinic,
-      'Clínica creada exitosamente'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, clinic, 'Clínica creada exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -48,11 +55,9 @@ export const getClinic = async (req, res, next) => {
       return next(new appError('Clínica no encontrada', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      clinic,
-      'Clínica obtenida exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, clinic, 'Clínica obtenida exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -66,11 +71,9 @@ export const getClinicsByUser = async (req, res, next) => {
   try {
     const clinics = await Clinic.find({ owner: req.params.userId });
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      clinics,
-      'Clínicas obtenidas exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, clinics, 'Clínicas obtenidas exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -89,10 +92,21 @@ export const updateClinic = async (req, res, next) => {
     }
 
     if (!clinic.isAdmin(req.user.id)) {
-      return next(new appError('No tienes permisos para actualizar esta clínica', 403));
+      return next(
+        new appError('No tienes permisos para actualizar esta clínica', 403),
+      );
     }
 
-    const { name, description, address, phone, email, website, status, settings } = req.body;
+    const {
+      name,
+      description,
+      address,
+      phone,
+      email,
+      website,
+      status,
+      settings,
+    } = req.body;
 
     if (name) clinic.name = name;
     if (description) clinic.description = description;
@@ -105,11 +119,9 @@ export const updateClinic = async (req, res, next) => {
 
     await clinic.save();
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      clinic,
-      'Clínica actualizada exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, clinic, 'Clínica actualizada exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -127,11 +139,9 @@ export const deleteClinic = async (req, res, next) => {
       return next(new appError('Clínica no encontrada', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Clínica eliminada exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Clínica eliminada exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -155,11 +165,9 @@ export const addClinicAdmin = async (req, res, next) => {
 
     await clinic.addAdmin(req.params.userId);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      clinic,
-      'Admin agregado exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, clinic, 'Admin agregado exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -183,11 +191,9 @@ export const removeClinicAdmin = async (req, res, next) => {
 
     await clinic.removeAdmin(req.params.userId);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      clinic,
-      'Admin removido exitosamente'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, clinic, 'Admin removido exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -202,7 +208,7 @@ export const getAllClinics = async (req, res, next) => {
     const { page = 1, limit = 10, status } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = {};
+    const query = {};
     if (status) query.status = status;
 
     const clinics = await Clinic.find(query)
@@ -212,11 +218,15 @@ export const getAllClinics = async (req, res, next) => {
 
     const total = await Clinic.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { clinics, total, page, pages: Math.ceil(total / limit) },
-      'Clínicas obtenidas'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { clinics, total, page, pages: Math.ceil(total / limit) },
+          'Clínicas obtenidas',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

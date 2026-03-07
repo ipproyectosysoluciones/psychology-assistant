@@ -21,7 +21,9 @@ export const validateClinicOwnership = async (req, res, next) => {
     }
 
     if (!clinic.isAdmin(req.user.id)) {
-      return next(new appError('No tienes permisos para acceder a esta clínica', 403));
+      return next(
+        new appError('No tienes permisos para acceder a esta clínica', 403),
+      );
     }
 
     req.clinic = clinic;

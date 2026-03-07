@@ -3,7 +3,7 @@
  * Gestiona endpoints de terapeutas
  */
 
-import { Therapist, User } from '../models/index.js';
+import { Therapist } from '../models/index.js';
 import { ApiResponse, appError } from '../utils/apiResponse.js';
 
 /**
@@ -12,7 +12,15 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
  */
 export const createTherapist = async (req, res, next) => {
   try {
-    const { clinic, user, specializations, licenseNumber, licenseExpiry, hourlyRate, bio } = req.body;
+    const {
+      clinic,
+      user,
+      specializations,
+      licenseNumber,
+      licenseExpiry,
+      hourlyRate,
+      bio,
+    } = req.body;
 
     const existingTherapist = await Therapist.findOne({ licenseNumber });
     if (existingTherapist) {
@@ -26,14 +34,12 @@ export const createTherapist = async (req, res, next) => {
       licenseNumber,
       licenseExpiry,
       hourlyRate,
-      bio
+      bio,
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      therapist,
-      'Terapeuta creado exitosamente'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, therapist, 'Terapeuta creado exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -53,11 +59,9 @@ export const getTherapist = async (req, res, next) => {
       return next(new appError('Terapeuta no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      therapist,
-      'Terapeuta obtenido'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, therapist, 'Terapeuta obtenido'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -72,18 +76,28 @@ export const getTherapistsByClinic = async (req, res, next) => {
     const { page = 1, limit = 10, status = 'active' } = req.query;
     const skip = (page - 1) * limit;
 
-    const therapists = await Therapist.find({ clinic: req.params.clinicId, status })
+    const therapists = await Therapist.find({
+      clinic: req.params.clinicId,
+      status,
+    })
       .populate('user', 'firstName lastName email')
       .skip(skip)
       .limit(limit);
 
-    const total = await Therapist.countDocuments({ clinic: req.params.clinicId, status });
+    const total = await Therapist.countDocuments({
+      clinic: req.params.clinicId,
+      status,
+    });
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { therapists, total, page, pages: Math.ceil(total / limit) },
-      'Terapeutas obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { therapists, total, page, pages: Math.ceil(total / limit) },
+          'Terapeutas obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -100,18 +114,16 @@ export const updateTherapist = async (req, res, next) => {
     const therapist = await Therapist.findByIdAndUpdate(
       req.params.id,
       { specializations, hourlyRate, bio, status, availability },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!therapist) {
       return next(new appError('Terapeuta no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      therapist,
-      'Terapeuta actualizado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, therapist, 'Terapeuta actualizado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -129,11 +141,9 @@ export const deleteTherapist = async (req, res, next) => {
       return next(new appError('Terapeuta no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Terapeuta eliminado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Terapeuta eliminado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -151,11 +161,11 @@ export const getTherapistAvailability = async (req, res, next) => {
       return next(new appError('Terapeuta no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      therapist.availability,
-      'Disponibilidad obtenida'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, therapist.availability, 'Disponibilidad obtenida'),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -170,18 +180,22 @@ export const updateTherapistAvailability = async (req, res, next) => {
     const therapist = await Therapist.findByIdAndUpdate(
       req.params.id,
       { availability: req.body },
-      { new: true }
+      { new: true },
     );
 
     if (!therapist) {
       return next(new appError('Terapeuta no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      therapist.availability,
-      'Disponibilidad actualizada'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          therapist.availability,
+          'Disponibilidad actualizada',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

@@ -2,10 +2,9 @@
  * Clinic Controller Tests
  */
 
-import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
+import { beforeAll, describe, expect, it } from '@jest/globals';
 import request from 'supertest';
 import app from '../../app.js';
-import { Clinic } from '../../models/index.js';
 
 describe('Clinic Controller', () => {
   let clinicId;
@@ -29,7 +28,7 @@ describe('Clinic Controller', () => {
           phone: '+57 1 2345678',
           email: 'clinic@test.com',
           country: 'Colombia',
-          currency: 'COP'
+          currency: 'COP',
         });
 
       expect(response.status).toBe(201);
@@ -44,7 +43,7 @@ describe('Clinic Controller', () => {
         .post('/api/v1/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          name: 'Test Clinic'
+          name: 'Test Clinic',
         });
 
       expect(response.status).toBe(400);
@@ -78,7 +77,7 @@ describe('Clinic Controller', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Updated Clinic',
-          description: 'Updated description'
+          description: 'Updated description',
         });
 
       expect(response.status).toBe(200);
@@ -97,4 +96,3 @@ describe('Clinic Controller', () => {
     });
   });
 });
-

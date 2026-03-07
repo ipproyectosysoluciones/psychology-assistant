@@ -5,11 +5,11 @@
 import express from 'express';
 import {
   createPatient,
+  deletePatient,
   getPatient,
+  getPatientMedicalHistory,
   getPatientsByClinic,
   updatePatient,
-  deletePatient,
-  getPatientMedicalHistory
 } from '../controllers/patientController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
@@ -52,4 +52,3 @@ router.delete('/:id', verifyToken, deletePatient);
 router.get('/:id/medical-history', verifyToken, getPatientMedicalHistory);
 
 export default router;
-

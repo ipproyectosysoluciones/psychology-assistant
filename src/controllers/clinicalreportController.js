@@ -13,12 +13,26 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
 export const createClinicalReport = async (req, res, next) => {
   try {
     const {
-      patient, clinic, therapist, reportType,
-      fromDate, toDate, title, summary,
-      keyFindings, improvements, areasOfConcern,
-      recommendations, treatmentGoals, sessionCount,
-      attachanceRate, overallProgress, clinicalObservations,
-      diagnosis, prognosis, suggestedFollowUp
+      patient,
+      clinic,
+      therapist,
+      reportType,
+      fromDate,
+      toDate,
+      title,
+      summary,
+      keyFindings,
+      improvements,
+      areasOfConcern,
+      recommendations,
+      treatmentGoals,
+      sessionCount,
+      attachanceRate,
+      overallProgress,
+      clinicalObservations,
+      diagnosis,
+      prognosis,
+      suggestedFollowUp,
     } = req.body;
 
     const report = await ClinicalReport.create({
@@ -42,14 +56,12 @@ export const createClinicalReport = async (req, res, next) => {
       diagnosis,
       prognosis,
       suggestedFollowUp,
-      status: 'completed'
+      status: 'completed',
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      report,
-      'Reporte clínico creado'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, report, 'Reporte clínico creado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -71,11 +83,9 @@ export const getClinicalReport = async (req, res, next) => {
       return next(new appError('Reporte no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      report,
-      'Reporte obtenido'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, report, 'Reporte obtenido'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -90,7 +100,7 @@ export const getPatientClinicalReports = async (req, res, next) => {
     const { page = 1, limit = 10, reportType } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = { patient: req.params.patientId };
+    const query = { patient: req.params.patientId };
     if (reportType) query.reportType = reportType;
 
     const reports = await ClinicalReport.find(query)
@@ -100,11 +110,15 @@ export const getPatientClinicalReports = async (req, res, next) => {
 
     const total = await ClinicalReport.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { reports, total, page, pages: Math.ceil(total / limit) },
-      'Reportes obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { reports, total, page, pages: Math.ceil(total / limit) },
+          'Reportes obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -123,7 +137,9 @@ export const updateClinicalReport = async (req, res, next) => {
     }
 
     if (!report.canEdit()) {
-      return next(new appError('No se puede editar un reporte completado', 400));
+      return next(
+        new appError('No se puede editar un reporte completado', 400),
+      );
     }
 
     const updateData = { ...req.body };
@@ -131,11 +147,9 @@ export const updateClinicalReport = async (req, res, next) => {
 
     await report.save();
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      report,
-      'Reporte actualizado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, report, 'Reporte actualizado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -155,11 +169,9 @@ export const reviewClinicalReport = async (req, res, next) => {
 
     await report.markAsReviewed(req.user.id);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      report,
-      'Reporte marcado como revisado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, report, 'Reporte marcado como revisado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -177,11 +189,9 @@ export const deleteClinicalReport = async (req, res, next) => {
       return next(new appError('Reporte no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Reporte eliminado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Reporte eliminado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -196,7 +206,7 @@ export const getClinicClinicalReports = async (req, res, next) => {
     const { page = 1, limit = 10, reportType, therapistId } = req.query;
     const skip = (page - 1) * limit;
 
-    let query = { clinic: req.params.clinicId };
+    const query = { clinic: req.params.clinicId };
     if (reportType) query.reportType = reportType;
     if (therapistId) query.therapist = therapistId;
 
@@ -207,11 +217,15 @@ export const getClinicClinicalReports = async (req, res, next) => {
 
     const total = await ClinicalReport.countDocuments(query);
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { reports, total, page, pages: Math.ceil(total / limit) },
-      'Reportes obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { reports, total, page, pages: Math.ceil(total / limit) },
+          'Reportes obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

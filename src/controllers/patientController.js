@@ -13,8 +13,16 @@ import { ApiResponse, appError } from '../utils/apiResponse.js';
 export const createPatient = async (req, res, next) => {
   try {
     const {
-      clinic, user, dateOfBirth, gender, idType, idNumber,
-      address, phone, insurance, emergencyContact
+      clinic,
+      user,
+      dateOfBirth,
+      gender,
+      idType,
+      idNumber,
+      address,
+      phone,
+      insurance,
+      emergencyContact,
     } = req.body;
 
     const existingPatient = await Patient.findOne({ clinic, idNumber });
@@ -32,14 +40,12 @@ export const createPatient = async (req, res, next) => {
       address,
       phone,
       insurance,
-      emergencyContact
+      emergencyContact,
     });
 
-    return res.status(201).json(new ApiResponse(
-      201,
-      patient,
-      'Paciente creado exitosamente'
-    ));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, patient, 'Paciente creado exitosamente'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -60,11 +66,9 @@ export const getPatient = async (req, res, next) => {
       return next(new appError('Paciente no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      patient,
-      'Paciente obtenido'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, patient, 'Paciente obtenido'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -84,13 +88,20 @@ export const getPatientsByClinic = async (req, res, next) => {
       .skip(skip)
       .limit(limit);
 
-    const total = await Patient.countDocuments({ clinic: req.params.clinicId, status });
+    const total = await Patient.countDocuments({
+      clinic: req.params.clinicId,
+      status,
+    });
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      { patients, total, page, pages: Math.ceil(total / limit) },
-      'Pacientes obtenidos'
-    ));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { patients, total, page, pages: Math.ceil(total / limit) },
+          'Pacientes obtenidos',
+        ),
+      );
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -103,25 +114,38 @@ export const getPatientsByClinic = async (req, res, next) => {
 export const updatePatient = async (req, res, next) => {
   try {
     const {
-      dateOfBirth, phone, insurance, insurancePlan,
-      emergencyContact, status, preferredTherapist, notes
+      dateOfBirth,
+      phone,
+      insurance,
+      insurancePlan,
+      emergencyContact,
+      status,
+      preferredTherapist,
+      notes,
     } = req.body;
 
     const patient = await Patient.findByIdAndUpdate(
       req.params.id,
-      { dateOfBirth, phone, insurance, insurancePlan, emergencyContact, status, preferredTherapist, notes },
-      { new: true, runValidators: true }
+      {
+        dateOfBirth,
+        phone,
+        insurance,
+        insurancePlan,
+        emergencyContact,
+        status,
+        preferredTherapist,
+        notes,
+      },
+      { new: true, runValidators: true },
     );
 
     if (!patient) {
       return next(new appError('Paciente no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      patient,
-      'Paciente actualizado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, patient, 'Paciente actualizado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -139,11 +163,9 @@ export const deletePatient = async (req, res, next) => {
       return next(new appError('Paciente no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      null,
-      'Paciente eliminado'
-    ));
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, 'Paciente eliminado'));
   } catch (error) {
     return next(new appError(error.message, 400));
   }
@@ -161,15 +183,17 @@ export const getPatientMedicalHistory = async (req, res, next) => {
       return next(new appError('Paciente no encontrado', 404));
     }
 
-    return res.status(200).json(new ApiResponse(
-      200,
-      {
-        medicalHistory: patient.medicalHistory,
-        allergies: patient.allergies,
-        medications: patient.medications
-      },
-      'Historial médico obtenido'
-    ));
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          medicalHistory: patient.medicalHistory,
+          allergies: patient.allergies,
+          medications: patient.medications,
+        },
+        'Historial médico obtenido',
+      ),
+    );
   } catch (error) {
     return next(new appError(error.message, 400));
   }

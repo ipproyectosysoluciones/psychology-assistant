@@ -4,14 +4,14 @@
 
 import express from 'express';
 import {
+  addClinicAdmin,
   createClinic,
+  deleteClinic,
+  getAllClinics,
   getClinic,
   getClinicsByUser,
-  updateClinic,
-  deleteClinic,
-  addClinicAdmin,
   removeClinicAdmin,
-  getAllClinics
+  updateClinic,
 } from '../controllers/clinicController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
