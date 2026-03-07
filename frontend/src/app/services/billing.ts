@@ -24,12 +24,9 @@ export class BillingService {
     page: number = 1,
     limit: number = 10,
   ): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.apiUrl}/billing`,
-      {
-        params: { page: page.toString(), limit: limit.toString() },
-      },
-    );
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/billing`, {
+      params: { page: page.toString(), limit: limit.toString() },
+    });
   }
 
   /**
@@ -74,8 +71,6 @@ export class BillingService {
    * EN: Delete a billing record
    */
   deleteBillingRecord(id: string): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(
-      `${this.apiUrl}/billing/${id}`,
-    );
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/billing/${id}`);
   }
 }

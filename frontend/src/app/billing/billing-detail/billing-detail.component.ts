@@ -10,8 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BillingService } from '../../services/billing';
 import { BillingRecord } from '../../models';
+import { BillingService } from '../../services/billing';
 
 /**
  * Billing Detail Component
@@ -57,7 +57,8 @@ export class BillingDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.billing = response.data;
         } else {
-          this.errorMessage = response.message || 'Error loading billing record';
+          this.errorMessage =
+            response.message || 'Error loading billing record';
         }
         this.isLoading = false;
       },

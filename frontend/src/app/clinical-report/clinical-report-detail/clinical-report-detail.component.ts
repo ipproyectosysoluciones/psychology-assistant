@@ -10,8 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClinicalReportService } from '../../services/clinical-report';
 import { ClinicalReport } from '../../models';
+import { ClinicalReportService } from '../../services/clinical-report';
 
 /**
  * Clinical Report Detail Component
@@ -57,7 +57,8 @@ export class ClinicalReportDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.report = response.data;
         } else {
-          this.errorMessage = response.message || 'Error loading clinical report';
+          this.errorMessage =
+            response.message || 'Error loading clinical report';
         }
         this.isLoading = false;
       },
@@ -81,16 +82,18 @@ export class ClinicalReportDetailComponent implements OnInit {
       confirm(`¿Estás seguro que deseas eliminar este reporte?`)
     ) {
       this.isLoading = true;
-      this.clinicalReportService.deleteClinicalReport(this.report.id).subscribe({
-        next: () => {
-          this.router.navigate(['/clinical-report']);
-        },
-        error: (error) => {
-          this.errorMessage =
-            error.error?.message || 'Error deleting clinical report';
-          this.isLoading = false;
-        },
-      });
+      this.clinicalReportService
+        .deleteClinicalReport(this.report.id)
+        .subscribe({
+          next: () => {
+            this.router.navigate(['/clinical-report']);
+          },
+          error: (error) => {
+            this.errorMessage =
+              error.error?.message || 'Error deleting clinical report';
+            this.isLoading = false;
+          },
+        });
     }
   }
 

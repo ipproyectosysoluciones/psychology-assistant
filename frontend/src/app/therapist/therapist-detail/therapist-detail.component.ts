@@ -10,8 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TherapistService } from '../../services/therapist';
 import { Therapist } from '../../models';
+import { TherapistService } from '../../services/therapist';
 
 /**
  * Therapist Detail Component

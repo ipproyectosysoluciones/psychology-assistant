@@ -10,8 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClinicService } from '../../services/clinic';
 import { Clinic } from '../../models';
+import { ClinicService } from '../../services/clinic';
 
 /**
  * Clinic Detail Component
@@ -62,8 +62,7 @@ export class ClinicDetailComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage =
-          error.error?.message || 'Error loading clinic data';
+        this.errorMessage = error.error?.message || 'Error loading clinic data';
         this.isLoading = false;
       },
     });
@@ -86,8 +85,7 @@ export class ClinicDetailComponent implements OnInit {
           this.router.navigate(['/clinic']);
         },
         error: (error) => {
-          this.errorMessage =
-            error.error?.message || 'Error deleting clinic';
+          this.errorMessage = error.error?.message || 'Error deleting clinic';
           this.isLoading = false;
         },
       });

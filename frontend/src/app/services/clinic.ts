@@ -20,13 +20,13 @@ export class ClinicService {
    * ES: Obtener lista de clínicas
    * EN: Get list of clinics
    */
-  getClinics(page: number = 1, limit: number = 10): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.apiUrl}/clinics`,
-      {
-        params: { page: page.toString(), limit: limit.toString() },
-      },
-    );
+  getClinics(
+    page: number = 1,
+    limit: number = 10,
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/clinics`, {
+      params: { page: page.toString(), limit: limit.toString() },
+    });
   }
 
   /**
@@ -34,9 +34,7 @@ export class ClinicService {
    * EN: Get a clinic by ID
    */
   getClinic(id: string): Observable<ApiResponse<Clinic>> {
-    return this.http.get<ApiResponse<Clinic>>(
-      `${this.apiUrl}/clinics/${id}`,
-    );
+    return this.http.get<ApiResponse<Clinic>>(`${this.apiUrl}/clinics/${id}`);
   }
 
   /**
@@ -44,17 +42,17 @@ export class ClinicService {
    * EN: Create a new clinic
    */
   createClinic(data: Partial<Clinic>): Observable<ApiResponse<Clinic>> {
-    return this.http.post<ApiResponse<Clinic>>(
-      `${this.apiUrl}/clinics`,
-      data,
-    );
+    return this.http.post<ApiResponse<Clinic>>(`${this.apiUrl}/clinics`, data);
   }
 
   /**
    * ES: Actualizar una clínica
    * EN: Update a clinic
    */
-  updateClinic(id: string, data: Partial<Clinic>): Observable<ApiResponse<Clinic>> {
+  updateClinic(
+    id: string,
+    data: Partial<Clinic>,
+  ): Observable<ApiResponse<Clinic>> {
     return this.http.put<ApiResponse<Clinic>>(
       `${this.apiUrl}/clinics/${id}`,
       data,
@@ -66,8 +64,6 @@ export class ClinicService {
    * EN: Delete a clinic
    */
   deleteClinic(id: string): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(
-      `${this.apiUrl}/clinics/${id}`,
-    );
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/clinics/${id}`);
   }
 }

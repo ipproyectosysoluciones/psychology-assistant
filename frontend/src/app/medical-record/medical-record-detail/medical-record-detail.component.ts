@@ -10,8 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MedicalRecordService } from '../../services/medical-record';
 import { MedicalRecord } from '../../models';
+import { MedicalRecordService } from '../../services/medical-record';
 
 /**
  * Medical Record Detail Component
@@ -57,7 +57,8 @@ export class MedicalRecordDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.record = response.data;
         } else {
-          this.errorMessage = response.message || 'Error loading medical record';
+          this.errorMessage =
+            response.message || 'Error loading medical record';
         }
         this.isLoading = false;
       },

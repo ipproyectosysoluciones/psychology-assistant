@@ -20,13 +20,13 @@ export class PatientService {
    * ES: Obtener lista de pacientes
    * EN: Get list of patients
    */
-  getPatients(page: number = 1, limit: number = 10): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.apiUrl}/patients`,
-      {
-        params: { page: page.toString(), limit: limit.toString() },
-      },
-    );
+  getPatients(
+    page: number = 1,
+    limit: number = 10,
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/patients`, {
+      params: { page: page.toString(), limit: limit.toString() },
+    });
   }
 
   /**
@@ -34,9 +34,7 @@ export class PatientService {
    * EN: Get a patient by ID
    */
   getPatient(id: string): Observable<ApiResponse<Patient>> {
-    return this.http.get<ApiResponse<Patient>>(
-      `${this.apiUrl}/patients/${id}`,
-    );
+    return this.http.get<ApiResponse<Patient>>(`${this.apiUrl}/patients/${id}`);
   }
 
   /**
@@ -69,8 +67,6 @@ export class PatientService {
    * EN: Delete a patient
    */
   deletePatient(id: string): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(
-      `${this.apiUrl}/patients/${id}`,
-    );
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/patients/${id}`);
   }
 }

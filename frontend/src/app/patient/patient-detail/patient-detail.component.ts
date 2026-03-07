@@ -11,8 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatientService } from '../../services/patient';
 import { Patient } from '../../models';
+import { PatientService } from '../../services/patient';
 
 /**
  * Patient Detail Component
@@ -94,8 +94,7 @@ export class PatientDetailComponent implements OnInit {
           this.router.navigate(['/patient']);
         },
         error: (error) => {
-          this.errorMessage =
-            error.error?.message || 'Error deleting patient';
+          this.errorMessage = error.error?.message || 'Error deleting patient';
           this.isLoading = false;
         },
       });

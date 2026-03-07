@@ -20,13 +20,13 @@ export class TherapistService {
    * ES: Obtener lista de terapeutas
    * EN: Get list of therapists
    */
-  getTherapists(page: number = 1, limit: number = 10): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.apiUrl}/therapists`,
-      {
-        params: { page: page.toString(), limit: limit.toString() },
-      },
-    );
+  getTherapists(
+    page: number = 1,
+    limit: number = 10,
+  ): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/therapists`, {
+      params: { page: page.toString(), limit: limit.toString() },
+    });
   }
 
   /**
@@ -43,7 +43,9 @@ export class TherapistService {
    * ES: Crear un nuevo terapeuta
    * EN: Create a new therapist
    */
-  createTherapist(data: Partial<Therapist>): Observable<ApiResponse<Therapist>> {
+  createTherapist(
+    data: Partial<Therapist>,
+  ): Observable<ApiResponse<Therapist>> {
     return this.http.post<ApiResponse<Therapist>>(
       `${this.apiUrl}/therapists`,
       data,

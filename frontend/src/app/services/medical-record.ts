@@ -24,12 +24,9 @@ export class MedicalRecordService {
     page: number = 1,
     limit: number = 10,
   ): Observable<ApiResponse<any>> {
-    return this.http.get<ApiResponse<any>>(
-      `${this.apiUrl}/medical-records`,
-      {
-        params: { page: page.toString(), limit: limit.toString() },
-      },
-    );
+    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/medical-records`, {
+      params: { page: page.toString(), limit: limit.toString() },
+    });
   }
 
   /**
