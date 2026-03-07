@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { MedicalRecord } from '../../models';
 import { MedicalRecordService } from '../../services/medical-record';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 /**
  * Medical Record Detail Component

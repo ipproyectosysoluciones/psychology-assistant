@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Clinic } from '../../models';
 import { ClinicService } from '../../services/clinic';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 /**
  * Clinic Detail Component

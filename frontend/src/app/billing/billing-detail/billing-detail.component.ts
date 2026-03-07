@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { BillingRecord } from '../../models';
 import { BillingService } from '../../services/billing';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 /**
  * Billing Detail Component
@@ -118,7 +118,9 @@ export class BillingDetailComponent implements OnInit {
     this.isLoading = true;
     this.billingService.deleteBillingRecord(this.billing.id).subscribe({
       next: () => {
-        this.showSuccessSnackBar('Registro de facturación eliminado exitosamente');
+        this.showSuccessSnackBar(
+          'Registro de facturación eliminado exitosamente',
+        );
         setTimeout(() => {
           this.router.navigate(['/billing']);
         }, 1500);

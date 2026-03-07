@@ -1,7 +1,11 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 
 /**
  * ES: Interfaz para datos del diálogo de confirmación

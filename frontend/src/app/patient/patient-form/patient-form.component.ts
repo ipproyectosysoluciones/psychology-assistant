@@ -17,11 +17,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PatientService } from '../../services/patient';
 
 /**
- * Patient Form Component
- * Formulario para crear/editar un paciente
+ * ES: Componente de formulario para crear/editar pacientes
+ * EN: Patient Form Component for create/edit operations
+ *
+ * Características / Features:
+ * - Carga datos si existe un ID en la ruta (editar)
+ * - Validación reactiva de formulario
+ * - Notificaciones con snackbars
+ * - Protección de cambios no guardados
  */
 @Component({
   selector: 'app-patient-form',
@@ -35,6 +43,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatSnackBarModule,
   ],
   templateUrl: './patient-form.component.html',
   styleUrl: './patient-form.component.scss',
@@ -44,10 +53,15 @@ export class PatientFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private patientService = inject(PatientService);
+  private snackBar = inject(MatSnackBar);
 
   form!: FormGroup;
   isLoading = false;
+  isSubmitting = false;
   errorMessage: string | null = null;
+  isEditMode = false;
+  patientId: string | null = null;
 
   readonly genderOptions = ['M', 'F', 'Other', 'Prefer not to say'];
   readonly idTypes = ['CC', 'TI', 'CE', 'PA', 'RC'];
@@ -70,6 +84,43 @@ export class PatientFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.checkForEditMode();
+  }
+
+  /**
+   * ES: Verificar si estamos en modo edición
+   * EN: Check if we are in edit mode
+   */
+  private checkForEditMode(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.patientId = id;
+      this.loadPatient(id);
+    }
+  }
+
+  /**
+   * ES: Cargar datos del paciente
+   * EN: Load patient data
+   */
+  private loadPatient(id: string): void {
+    this.isLoading = true;
+    this.patientService.getPatient(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.form.patchValue(response.data);
+        } else {
+          this.showErrorSnackBar(response.message || 'Error al cargar paciente');
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        const message = error.error?.message || 'Error al cargar paciente';
+        this.showErrorSnackBar(message);
+        this.isLoading = false;
+      },
+    });
   }
 
   private initializeForm(): void {
@@ -124,22 +175,77 @@ export class PatientFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     this.errorMessage = null;
-
     const patientData = this.form.value;
-    console.log('Submitting patient:', patientData);
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('¡Paciente registrado exitosamente!');
-      this.router.navigate(['/patients']);
-    }, 1500);
+    if (this.isEditMode && this.patientId) {
+      // Actualizar paciente existente
+      this.patientService.updatePatient(this.patientId, patientData).subscribe({
+        next: () => {
+          this.showSuccessSnackBar('Paciente actualizado exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/patient', this.patientId]);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al actualizar';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      // Crear nuevo paciente
+      this.patientService.createPatient(patientData).subscribe({
+        next: (response) => {
+          this.showSuccessSnackBar('Paciente creado exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/patient']);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al crear';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
   onCancel(): void {
-    this.router.navigate(['/patients']);
+    if (this.isEditMode && this.patientId) {
+      this.router.navigate(['/patient', this.patientId]);
+    } else {
+      this.router.navigate(['/patient']);
+    }
+  }
+
+  /**
+   * ES: Mostrar notificación de error
+   * EN: Show error snackbar
+   */
+  private showErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar'],
+    });
+  }
+
+  /**
+   * ES: Mostrar notificación de éxito
+   * EN: Show success snackbar
+   */
+  private showSuccessSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar'],
+    });
   }
 
   getErrorMessage(fieldName: string): string {

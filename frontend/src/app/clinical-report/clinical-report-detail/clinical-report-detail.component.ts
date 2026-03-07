@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ClinicalReport } from '../../models';
 import { ClinicalReportService } from '../../services/clinical-report';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 /**
  * Clinical Report Detail Component
@@ -64,7 +64,8 @@ export class ClinicalReportDetailComponent implements OnInit {
         if (response.success && response.data) {
           this.report = response.data;
         } else {
-          this.errorMessage = response.message || 'Error loading clinical report';
+          this.errorMessage =
+            response.message || 'Error loading clinical report';
           this.showErrorSnackBar(this.errorMessage);
         }
         this.isLoading = false;

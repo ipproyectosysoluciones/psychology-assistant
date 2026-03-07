@@ -16,7 +16,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BillingService } from '../../services/billing';
 
 /**
  * Billing Form Component
@@ -33,6 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSnackBarModule,
   ],
   templateUrl: './billing-form.component.html',
   styleUrl: './billing-form.component.scss',
@@ -42,10 +45,15 @@ export class BillingFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private billingService = inject(BillingService);
+  private snackBar = inject(MatSnackBar);
 
   form!: FormGroup;
   isLoading = false;
+  isSubmitting = false;
   errorMessage: string | null = null;
+  isEditMode = false;
+  billingId: string | null = null;
 
   readonly currencies = ['COP', 'USD', 'EUR', 'ARS', 'MXN', 'BRL'];
   readonly paymentMethods = ['cash', 'card', 'transfer', 'check', 'insurance'];
@@ -60,6 +68,35 @@ export class BillingFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.checkForEditMode();
+  }
+
+  private checkForEditMode(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.billingId = id;
+      this.loadBilling(id);
+    }
+  }
+
+  private loadBilling(id: string): void {
+    this.isLoading = true;
+    this.billingService.getBillingRecord(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.form.patchValue(response.data);
+        } else {
+          this.showErrorSnackBar(response.message || 'Error al cargar factura');
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        const message = error.error?.message || 'Error al cargar factura';
+        this.showErrorSnackBar(message);
+        this.isLoading = false;
+      },
+    });
   }
 
   private initializeForm(): void {
@@ -92,22 +129,67 @@ export class BillingFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     this.errorMessage = null;
-
     const billingData = this.form.value;
-    console.log('Submitting billing:', billingData);
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('¡Factura creada exitosamente!');
-      this.router.navigate(['/billing']);
-    }, 1500);
+    if (this.isEditMode && this.billingId) {
+      this.billingService.updateBillingRecord(this.billingId, billingData).subscribe({
+        next: () => {
+          this.showSuccessSnackBar('Factura actualizada exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/billing', this.billingId]);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al actualizar';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      this.billingService.createBillingRecord(billingData).subscribe({
+        next: () => {
+          this.showSuccessSnackBar('Factura creada exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/billing']);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al crear';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
   onCancel(): void {
-    this.router.navigate(['/billing']);
+    if (this.isEditMode && this.billingId) {
+      this.router.navigate(['/billing', this.billingId]);
+    } else {
+      this.router.navigate(['/billing']);
+    }
+  }
+
+  private showErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar'],
+    });
+  }
+
+  private showSuccessSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar'],
+    });
   }
 
   getErrorMessage(fieldName: string): string {

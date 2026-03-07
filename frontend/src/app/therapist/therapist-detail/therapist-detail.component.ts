@@ -12,9 +12,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { Therapist } from '../../models';
 import { TherapistService } from '../../services/therapist';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 /**
  * Therapist Detail Component
@@ -70,8 +70,7 @@ export class TherapistDetailComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        const message =
-          error.error?.message || 'Error loading therapist data';
+        const message = error.error?.message || 'Error loading therapist data';
         this.errorMessage = message;
         this.showErrorSnackBar(message);
         this.isLoading = false;
@@ -123,8 +122,7 @@ export class TherapistDetailComponent implements OnInit {
         }, 1500);
       },
       error: (error) => {
-        const message =
-          error.error?.message || 'Error al eliminar terapeuta';
+        const message = error.error?.message || 'Error al eliminar terapeuta';
         this.errorMessage = message;
         this.showErrorSnackBar(message);
         this.isLoading = false;

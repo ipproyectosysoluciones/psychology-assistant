@@ -16,7 +16,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClinicService } from '../../services/clinic';
 
 /**
  * Clinic Form Component
@@ -33,6 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSnackBarModule,
   ],
   templateUrl: './clinic-form.component.html',
   styleUrl: './clinic-form.component.scss',
@@ -42,10 +45,15 @@ export class ClinicFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private clinicService = inject(ClinicService);
+  private snackBar = inject(MatSnackBar);
 
   form!: FormGroup;
   isLoading = false;
+  isSubmitting = false;
   errorMessage: string | null = null;
+  isEditMode = false;
+  clinicId: string | null = null;
 
   readonly currencyOptions = ['USD', 'EUR', 'COP', 'ARG', 'MXN', 'BRL'];
   readonly countryOptions = [
@@ -68,6 +76,35 @@ export class ClinicFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.checkForEditMode();
+  }
+
+  private checkForEditMode(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.clinicId = id;
+      this.loadClinic(id);
+    }
+  }
+
+  private loadClinic(id: string): void {
+    this.isLoading = true;
+    this.clinicService.getClinic(id).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.form.patchValue(response.data);
+        } else {
+          this.showErrorSnackBar(response.message || 'Error al cargar clínica');
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        const message = error.error?.message || 'Error al cargar clínica';
+        this.showErrorSnackBar(message);
+        this.isLoading = false;
+      },
+    });
   }
 
   private initializeForm(): void {
@@ -104,22 +141,67 @@ export class ClinicFormComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    this.isSubmitting = true;
     this.errorMessage = null;
-
     const clinicData = this.form.value;
-    console.log('Sumitting clinic:', clinicData);
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('¡Clínica creada exitosamente!');
-      this.router.navigate(['/clinic']);
-    }, 1000);
+    if (this.isEditMode && this.clinicId) {
+      this.clinicService.updateClinic(this.clinicId, clinicData).subscribe({
+        next: () => {
+          this.showSuccessSnackBar('Clínica actualizada exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/clinic', this.clinicId]);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al actualizar';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      this.clinicService.createClinic(clinicData).subscribe({
+        next: () => {
+          this.showSuccessSnackBar('Clínica creada exitosamente');
+          setTimeout(() => {
+            this.router.navigate(['/clinic']);
+          }, 1500);
+        },
+        error: (error) => {
+          const message = error.error?.message || 'Error al crear';
+          this.errorMessage = message;
+          this.showErrorSnackBar(message);
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
   onCancel(): void {
-    this.router.navigate(['/clinic']);
+    if (this.isEditMode && this.clinicId) {
+      this.router.navigate(['/clinic', this.clinicId]);
+    } else {
+      this.router.navigate(['/clinic']);
+    }
+  }
+
+  private showErrorSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['error-snackbar'],
+    });
+  }
+
+  private showSuccessSnackBar(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'end',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar'],
+    });
   }
 
   getErrorMessage(fieldName: string): string {
