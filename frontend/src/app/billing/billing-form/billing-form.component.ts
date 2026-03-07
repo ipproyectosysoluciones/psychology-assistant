@@ -116,8 +116,7 @@ export class BillingFormComponent implements OnInit {
 
     const errors = control.errors;
     if (errors['required']) return this.errorMessages.required;
-    if (errors['min'])
-      return `El valor debe ser mayor a ${errors['min'].min}`;
+    if (errors['min']) return `El valor debe ser mayor a ${errors['min'].min}`;
     if (errors['pattern']) return this.errorMessages.pattern;
 
     return 'Error de validación';

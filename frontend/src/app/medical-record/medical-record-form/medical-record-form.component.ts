@@ -70,10 +70,7 @@ export class MedicalRecordFormComponent implements OnInit {
       treatmentPlan: ['', [Validators.maxLength(2000)]],
       interventions: [''],
       clinicalNotes: ['', [Validators.required, Validators.maxLength(3000)]],
-      progressRating: [
-        '',
-        [Validators.min(1), Validators.max(10)],
-      ],
+      progressRating: ['', [Validators.min(1), Validators.max(10)]],
       nextSteps: ['', Validators.maxLength(1000)],
       medications: [''],
       referrals: [''],
@@ -115,8 +112,7 @@ export class MedicalRecordFormComponent implements OnInit {
     if (errors['minlength'])
       return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
     if (errors['pattern']) return this.errorMessages.pattern;
-    if (errors['min'])
-      return `El valor debe ser mayor a ${errors['min'].min}`;
+    if (errors['min']) return `El valor debe ser mayor a ${errors['min'].min}`;
 
     return 'Error de validación';
   }

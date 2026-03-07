@@ -1,0 +1,87 @@
+<div class="list-container">
+  <mat-toolbar color="primary" class="list-toolbar">
+    <h1>Historias Clínicas</h1>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Nuevo Registro
+    </button>
+  </mat-toolbar>
+
+  @if (isLoading) {
+    <div class="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando registros...</p>
+    </div>
+  } @else {
+    <div class="list-content">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar registros</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ej: diagnóstico, terapeuta..." />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- Record Date Column -->
+          <ng-container matColumnDef="recordDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+            <td mat-cell *matCellDef="let element">{{ element.recordDate | date: 'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <!-- Primary Diagnosis Column -->
+          <ng-container matColumnDef="primaryDiagnosis">
+            <th mat-header-cell *matHeaderCellDef>Diagnóstico Primario</th>
+            <td mat-cell *matCellDef="let element" class="truncate">{{ element.primaryDiagnosis }}</td>
+          </ng-container>
+
+          <!-- Therapist Column -->
+          <ng-container matColumnDef="therapist">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Terapeuta</th>
+            <td mat-cell *matCellDef="let element">{{ element.therapist }}</td>
+          </ng-container>
+
+          <!-- Progress Rating Column -->
+          <ng-container matColumnDef="progressRating">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Progreso</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="progress-badge" [style.backgroundColor]="getProgressColor(element.progressRating)">
+                {{ element.progressRating }}/10
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+            <td mat-cell *matCellDef="let element">
+              <span [class.status-completed]="element.status === 'completed'" 
+                    [class.status-draft]="element.status === 'draft'"
+                    class="status-badge">
+                {{ element.status }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button color="primary" (click)="onEdit(element.id)" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="onDelete(element.id)" matTooltip="Eliminar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+    </div>
+  }
+</div>

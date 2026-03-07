@@ -47,8 +47,20 @@ export class ClinicalReportFormComponent implements OnInit {
   isLoading = false;
   errorMessage: string | null = null;
 
-  readonly reportTypes = ['progress', 'discharge', 'assessment', 'evaluation', 'summary'];
-  readonly followUpOptions = ['continue', 'reduce_frequency', 'increase_frequency', 'discharge', 'referral'];
+  readonly reportTypes = [
+    'progress',
+    'discharge',
+    'assessment',
+    'evaluation',
+    'summary',
+  ];
+  readonly followUpOptions = [
+    'continue',
+    'reduce_frequency',
+    'increase_frequency',
+    'discharge',
+    'referral',
+  ];
   readonly statuses = ['draft', 'completed', 'reviewed', 'archived'];
 
   errorMessages = {
@@ -76,14 +88,8 @@ export class ClinicalReportFormComponent implements OnInit {
       recommendations: [''],
       treatmentGoals: [''],
       sessionCount: [0, Validators.min(0)],
-      attackanceRate: [
-        '',
-        [Validators.min(0), Validators.max(100)],
-      ],
-      overallProgress: [
-        '',
-        [Validators.min(1), Validators.max(10)],
-      ],
+      attackanceRate: ['', [Validators.min(0), Validators.max(100)]],
+      overallProgress: ['', [Validators.min(1), Validators.max(10)]],
       clinicalObservations: ['', Validators.maxLength(2000)],
       diagnosis: ['', Validators.required],
       prognosis: ['', Validators.maxLength(1000)],
@@ -127,10 +133,8 @@ export class ClinicalReportFormComponent implements OnInit {
     if (errors['minlength'])
       return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
     if (errors['pattern']) return this.errorMessages.pattern;
-    if (errors['min'])
-      return `El valor debe ser mayor a ${errors['min'].min}`;
-    if (errors['max'])
-      return `El valor no debe exceder ${errors['max'].max}`;
+    if (errors['min']) return `El valor debe ser mayor a ${errors['min'].min}`;
+    if (errors['max']) return `El valor no debe exceder ${errors['max'].max}`;
 
     return 'Error de validación';
   }

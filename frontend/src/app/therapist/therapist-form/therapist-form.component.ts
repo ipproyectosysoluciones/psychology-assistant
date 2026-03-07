@@ -91,10 +91,7 @@ export class TherapistFormComponent implements OnInit {
         ],
       ],
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.minLength(8)],
-      ],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       phone: [
         '',
         [Validators.required, Validators.pattern(/^\+?[\d\s-()]{10,}$/)],
@@ -102,10 +99,7 @@ export class TherapistFormComponent implements OnInit {
       licenseType: ['', Validators.required],
       licenseNumber: ['', Validators.required],
       specializations: [[], Validators.required],
-      hourlyRate: [
-        '',
-        [Validators.required, Validators.min(0)],
-      ],
+      hourlyRate: ['', [Validators.required, Validators.min(0)]],
       bio: ['', [Validators.maxLength(1000)]],
       languages: ['', Validators.required],
       yearsExperience: [
@@ -152,8 +146,7 @@ export class TherapistFormComponent implements OnInit {
     if (errors['minlength'])
       return `Mínimo ${errors['minlength'].requiredLength} caracteres`;
     if (errors['pattern']) return this.errorMessages.pattern;
-    if (errors['min'])
-      return `El valor debe ser mayor a ${errors['min'].min}`;
+    if (errors['min']) return `El valor debe ser mayor a ${errors['min'].min}`;
 
     return 'Error de validación';
   }

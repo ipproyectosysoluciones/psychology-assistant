@@ -51,7 +51,13 @@ export class PatientFormComponent implements OnInit {
 
   readonly genderOptions = ['M', 'F', 'Other', 'Prefer not to say'];
   readonly idTypes = ['CC', 'TI', 'CE', 'PA', 'RC'];
-  readonly employmentStatuses = ['employed', 'self-employed', 'student', 'unemployed', 'retired'];
+  readonly employmentStatuses = [
+    'employed',
+    'self-employed',
+    'student',
+    'unemployed',
+    'retired',
+  ];
   readonly patientStatuses = ['active', 'inactive', 'paused'];
 
   errorMessages = {
@@ -70,11 +76,19 @@ export class PatientFormComponent implements OnInit {
     this.form = this.fb.group({
       firstName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
       ],
       lastName: [
         '',
-        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
       ],
       email: ['', [Validators.email]],
       dateOfBirth: ['', Validators.required],

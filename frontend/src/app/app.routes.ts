@@ -6,16 +6,16 @@ import { AppointmentListComponent } from './appointments/appointment-list/appoin
 import { LoginComponent } from './auth/login/login';
 import { RegisterComponent } from './auth/register/register';
 import { TwoFaSetupComponent } from './auth/two-fa-setup/two-fa-setup';
+import { BillingFormComponent } from './billing/billing-form/billing-form.component';
+import { ClinicFormComponent } from './clinic/clinic-form/clinic-form.component';
+import { ClinicalReportFormComponent } from './clinical-report/clinical-report-form/clinical-report-form.component';
 import { DashboardComponent } from './dashboard/dashboard';
 import { authGuard } from './guards/auth-guard';
-import { ProfileComponent } from './users/profile/profile';
 import { LandingComponent } from './landing/landing.component';
-import { ClinicFormComponent } from './clinic/clinic-form/clinic-form.component';
-import { TherapistFormComponent } from './therapist/therapist-form/therapist-form.component';
-import { PatientFormComponent } from './patient/patient-form/patient-form.component';
 import { MedicalRecordFormComponent } from './medical-record/medical-record-form/medical-record-form.component';
-import { BillingFormComponent } from './billing/billing-form/billing-form.component';
-import { ClinicalReportFormComponent } from './clinical-report/clinical-report-form/clinical-report-form.component';
+import { PatientFormComponent } from './patient/patient-form/patient-form.component';
+import { TherapistFormComponent } from './therapist/therapist-form/therapist-form.component';
+import { ProfileComponent } from './users/profile/profile';
 
 export const routes: Routes = [
   { path: 'landing', component: LandingComponent },

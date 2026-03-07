@@ -13,9 +13,11 @@ Complete REST API for Psychology Assistant Platform - a comprehensive solution f
 ## Authentication
 
 ### Register
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/register`
 - **Body:**
+
   ```json
   {
     "name": "Dr. Juan Pérez",
@@ -24,7 +26,9 @@ Complete REST API for Psychology Assistant Platform - a comprehensive solution f
     "role": "psychologist"
   }
   ```
+
 - **Response:** `201 Created`
+
   ```json
   {
     "statusCode": 201,
@@ -34,16 +38,20 @@ Complete REST API for Psychology Assistant Platform - a comprehensive solution f
   ```
 
 ### Login
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/login`
 - **Body:**
+
   ```json
   {
     "email": "juan@example.com",
     "password": "SecurePassword123!"
   }
   ```
+
 - **Response:** `200 OK`
+
   ```json
   {
     "statusCode": 200,
@@ -59,10 +67,12 @@ Complete REST API for Psychology Assistant Platform - a comprehensive solution f
 Full multi-clinic management system.
 
 ### Create Clinic
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/clinics`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "name": "Clínica Psicología Integral",
@@ -74,21 +84,25 @@ Full multi-clinic management system.
     "currency": "COP"
   }
   ```
+
 - **Response:** `201 Created`
 
 ### Get Clinic
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/clinics/:id`
 - **Auth:** Bearer Token (Required)
 - **Response:** `200 OK`
 
 ### Update Clinic
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/clinics/:id`
 - **Auth:** Bearer Token (Required)
 - **Response:** `200 OK`
 
 ### Delete Clinic
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/clinics/:id`
 - **Auth:** Bearer Token (Required)
@@ -101,10 +115,12 @@ Full multi-clinic management system.
 Professional psychologist management with licensing and availability.
 
 ### Create Therapist
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/therapists`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "user": "user_id",
@@ -118,18 +134,22 @@ Professional psychologist management with licensing and availability.
   ```
 
 ### Get Therapist
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/therapists/:id`
 
 ### List Therapists by Clinic
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/clinics/:clinicId/therapists`
 
 ### Update Therapist
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/therapists/:id`
 
 ### Delete Therapist
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/therapists/:id`
 
@@ -140,10 +160,12 @@ Professional psychologist management with licensing and availability.
 Patient registry with comprehensive demographic and contact information.
 
 ### Create Patient
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/patients`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "firstName": "Carlos",
@@ -159,19 +181,23 @@ Patient registry with comprehensive demographic and contact information.
   ```
 
 ### Get Patient
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/patients/:id`
 
 ### List Patients by Clinic
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/clinics/:clinicId/patients`
 - **Query Params:** `page=1&limit=10&status=active`
 
 ### Update Patient
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/patients/:id`
 
 ### Delete Patient
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/patients/:id`
 
@@ -182,10 +208,12 @@ Patient registry with comprehensive demographic and contact information.
 Clinical documentation with CIE-10 diagnosis codes and treatment planning.
 
 ### Create Medical Record
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/medical-records`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "patient": "patient_id",
@@ -199,18 +227,22 @@ Clinical documentation with CIE-10 diagnosis codes and treatment planning.
   ```
 
 ### Get Medical Record
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/medical-records/:id`
 
 ### List Records by Patient
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/patients/:patientId/medical-records`
 
 ### Update Medical Record
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/medical-records/:id`
 
 ### Delete Medical Record
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/medical-records/:id`
 
@@ -221,10 +253,12 @@ Clinical documentation with CIE-10 diagnosis codes and treatment planning.
 Integrated invoicing and payment management system.
 
 ### Create Invoice
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/billings`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "patient": "patient_id",
@@ -243,26 +277,32 @@ Integrated invoicing and payment management system.
     ]
   }
   ```
+
 - **Response:** `201 Created`
 
 ### Get Invoice
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/billings/:id`
 
 ### List Invoices by Patient
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/patients/:patientId/billings`
 - **Query Params:** `page=1&limit=10&status=paid`
 
 ### Update Invoice
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/billings/:id`
 
 ### Mark as Paid
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/billings/:id/pay`
 
 ### Delete Invoice
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/billings/:id`
 
@@ -273,10 +313,12 @@ Integrated invoicing and payment management system.
 Progress tracking and clinical documentation system.
 
 ### Create Report
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/clinical-reports`
 - **Auth:** Bearer Token (Required)
 - **Body:**
+
   ```json
   {
     "patient": "patient_id",
@@ -291,22 +333,27 @@ Progress tracking and clinical documentation system.
   ```
 
 ### Get Report
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/clinical-reports/:id`
 
 ### List Reports by Patient
+
 - **Method:** `GET`
 - **Endpoint:** `/api/v1/patients/:patientId/clinical-reports`
 
 ### Update Report
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/v1/clinical-reports/:id`
 
 ### Mark as Reviewed
+
 - **Method:** `POST`
 - **Endpoint:** `/api/v1/clinical-reports/:id/review`
 
 ### Delete Report
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/v1/clinical-reports/:id`
 
@@ -326,6 +373,7 @@ All error responses follow this format:
 ```
 
 ### Common Error Codes
+
 - **400** Bad Request - Invalid input
 - **401** Unauthorized - Missing or invalid token
 - **403** Forbidden - Permission denied
