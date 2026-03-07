@@ -376,7 +376,12 @@ export interface ClinicalReport {
   patient?: string; // Reference to Patient
   clinic?: string; // Reference to Clinic
   therapist?: string; // Reference to Therapist
-  reportType: 'progress' | 'discharge' | 'assessment' | 'evaluation' | 'summary';
+  reportType:
+    | 'progress'
+    | 'discharge'
+    | 'assessment'
+    | 'evaluation'
+    | 'summary';
   reportDate: string; // Date
   fromDate: string; // Date
   toDate: string; // Date

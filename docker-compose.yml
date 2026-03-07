@@ -6,7 +6,7 @@ services:
     build: .
     container_name: psychology-assistant-api
     ports:
-      - "5000:5000"
+      - '5000:5000'
     environment:
       - NODE_ENV=production
       - MONGO_URI=mongodb://mongodb:27017/psychology-assistant
@@ -23,7 +23,7 @@ services:
       - psychology-network
     restart: always
     healthcheck:
-      test: ["CMD", "node", "scripts/healthcheck.js"]
+      test: ['CMD', 'node', 'scripts/healthcheck.js']
       interval: 30s
       timeout: 10s
       start_period: 40s
@@ -36,7 +36,7 @@ services:
     image: mongo:6.0
     container_name: psychology-assistant-mongodb
     ports:
-      - "27017:27017"
+      - '27017:27017'
     environment:
       - MONGO_INITDB_DATABASE=psychology-assistant
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER:-admin}
@@ -49,7 +49,7 @@ services:
       - psychology-network
     restart: always
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
       interval: 30s
       timeout: 10s
       start_period: 40s

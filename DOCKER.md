@@ -5,6 +5,7 @@
 Este proyecto incluye configuración completa de Docker para desarrollo y producción.
 
 **Files:**
+
 - `Dockerfile` - Production image for Node.js backend
 - `docker-compose.yml` - Production stack with MongoDB
 - `docker-compose.dev.yml` - Development stack with frontend and backend
@@ -28,6 +29,7 @@ docker-compose -f docker-compose.dev.yml down
 ```
 
 **Access points:**
+
 - Frontend: http://localhost:4200
 - Backend: http://localhost:5000
 - MongoDB: mongodb://localhost:27017

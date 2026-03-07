@@ -119,8 +119,7 @@ describe('Billing Workflows', () => {
     cy.typeFormField('lineItems.1.unitPrice', '50000');
 
     // Verify total calculation
-    cy.get('[data-test="total-amount"]')
-      .should('contain', '150000'); // 100000 + 50000
+    cy.get('[data-test="total-amount"]').should('contain', '150000'); // 100000 + 50000
   });
 
   it('should apply discounts and taxes', () => {
@@ -131,8 +130,7 @@ describe('Billing Workflows', () => {
     cy.typeFormField('discount', '10000');
 
     // Verify final amount
-    cy.get('[data-test="final-amount"]')
-      .should('contain', '109000'); // 100000 + 19000 - 10000
+    cy.get('[data-test="final-amount"]').should('contain', '109000'); // 100000 + 19000 - 10000
   });
 });
 
@@ -185,10 +183,7 @@ describe('Billing Error Scenarios', () => {
     cy.fillBillingForm(testBilling);
     cy.get('button').contains('Guardar').click();
 
-    cy.get('.error-snackbar').should(
-      'contain',
-      'Error de conexión',
-    );
+    cy.get('.error-snackbar').should('contain', 'Error de conexión');
   });
 });
 
