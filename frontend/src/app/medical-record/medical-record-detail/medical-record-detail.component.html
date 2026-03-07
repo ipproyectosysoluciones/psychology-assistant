@@ -1,0 +1,170 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalle del Registro Médico</h1>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando registro médico...</p>
+    </div>
+  } @else if (errorMessage) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button mat-stroked-button (click)="onBack()">Volver</button>
+      </mat-card-content>
+    </mat-card>
+  } @else if (record) {
+    <div class="detail-content">
+      <!-- Información General -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información General</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Paciente:</span>
+              <span class="value">{{ record.patientName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Fecha del Registro:</span>
+              <span class="value">{{ record.recordDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Terapeuta:</span>
+              <span class="value">{{ record.therapist }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado:</span>
+              <span class="value badge status-completed">{{ record.status }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Diagnóstico -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Diagnóstico</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <span class="label">Diagnóstico Primario:</span>
+              <span class="value">{{ record.primaryDiagnosis }}</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Diagnóstico Secundario:</span>
+              <span class="value">{{ record.secondaryDiagnosis }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Código ICD:</span>
+              <span class="value">{{ record.icdCode }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Síntomas -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Síntomas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (record.symptoms && record.symptoms.length > 0) {
+            <ul class="symptoms-list">
+              @for (symptom of record.symptoms; track symptom) {
+                <li>
+                  <mat-icon>check_circle</mat-icon>
+                  {{ symptom }}
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="no-data">Sin síntomas registrados</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Plan de Tratamiento -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Plan de Tratamiento</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-section">
+            <h4>Tratamiento:</h4>
+            <p class="treatment-text">{{ record.treatment }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Medicamentos -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Medicamentos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (record.medications && record.medications.length > 0) {
+            <div class="medications-list">
+              @for (med of record.medications; track med.name) {
+                <div class="medication-item">
+                  <div class="med-header">
+                    <span class="med-name">{{ med.name }}</span>
+                    <span class="med-dose">{{ med.dose }}</span>
+                  </div>
+                  <div class="med-frequency">
+                    <mat-icon>schedule</mat-icon>
+                    {{ med.frequency }}
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin medicamentos registrados</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Plan de Seguimiento -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Plan de Seguimiento</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="followup-text">{{ record.followUpPlan }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Notas -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Notas Adicionales</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="notes-text">{{ record.notes }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Auditoría -->
+      <div class="audit-info">
+        <span>Creado: {{ record.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizado: {{ record.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,182 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalle del Terapeuta</h1>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando información del terapeuta...</p>
+    </div>
+  } @else if (errorMessage) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button mat-stroked-button (click)="onBack()">Volver</button>
+      </mat-card-content>
+    </mat-card>
+  } @else if (therapist) {
+    <div class="detail-content">
+      <!-- Información Personal -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información Personal</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ therapist.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ therapist.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ therapist.phone }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Número de Licencia:</span>
+              <span class="value">{{ therapist.licenseNumber }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Tipo de Licencia:</span>
+              <span class="value">{{ therapist.licenseType }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado:</span>
+              <span class="value badge status-active">{{ therapist.status }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Biografía y Experiencia -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Biografía y Experiencia</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="bio-text">
+            <p>{{ therapist.biography }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Especialidades -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Especialidades</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (therapist.specializations && therapist.specializations.length > 0) {
+            <div class="tags">
+              @for (spec of therapist.specializations; track spec) {
+                <span class="tag">{{ spec }}</span>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin especialidades registradas</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Educación -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Educación y Certificaciones</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (therapist.education && therapist.education.length > 0) {
+            <ul class="education-list">
+              @for (edu of therapist.education; track edu) {
+                <li>
+                  <mat-icon>school</mat-icon>
+                  {{ edu }}
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="no-data">Sin educación registrada</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Horario de Trabajo -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Horario de Trabajo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="schedule">
+            @for (day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']; track day) {
+              <div class="schedule-item">
+                <span class="day">{{ day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : 'Viernes' }}</span>
+                <span class="time">{{ therapist.workSchedule[day] }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Servicios Ofrecidos -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Servicios Ofrecidos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (therapist.offeringServices && therapist.offeringServices.length > 0) {
+            <div class="services">
+              @for (service of therapist.offeringServices; track service) {
+                <div class="service-item">
+                  <mat-icon>check_circle</mat-icon>
+                  {{ service }}
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin servicios registrados</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Estadísticas -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Estadísticas</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Pacientes Activos:</span>
+              <span class="value stats">{{ therapist.patientCount }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Promedio de Calificación:</span>
+              <span class="value stats">{{ therapist.averageRating }}/5.0 ⭐</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Auditoría -->
+      <div class="audit-info">
+        <span>Creado: {{ therapist.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizado: {{ therapist.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  }
+</div>

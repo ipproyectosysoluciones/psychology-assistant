@@ -1,0 +1,312 @@
+.detail-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: #1976d2;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.detail-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.detail-header .spacer {
+  flex: 1 1 auto;
+}
+
+.detail-header button {
+  margin-left: 0.5rem;
+}
+
+.back-btn {
+  color: white;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1.5rem;
+  background: white;
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.loading-state p {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.error-card {
+  margin-bottom: 2rem;
+  border-left: 4px solid #d32f2f;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+}
+
+.detail-content {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.info-card {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.info-card mat-card-header {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0;
+}
+
+.info-card mat-card-header mat-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.info-card mat-card-content {
+  padding: 1.5rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-item .label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item .value {
+  color: #333;
+  font-size: 1.05rem;
+  padding: 0.5rem;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid #1976d2;
+  padding-left: 1rem;
+}
+
+.value.badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: none;
+}
+
+.value.badge.status-completed {
+  background: #c8e6c9;
+  color: #2e7d32;
+}
+
+.value.badge.status-draft {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.info-section {
+  margin-bottom: 1.5rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h4 {
+  margin: 0 0 0.5rem 0;
+  color: #555;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+}
+
+.symptoms-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.symptoms-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #f9f9f9;
+  border-radius: 4px;
+  color: #333;
+}
+
+.symptoms-list mat-icon {
+  color: #2e7d32;
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.treatment-text,
+.followup-text,
+.notes-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.medications-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.medication-item {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-left: 4px solid #1976d2;
+  border-radius: 4px;
+}
+
+.med-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.med-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.05rem;
+}
+
+.med-dose {
+  background: #1976d2;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.med-frequency {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.med-frequency mat-icon {
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+}
+
+.no-data {
+  color: #999;
+  font-style: italic;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+.audit-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #999;
+  text-align: right;
+}
+
+.audit-info span {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .detail-container {
+    padding: 1rem;
+  }
+
+  .detail-header {
+    flex-wrap: wrap;
+    padding: 1rem;
+  }
+
+  .detail-header h1 {
+    font-size: 1.35rem;
+    flex-basis: 100%;
+  }
+
+  .detail-header button {
+    width: 100%;
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-info {
+    flex-direction: column;
+    text-align: left;
+    gap: 0.5rem;
+  }
+
+  .audit-info span {
+    display: inline;
+  }
+}

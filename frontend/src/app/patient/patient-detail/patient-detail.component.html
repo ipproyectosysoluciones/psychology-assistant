@@ -1,0 +1,205 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalle del Paciente</h1>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando información del paciente...</p>
+    </div>
+  } @else if (errorMessage) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button mat-stroked-button (click)="onBack()">Volver</button>
+      </mat-card-content>
+    </mat-card>
+  } @else if (patient) {
+    <div class="detail-content">
+      <!-- Información Personal -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información Personal</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nombres:</span>
+              <span class="value">{{ patient.firstName }} {{ patient.lastName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ patient.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ patient.phone }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Tipo de ID:</span>
+              <span class="value">{{ patient.idType }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Número de ID:</span>
+              <span class="value">{{ patient.idNumber }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Fecha de Nacimiento:</span>
+              <span class="value">{{ patient.dateOfBirth | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Género:</span>
+              <span class="value">{{ patient.gender === 'M' ? 'Masculino' : 'Femenino' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado:</span>
+              <span class="value badge" [ngClass]="'status-' + patient.status">
+                {{ patient.status === 'active' ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Contacto -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información de Contacto</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <span class="label">Dirección:</span>
+              <span class="value">{{ patient.address }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Ciudad:</span>
+              <span class="value">{{ patient.city }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">País:</span>
+              <span class="value">{{ patient.country }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Código Postal:</span>
+              <span class="value">{{ patient.postalCode }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Seguro -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información de Seguro</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Aseguradora:</span>
+              <span class="value">{{ patient.insurance }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Plan:</span>
+              <span class="value">{{ patient.insurancePlan }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información Laboral -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información Laboral</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Estado Laboral:</span>
+              <span class="value">{{ patient.employmentStatus }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Ocupación:</span>
+              <span class="value">{{ patient.occupation }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Contacto de Emergencia -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Contacto de Emergencia</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ patient.emergencyContactName }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ patient.emergencyContactPhone }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Relación:</span>
+              <span class="value">{{ patient.emergencyContactRelationship }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Historial Médico -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Historial Médico</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-section">
+            <h4>Antecedentes Médicos:</h4>
+            @if (patient.medicalHistory && patient.medicalHistory.length > 0) {
+              <ul class="list">
+                @for (item of patient.medicalHistory; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            } @else {
+              <p class="no-data">Sin registro</p>
+            }
+          </div>
+          <div class="info-section">
+            <h4>Alergias:</h4>
+            @if (patient.allergies && patient.allergies.length > 0) {
+              <ul class="list">
+                @for (allergy of patient.allergies; track allergy) {
+                  <li>{{ allergy }}</li>
+                }
+              </ul>
+            } @else {
+              <p class="no-data">Sin registro</p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Auditoría -->
+      <div class="audit-info">
+        <span>Creado: {{ patient.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizado: {{ patient.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  }
+</div>

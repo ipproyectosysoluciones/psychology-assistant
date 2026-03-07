@@ -1,0 +1,168 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalle del Reporte Clínico</h1>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando reporte clínico...</p>
+    </div>
+  } @else if (errorMessage) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button mat-stroked-button (click)="onBack()">Volver</button>
+      </mat-card-content>
+    </mat-card>
+  } @else if (report) {
+    <div class="detail-content">
+      <!-- Información General del Reporte -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>{{ report.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Tipo de Reporte:</span>
+              <span class="value">{{ report.reportType }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Fecha del Reporte:</span>
+              <span class="value">{{ report.reportDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Paciente:</span>
+              <span class="value">{{ report.patient }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Terapeuta:</span>
+              <span class="value">{{ report.therapist }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Número de Sesiones:</span>
+              <span class="value">{{ report.sessionCount }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Progreso General:</span>
+              <span class="value progress">{{ report.overallProgress }}/10</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado:</span>
+              <span class="value badge status-completed">{{ report.status }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Resumen de Sesiones -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Resumen de Sesiones</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="summary-text">{{ report.sessionsSummary }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Enfoque Terapéutico -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Enfoque Terapéutico</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="therapy-text">{{ report.therapeuticApproach }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Logros Clave -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Logros Clave</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (report.keyAchievements && report.keyAchievements.length > 0) {
+            <ul class="achievements-list">
+              @for (achievement of report.keyAchievements; track achievement) {
+                <li>
+                  <mat-icon>check_circle</mat-icon>
+                  {{ achievement }}
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="no-data">Sin logros registrados</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Desafíos y Obstáculos -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Desafíos y Obstáculos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="challenges-text">{{ report.challengesAndObstacles }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Próximos Pasos -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Próximos Pasos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="next-steps-text">{{ report.nextSteps }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Recomendaciones -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Recomendaciones</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="recommendations-text">{{ report.recommendations }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Evaluación Clínica -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Evaluación Clínica</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Evaluación:</span>
+              <span class="value clinical-rating">{{ report.clinicalRating }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Revisado Por:</span>
+              <span class="value">{{ report.reviewedBy }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Auditoría -->
+      <div class="audit-info">
+        <span>Creado: {{ report.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizado: {{ report.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  }
+</div>

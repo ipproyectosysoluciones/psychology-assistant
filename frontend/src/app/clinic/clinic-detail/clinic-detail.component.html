@@ -1,0 +1,202 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalle de la Clínica</h1>
+    <div class="spacer"></div>
+    <button mat-raised-button color="primary" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+    <button mat-raised-button color="warn" (click)="onDelete()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <mat-spinner></mat-spinner>
+      <p>Cargando información de la clínica...</p>
+    </div>
+  } @else if (errorMessage) {
+    <mat-card class="error-card">
+      <mat-card-content>
+        <p class="error-message">{{ errorMessage }}</p>
+        <button mat-stroked-button (click)="onBack()">Volver</button>
+      </mat-card-content>
+    </mat-card>
+  } @else if (clinic) {
+    <div class="detail-content">
+      <!-- Información General -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información General</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ clinic.name }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Email:</span>
+              <span class="value">{{ clinic.email }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ clinic.phone }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Sitio Web:</span>
+              <span class="value">{{ clinic.website }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Número de Licencia:</span>
+              <span class="value">{{ clinic.licenseNumber }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado:</span>
+              <span class="value badge status-active">{{ clinic.status }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Ubicación -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Ubicación</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item full-width">
+              <span class="label">Dirección:</span>
+              <span class="value">{{ clinic.address }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Ciudad:</span>
+              <span class="value">{{ clinic.city }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Departamento:</span>
+              <span class="value">{{ clinic.state }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Código Postal:</span>
+              <span class="value">{{ clinic.postalCode }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">País:</span>
+              <span class="value">{{ clinic.country }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Servicios -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Servicios Ofrecidos</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (clinic.services && clinic.services.length > 0) {
+            <div class="tags">
+              @for (service of clinic.services; track service) {
+                <span class="tag service">{{ service }}</span>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin servicios registrados</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Especialidades -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Especialidades</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (clinic.specialties && clinic.specialties.length > 0) {
+            <div class="tags">
+              @for (specialty of clinic.specialties; track specialty) {
+                <span class="tag specialty">{{ specialty }}</span>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin especialidades registradas</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Horario de Operación -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Horario de Operación</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="schedule">
+            @for (day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; track day) {
+              <div class="schedule-item">
+                <span class="day">{{ day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : 'Sábado' }}</span>
+                <span class="time">{{ clinic.operatingHours[day] }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Seguros Aceptados -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Seguros Aceptados</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (clinic.insuranceAccepted && clinic.insuranceAccepted.length > 0) {
+            <div class="insurance-list">
+              @for (insurance of clinic.insuranceAccepted; track insurance) {
+                <div class="insurance-item">
+                  <mat-icon>verified</mat-icon>
+                  {{ insurance }}
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="no-data">Sin información de seguros</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Estadísticas -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Información Adicional</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Número de Terapeutas:</span>
+              <span class="value stats">{{ clinic.therapistCount }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Promedio de Calificación:</span>
+              <span class="value stats">{{ clinic.averageRating }}/5.0 ⭐</span>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Acreditación:</span>
+              <span class="value">{{ clinic.accreditation }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de Auditoría -->
+      <div class="audit-info">
+        <span>Creado: {{ clinic.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+        <span>Actualizado: {{ clinic.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  }
+</div>
