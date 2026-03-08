@@ -24,7 +24,7 @@ export const createBilling = async (req, res, next) => {
       discount,
       tax,
       paymentMethod,
-      insurance,
+      insurance
     } = req.body;
 
     const invoiceNumber = `INV-${Date.now()}`;
@@ -42,7 +42,7 @@ export const createBilling = async (req, res, next) => {
       tax: tax || 0,
       paymentMethod,
       insurance,
-      status: 'draft',
+      status: 'draft'
     });
 
     return res
@@ -101,8 +101,8 @@ export const getPatientBillings = async (req, res, next) => {
         new ApiResponse(
           200,
           { billings, total, page, pages: Math.ceil(total / limit) },
-          'Facturas obtenidas',
-        ),
+          'Facturas obtenidas'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -132,7 +132,7 @@ export const updateBilling = async (req, res, next) => {
       discount,
       tax,
       paymentMethod,
-      status,
+      status
     } = req.body;
 
     if (amount) billing.amount = amount;
@@ -220,8 +220,8 @@ export const getClinicBillings = async (req, res, next) => {
         new ApiResponse(
           200,
           { billings, total, page, pages: Math.ceil(total / limit) },
-          'Facturas obtenidas',
-        ),
+          'Facturas obtenidas'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));

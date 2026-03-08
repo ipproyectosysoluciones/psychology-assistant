@@ -160,7 +160,7 @@ export class PatientFormComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = null;
     const formValue = this.form.value;
-    
+
     // Transform form data to match Patient model
     const patientData = {
       ...formValue,
@@ -169,8 +169,12 @@ export class PatientFormComponent implements OnInit {
         phone: formValue.emergencyContactPhone,
         relationship: formValue.emergencyContactRelationship,
       },
-      allergies: formValue.allergies ? formValue.allergies.split(',').map((a: string) => a.trim()) : [],
-      medications: formValue.medications ? formValue.medications.split(',').map((m: string) => m.trim()) : [],
+      allergies: formValue.allergies
+        ? formValue.allergies.split(',').map((a: string) => a.trim())
+        : [],
+      medications: formValue.medications
+        ? formValue.medications.split(',').map((m: string) => m.trim())
+        : [],
     };
     delete patientData.emergencyContactName;
     delete patientData.emergencyContactPhone;

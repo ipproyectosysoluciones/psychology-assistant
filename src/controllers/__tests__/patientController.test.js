@@ -10,7 +10,7 @@ const expect = (val) => ({
   },
   toBe: function () {
     return true;
-  },
+  }
 });
 
 describe('Patient Controller', () => {
@@ -32,7 +32,7 @@ describe('Patient Controller', () => {
         idNumber: '1234567890',
         address: '123 Calle Principal',
         phone: '+57 1 2345678',
-        insurance: 'Sura',
+        insurance: 'Sura'
       };
       expect(patientData).toBeDefined();
       patientId = 'mock-patient-id';

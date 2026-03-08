@@ -10,86 +10,86 @@ const patientSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: true
     },
     clinic: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Clinic',
-      required: true,
+      required: true
     },
     dateOfBirth: {
       type: Date,
-      required: true,
+      required: true
     },
     gender: {
       type: String,
       enum: ['M', 'F', 'Other', 'Prefer not to say'],
-      required: true,
+      required: true
     },
     idType: {
       type: String,
       enum: ['CC', 'TI', 'CE', 'PA', 'RC'],
-      required: true,
+      required: true
     },
     idNumber: {
       type: String,
-      required: true,
+      required: true
     },
     address: {
       type: String,
-      required: true,
+      required: true
     },
     phone: {
       type: String,
-      required: true,
+      required: true
     },
     insurance: {
       type: String,
-      trim: true,
+      trim: true
     },
     insurancePlan: {
       type: String,
-      trim: true,
+      trim: true
     },
     employmentStatus: {
       type: String,
       enum: ['employed', 'self-employed', 'student', 'unemployed', 'retired'],
-      default: 'employed',
+      default: 'employed'
     },
     emergencyContact: {
       name: String,
       relationship: String,
-      phone: String,
+      phone: String
     },
     medicalHistory: {
       type: String,
-      maxlength: 2000,
+      maxlength: 2000
     },
     allergies: {
       type: [String],
-      default: [],
+      default: []
     },
     medications: {
       type: [String],
-      default: [],
+      default: []
     },
     status: {
       type: String,
       enum: ['active', 'inactive', 'paused'],
-      default: 'active',
+      default: 'active'
     },
     preferredTherapist: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Therapist',
+      ref: 'Therapist'
     },
     notes: {
       type: String,
-      maxlength: 1000,
-    },
+      maxlength: 1000
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 patientSchema.index({ clinic: 1 });

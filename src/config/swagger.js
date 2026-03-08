@@ -19,26 +19,26 @@ const options = {
         'API para gestión integral de clínicas psicológicas con CRM completo',
       contact: {
         name: 'Psychology Assistant Team',
-        email: 'support@psychology-assistant.com',
-      },
+        email: 'support@psychology-assistant.com'
+      }
     },
     servers: [
       {
         url: `http://localhost:${environment.PORT}`,
-        description: 'Development server',
+        description: 'Development server'
       },
       {
         url: 'https://api.psychology-assistant.com',
-        description: 'Production server',
-      },
+        description: 'Production server'
+      }
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
+          bearerFormat: 'JWT'
+        }
       },
       schemas: {
         Clinic: {
@@ -53,18 +53,18 @@ const options = {
             country: { type: 'string', default: 'Colombia' },
             currency: {
               type: 'string',
-              enum: ['COP', 'USD', 'ARS', 'MXN', 'CLP', 'PEN'],
+              enum: ['COP', 'USD', 'ARS', 'MXN', 'CLP', 'PEN']
             },
             owner: { type: 'string' },
             admins: { type: 'array', items: { type: 'string' } },
             status: {
               type: 'string',
-              enum: ['active', 'inactive', 'suspended'],
+              enum: ['active', 'inactive', 'suspended']
             },
             settings: { type: 'object' },
             createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
-          },
+            updatedAt: { type: 'string', format: 'date-time' }
+          }
         },
         Therapist: {
           type: 'object',
@@ -78,10 +78,10 @@ const options = {
             hourlyRate: { type: 'number', minimum: 0 },
             status: {
               type: 'string',
-              enum: ['active', 'inactive', 'on_leave'],
+              enum: ['active', 'inactive', 'on_leave']
             },
-            availability: { type: 'object' },
-          },
+            availability: { type: 'object' }
+          }
         },
         Patient: {
           type: 'object',
@@ -92,13 +92,13 @@ const options = {
             dateOfBirth: { type: 'string', format: 'date' },
             gender: {
               type: 'string',
-              enum: ['M', 'F', 'Other', 'Prefer not to say'],
+              enum: ['M', 'F', 'Other', 'Prefer not to say']
             },
             idType: { type: 'string', enum: ['CC', 'TI', 'CE', 'PA', 'RC'] },
             idNumber: { type: 'string' },
             insurance: { type: 'string' },
-            status: { type: 'string', enum: ['active', 'inactive', 'paused'] },
-          },
+            status: { type: 'string', enum: ['active', 'inactive', 'paused'] }
+          }
         },
         MedicalRecord: {
           type: 'object',
@@ -115,9 +115,9 @@ const options = {
             progressRating: { type: 'number', minimum: 1, maximum: 10 },
             status: {
               type: 'string',
-              enum: ['draft', 'completed', 'archived'],
-            },
-          },
+              enum: ['draft', 'completed', 'archived']
+            }
+          }
         },
         Billing: {
           type: 'object',
@@ -129,14 +129,14 @@ const options = {
             amount: { type: 'number', minimum: 0 },
             status: {
               type: 'string',
-              enum: ['draft', 'sent', 'paid', 'overdue', 'cancelled'],
+              enum: ['draft', 'sent', 'paid', 'overdue', 'cancelled']
             },
             paymentMethod: {
               type: 'string',
-              enum: ['cash', 'card', 'transfer', 'check', 'insurance'],
+              enum: ['cash', 'card', 'transfer', 'check', 'insurance']
             },
-            paymentDate: { type: 'string', format: 'date-time' },
-          },
+            paymentDate: { type: 'string', format: 'date-time' }
+          }
         },
         ClinicalReport: {
           type: 'object',
@@ -152,8 +152,8 @@ const options = {
                 'discharge',
                 'assessment',
                 'evaluation',
-                'summary',
-              ],
+                'summary'
+              ]
             },
             title: { type: 'string' },
             summary: { type: 'string' },
@@ -161,9 +161,9 @@ const options = {
             overallProgress: { type: 'number', minimum: 1, maximum: 10 },
             status: {
               type: 'string',
-              enum: ['draft', 'completed', 'reviewed', 'archived'],
-            },
-          },
+              enum: ['draft', 'completed', 'reviewed', 'archived']
+            }
+          }
         },
         User: {
           type: 'object',
@@ -175,8 +175,8 @@ const options = {
             twoFAEnabled: { type: 'boolean' },
             isActive: { type: 'boolean' },
             createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
-          },
+            updatedAt: { type: 'string', format: 'date-time' }
+          }
         },
         Appointment: {
           type: 'object',
@@ -190,12 +190,12 @@ const options = {
             notes: { type: 'string', maxLength: 1000 },
             status: {
               type: 'string',
-              enum: ['scheduled', 'completed', 'cancelled', 'no-show'],
+              enum: ['scheduled', 'completed', 'cancelled', 'no-show']
             },
             qrCode: { type: 'string' },
             createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' },
-          },
+            updatedAt: { type: 'string', format: 'date-time' }
+          }
         },
         Error: {
           type: 'object',
@@ -208,21 +208,21 @@ const options = {
                 type: 'object',
                 properties: {
                   field: { type: 'string' },
-                  message: { type: 'string' },
-                },
-              },
-            },
-          },
-        },
-      },
+                  message: { type: 'string' }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     security: [
       {
-        bearerAuth: [],
-      },
-    ],
+        bearerAuth: []
+      }
+    ]
   },
-  apis: ['./src/routes/*.js', './src/models/*.js'], // Paths to files containing OpenAPI definitions
+  apis: ['./src/routes/*.js', './src/models/*.js'] // Paths to files containing OpenAPI definitions
 };
 
 const specs = swaggerJSDoc(options);

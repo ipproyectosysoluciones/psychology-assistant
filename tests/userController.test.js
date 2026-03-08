@@ -9,7 +9,9 @@ import * as userController from '../src/controllers/userController.js';
 import User from '../src/models/user.js';
 
 describe('User Controller', () => {
-  let mockReq, mockRes, mockNext;
+  let mockReq, mockRes;
+  // eslint-disable-next-line no-unused-vars
+  let mockNext;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -23,14 +25,14 @@ describe('User Controller', () => {
         email: 'test@example.com',
         role: 'user',
         isActive: true,
-        save: jest.fn()
-      }
+        save: jest.fn(),
+      },
     };
 
     mockRes = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
-      setHeader: jest.fn()
+      setHeader: jest.fn(),
     };
 
     mockNext = jest.fn();
@@ -64,13 +66,13 @@ describe('User Controller', () => {
     test('should successfully update user profile with valid data', async () => {
       mockReq.body = {
         name: 'Updated Name',
-        bio: 'Updated bio'
+        bio: 'Updated bio',
       };
 
       const updatedUser = {
         ...mockReq.user,
         name: 'Updated Name',
-        bio: 'Updated bio'
+        bio: 'Updated bio',
       };
 
       jest.spyOn(User, 'findByIdAndUpdate').mockResolvedValueOnce(updatedUser);
@@ -85,15 +87,15 @@ describe('User Controller', () => {
         'user-123',
         expect.objectContaining({
           name: 'Updated Name',
-          bio: 'Updated bio'
+          bio: 'Updated bio',
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
     test('should reject profile update with invalid name length', async () => {
       mockReq.body = {
-        name: 'a' // Too short
+        name: 'a', // Too short
       };
 
       try {
@@ -105,7 +107,7 @@ describe('User Controller', () => {
 
     test('should reject profile update with invalid email format', async () => {
       mockReq.body = {
-        email: 'invalid-email'
+        email: 'invalid-email',
       };
 
       try {
@@ -117,12 +119,12 @@ describe('User Controller', () => {
 
     test('should not allow email change if email already in use', async () => {
       mockReq.body = {
-        email: 'existing@example.com'
+        email: 'existing@example.com',
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce({
         _id: 'other-user-id',
-        email: 'existing@example.com'
+        email: 'existing@example.com',
       });
 
       try {
@@ -138,12 +140,13 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'OldPassword123',
         newPassword: 'NewPassword456',
-        confirmPassword: 'NewPassword456'
+        confirmPassword: 'NewPassword456',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(true);
       mockReq.user.password = 'newHashedPassword';
 
+      // eslint-disable-next-line no-unused-vars
       const updatedUser = { ...mockReq.user, password: 'newHashedPassword' };
       jest.spyOn(User, 'findById').mockResolvedValueOnce(mockReq.user);
 
@@ -154,7 +157,7 @@ describe('User Controller', () => {
       }
 
       expect(mockReq.user.comparePassword).toHaveBeenCalledWith(
-        'OldPassword123'
+        'OldPassword123',
       );
     });
 
@@ -162,7 +165,7 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'WrongPassword123',
         newPassword: 'NewPassword456',
-        confirmPassword: 'NewPassword456'
+        confirmPassword: 'NewPassword456',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(false);
@@ -178,7 +181,7 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'OldPassword123',
         newPassword: 'NewPassword456',
-        confirmPassword: 'DifferentPassword789'
+        confirmPassword: 'DifferentPassword789',
       };
 
       try {
@@ -192,7 +195,7 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'SamePassword123',
         newPassword: 'SamePassword123',
-        confirmPassword: 'SamePassword123'
+        confirmPassword: 'SamePassword123',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(true);
@@ -208,7 +211,7 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'OldPassword123',
         newPassword: '123', // Too weak
-        confirmPassword: '123'
+        confirmPassword: '123',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(true);
@@ -224,7 +227,7 @@ describe('User Controller', () => {
   describe('deactivateAccount', () => {
     test('should successfully deactivate account with correct password', async () => {
       mockReq.body = {
-        password: 'UserPassword123'
+        password: 'UserPassword123',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(true);
@@ -239,14 +242,14 @@ describe('User Controller', () => {
       }
 
       expect(mockReq.user.comparePassword).toHaveBeenCalledWith(
-        'UserPassword123'
+        'UserPassword123',
       );
       expect(mockReq.user.isActive).toBe(false);
     });
 
     test('should reject deactivation with incorrect password', async () => {
       mockReq.body = {
-        password: 'WrongPassword123'
+        password: 'WrongPassword123',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(false);
@@ -273,7 +276,7 @@ describe('User Controller', () => {
     test('should not allow re-activation of deactivated account with deactivateAccount endpoint', async () => {
       mockReq.user.isActive = false;
       mockReq.body = {
-        password: 'UserPassword123'
+        password: 'UserPassword123',
       };
 
       mockReq.user.comparePassword = jest.fn().mockResolvedValue(true);
@@ -293,13 +296,14 @@ describe('User Controller', () => {
 
   describe('getUserStats', () => {
     test('should successfully retrieve user statistics', async () => {
+      // eslint-disable-next-line no-unused-vars
       const mockStats = {
         _id: mockReq.user._id,
         totalAppointments: 15,
         completedAppointments: 12,
         cancelledAppointments: 2,
         upcomingAppointments: 1,
-        memberSince: new Date('2024-01-01')
+        memberSince: new Date('2024-01-01'),
       };
 
       jest.spyOn(User, 'findById').mockResolvedValueOnce(mockReq.user);
@@ -329,14 +333,15 @@ describe('User Controller', () => {
       mockReq.body = {
         name: '  Test User  ',
         email: '  TEST@EXAMPLE.COM  ',
-        bio: '<script>alert("xss")</script>bio'
+        bio: '<script>alert("xss")</script>bio',
       };
 
       // Input should be sanitized before reaching controller
+      // eslint-disable-next-line no-unused-vars
       const sanitized = {
         name: 'Test User',
         email: 'test@example.com',
-        bio: 'bio' // XSS tags should be removed
+        bio: 'bio', // XSS tags should be removed
       };
 
       try {
@@ -349,7 +354,7 @@ describe('User Controller', () => {
     test('should reject attempts to modify user role', async () => {
       mockReq.body = {
         name: 'Updated Name',
-        role: 'admin' // Attempting privilege escalation
+        role: 'admin', // Attempting privilege escalation
       };
 
       // Role should not be updateable through this endpoint
@@ -363,7 +368,7 @@ describe('User Controller', () => {
     test('should not expose password field in response', async () => {
       jest.spyOn(User, 'findById').mockResolvedValueOnce({
         ...mockReq.user,
-        password: 'hashedPassword'
+        password: 'hashedPassword',
       });
 
       try {
@@ -390,7 +395,7 @@ describe('User Controller', () => {
 
     test('should validate email format for updates', async () => {
       mockReq.body = {
-        email: 'invalid-email-format'
+        email: 'invalid-email-format',
       };
 
       try {
@@ -404,7 +409,7 @@ describe('User Controller', () => {
       mockReq.body = {
         currentPassword: 'ValidPassword123',
         newPassword: 'weak', // Weak password
-        confirmPassword: 'weak'
+        confirmPassword: 'weak',
       };
 
       try {

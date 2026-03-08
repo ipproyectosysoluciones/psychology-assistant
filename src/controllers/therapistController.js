@@ -20,7 +20,7 @@ export const createTherapist = async (req, res, next) => {
       licenseNumber,
       licenseExpiry,
       hourlyRate,
-      bio,
+      bio
     } = req.body;
 
     const existingTherapist = await Therapist.findOne({ licenseNumber });
@@ -35,7 +35,7 @@ export const createTherapist = async (req, res, next) => {
       licenseNumber,
       licenseExpiry,
       hourlyRate,
-      bio,
+      bio
     });
 
     return res
@@ -79,7 +79,7 @@ export const getTherapistsByClinic = async (req, res, next) => {
 
     const therapists = await Therapist.find({
       clinic: req.params.clinicId,
-      status,
+      status
     })
       .populate('user', 'firstName lastName email')
       .skip(skip)
@@ -87,7 +87,7 @@ export const getTherapistsByClinic = async (req, res, next) => {
 
     const total = await Therapist.countDocuments({
       clinic: req.params.clinicId,
-      status,
+      status
     });
 
     return res
@@ -96,8 +96,8 @@ export const getTherapistsByClinic = async (req, res, next) => {
         new ApiResponse(
           200,
           { therapists, total, page, pages: Math.ceil(total / limit) },
-          'Terapeutas obtenidos',
-        ),
+          'Terapeutas obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -115,7 +115,7 @@ export const updateTherapist = async (req, res, next) => {
     const therapist = await Therapist.findByIdAndUpdate(
       req.params.id,
       { specializations, hourlyRate, bio, status, availability },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
 
     if (!therapist) {
@@ -165,7 +165,7 @@ export const getTherapistAvailability = async (req, res, next) => {
     return res
       .status(200)
       .json(
-        new ApiResponse(200, therapist.availability, 'Disponibilidad obtenida'),
+        new ApiResponse(200, therapist.availability, 'Disponibilidad obtenida')
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -181,7 +181,7 @@ export const updateTherapistAvailability = async (req, res, next) => {
     const therapist = await Therapist.findByIdAndUpdate(
       req.params.id,
       { availability: req.body },
-      { new: true },
+      { new: true }
     );
 
     if (!therapist) {
@@ -194,8 +194,8 @@ export const updateTherapistAvailability = async (req, res, next) => {
         new ApiResponse(
           200,
           therapist.availability,
-          'Disponibilidad actualizada',
-        ),
+          'Disponibilidad actualizada'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));

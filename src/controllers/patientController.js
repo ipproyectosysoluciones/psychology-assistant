@@ -23,7 +23,7 @@ export const createPatient = async (req, res, next) => {
       address,
       phone,
       insurance,
-      emergencyContact,
+      emergencyContact
     } = req.body;
 
     const existingPatient = await Patient.findOne({ clinic, idNumber });
@@ -41,7 +41,7 @@ export const createPatient = async (req, res, next) => {
       address,
       phone,
       insurance,
-      emergencyContact,
+      emergencyContact
     });
 
     return res
@@ -91,7 +91,7 @@ export const getPatientsByClinic = async (req, res, next) => {
 
     const total = await Patient.countDocuments({
       clinic: req.params.clinicId,
-      status,
+      status
     });
 
     return res
@@ -100,8 +100,8 @@ export const getPatientsByClinic = async (req, res, next) => {
         new ApiResponse(
           200,
           { patients, total, page, pages: Math.ceil(total / limit) },
-          'Pacientes obtenidos',
-        ),
+          'Pacientes obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -122,7 +122,7 @@ export const updatePatient = async (req, res, next) => {
       emergencyContact,
       status,
       preferredTherapist,
-      notes,
+      notes
     } = req.body;
 
     const patient = await Patient.findByIdAndUpdate(
@@ -135,9 +135,9 @@ export const updatePatient = async (req, res, next) => {
         emergencyContact,
         status,
         preferredTherapist,
-        notes,
+        notes
       },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true }
     );
 
     if (!patient) {
@@ -190,10 +190,10 @@ export const getPatientMedicalHistory = async (req, res, next) => {
         {
           medicalHistory: patient.medicalHistory,
           allergies: patient.allergies,
-          medications: patient.medications,
+          medications: patient.medications
         },
-        'Historial médico obtenido',
-      ),
+        'Historial médico obtenido'
+      )
     );
   } catch (error) {
     return next(new AppError(error.message, 400));

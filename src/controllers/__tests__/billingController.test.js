@@ -10,7 +10,7 @@ const expect = (val) => ({
   },
   toBe: function () {
     return true;
-  },
+  }
 });
 
 describe('Billing Controller', () => {
@@ -31,7 +31,7 @@ describe('Billing Controller', () => {
         therapist: '507f1f77bcf86cd799439014',
         amount: 150000,
         description: 'Sesiones de terapia - Marzo 2026',
-        paymentMethod: 'transfer',
+        paymentMethod: 'transfer'
       };
       expect(billingData).toBeDefined();
       billingId = 'mock-billing-id';

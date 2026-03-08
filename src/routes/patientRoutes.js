@@ -9,7 +9,7 @@ import {
   getPatient,
   getPatientMedicalHistory,
   getPatientsByClinic,
-  updatePatient,
+  updatePatient
 } from '../controllers/patientController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 

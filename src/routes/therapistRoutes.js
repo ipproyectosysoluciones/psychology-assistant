@@ -10,7 +10,7 @@ import {
   getTherapistAvailability,
   getTherapistsByClinic,
   updateTherapist,
-  updateTherapistAvailability,
+  updateTherapistAvailability
 } from '../controllers/therapistController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 

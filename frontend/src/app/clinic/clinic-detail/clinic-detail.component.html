@@ -54,7 +54,7 @@
             </div>
             <div class="info-item">
               <span class="label">Número de Licencia:</span>
-              <span class="value">{{ clinic.licenseNumber }}</span>
+              <span class="value">{{ clinic.id }}</span>
             </div>
             <div class="info-item">
               <span class="label">Estado:</span>
@@ -77,15 +77,15 @@
             </div>
             <div class="info-item">
               <span class="label">Ciudad:</span>
-              <span class="value">{{ clinic.city }}</span>
+              <span class="value">{{ clinic.address }}</span>
             </div>
             <div class="info-item">
               <span class="label">Departamento:</span>
-              <span class="value">{{ clinic.state }}</span>
+              <span class="value">{{ 'N-A' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Código Postal:</span>
-              <span class="value">{{ clinic.postalCode }}</span>
+              <span class="value">{{ 'N-A' }}</span>
             </div>
             <div class="info-item">
               <span class="label">País:</span>
@@ -98,35 +98,30 @@
       <!-- Servicios -->
       <mat-card class="info-card">
         <mat-card-header>
-          <mat-card-title>Servicios Ofrecidos</mat-card-title>
+          <mat-card-title>Descripción</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (clinic.services && clinic.services.length > 0) {
-            <div class="tags">
-              @for (service of clinic.services; track service) {
-                <span class="tag service">{{ service }}</span>
-              }
-            </div>
-          } @else {
-            <p class="no-data">Sin servicios registrados</p>
-          }
+          <p>{{ clinic.description || 'Sin descripción' }}</p>
         </mat-card-content>
       </mat-card>
 
       <!-- Especialidades -->
       <mat-card class="info-card">
         <mat-card-header>
-          <mat-card-title>Especialidades</mat-card-title>
+          <mat-card-title>Métodos de Pago Aceptados</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (clinic.specialties && clinic.specialties.length > 0) {
-            <div class="tags">
-              @for (specialty of clinic.specialties; track specialty) {
-                <span class="tag specialty">{{ specialty }}</span>
+          @if (clinic.acceptedPaymentMethods && clinic.acceptedPaymentMethods.length > 0) {
+            <div class="payment-list">
+              @for (method of clinic.acceptedPaymentMethods; track method) {
+                <div class="payment-item">
+                  <mat-icon>payment</mat-icon>
+                  {{ method }}
+                </div>
               }
             </div>
           } @else {
-            <p class="no-data">Sin especialidades registradas</p>
+            <p class="no-data">Sin métodos de pago especificados</p>
           }
         </mat-card-content>
       </mat-card>
@@ -137,35 +132,24 @@
           <mat-card-title>Horario de Operación</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="schedule">
-            @for (day of ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; track day) {
-              <div class="schedule-item">
-                <span class="day">{{ day === 'monday' ? 'Lunes' : day === 'tuesday' ? 'Martes' : day === 'wednesday' ? 'Miércoles' : day === 'thursday' ? 'Jueves' : day === 'friday' ? 'Viernes' : 'Sábado' }}</span>
-                <span class="time">{{ clinic.operatingHours[day] }}</span>
-              </div>
-            }
-          </div>
+          <p class="no-data">Horario no especificado</p>
         </mat-card-content>
       </mat-card>
 
-      <!-- Seguros Aceptados -->
+      <!-- Métodos de Pago -->
       <mat-card class="info-card">
         <mat-card-header>
-          <mat-card-title>Seguros Aceptados</mat-card-title>
+          <mat-card-title>Información Adicional</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (clinic.insuranceAccepted && clinic.insuranceAccepted.length > 0) {
-            <div class="insurance-list">
-              @for (insurance of clinic.insuranceAccepted; track insurance) {
-                <div class="insurance-item">
-                  <mat-icon>verified</mat-icon>
-                  {{ insurance }}
-                </div>
-              }
-            </div>
-          } @else {
-            <p class="no-data">Sin información de seguros</p>
-          }
+          <div class="info-section">
+            <h4>Sitio Web:</h4>
+            <p>{{ clinic.website || 'No disponible' }}</p>
+          </div>
+          <div class="info-section">
+            <h4>Política de Cancelación:</h4>
+            <p>{{ clinic.cancellationPolicy || 'No especificada' }}</p>
+          </div>
         </mat-card-content>
       </mat-card>
 
@@ -178,15 +162,15 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Número de Terapeutas:</span>
-              <span class="value stats">{{ clinic.therapistCount }}</span>
+              <span class="value stats">N-A</span>
             </div>
             <div class="info-item">
               <span class="label">Promedio de Calificación:</span>
-              <span class="value stats">{{ clinic.averageRating }}/5.0 ⭐</span>
+              <span class="value stats">N-A ⭐</span>
             </div>
             <div class="info-item full-width">
-              <span class="label">Acreditación:</span>
-              <span class="value">{{ clinic.accreditation }}</span>
+              <span class="label">Estado de Verificación:</span>
+              <span class="value">{{ clinic.isVerified ? 'Verificado' : 'No verificado' }}</span>
             </div>
           </div>
         </mat-card-content>

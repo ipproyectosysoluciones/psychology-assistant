@@ -25,7 +25,7 @@ export const createMedicalRecord = async (req, res, next) => {
       interventions,
       clinicalNotes,
       progressRating,
-      nextSteps,
+      nextSteps
     } = req.body;
 
     const record = await MedicalRecord.create({
@@ -41,7 +41,7 @@ export const createMedicalRecord = async (req, res, next) => {
       clinicalNotes,
       progressRating,
       nextSteps,
-      status: 'completed',
+      status: 'completed'
     });
 
     return res
@@ -90,7 +90,7 @@ export const getPatientMedicalRecords = async (req, res, next) => {
       .sort({ recordDate: -1 });
 
     const total = await MedicalRecord.countDocuments({
-      patient: req.params.patientId,
+      patient: req.params.patientId
     });
 
     return res
@@ -99,8 +99,8 @@ export const getPatientMedicalRecords = async (req, res, next) => {
         new ApiResponse(
           200,
           { records, total, page, pages: Math.ceil(total / limit) },
-          'Historiales obtenidos',
-        ),
+          'Historiales obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -121,7 +121,7 @@ export const updateMedicalRecord = async (req, res, next) => {
 
     if (!record.canEdit()) {
       return next(
-        new AppError('No se puede editar un historial completado', 400),
+        new AppError('No se puede editar un historial completado', 400)
       );
     }
 
@@ -183,8 +183,8 @@ export const getClinicMedicalRecords = async (req, res, next) => {
         new ApiResponse(
           200,
           { records, total, page, pages: Math.ceil(total / limit) },
-          'Historiales obtenidos',
-        ),
+          'Historiales obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));

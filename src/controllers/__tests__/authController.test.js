@@ -151,10 +151,10 @@ describe('Auth Controller', () => {
 
   describe('POST /api/auth/logout', () => {
     let token;
-    let user;
 
     beforeEach(async () => {
-      user = await User.create({
+      // eslint-disable-next-line no-unused-vars
+      const user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
         password: 'MySecurePass@2024'
@@ -200,10 +200,10 @@ describe('Auth Controller', () => {
 
   describe('POST /api/auth/enable-2fa', () => {
     let token;
-    let user;
 
     beforeEach(async () => {
-      user = await User.create({
+      // eslint-disable-next-line no-unused-vars
+      const user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
         password: 'MySecurePass@2024'
@@ -237,11 +237,11 @@ describe('Auth Controller', () => {
 
   describe('POST /api/auth/verify-2fa', () => {
     let token;
-    let user;
     let secret;
 
     beforeEach(async () => {
-      user = await User.create({
+      // eslint-disable-next-line no-unused-vars
+      const user = await User.create({
         name: 'Test User',
         email: 'test@example.com',
         password: 'MySecurePass@2024'

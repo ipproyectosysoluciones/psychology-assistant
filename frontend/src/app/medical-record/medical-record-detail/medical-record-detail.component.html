@@ -38,7 +38,7 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Paciente:</span>
-              <span class="value">{{ record.patientName }}</span>
+              <span class="value">{{ record.patient || 'No asignado' }}</span>
             </div>
             <div class="info-item">
               <span class="label">Fecha del Registro:</span>
@@ -73,7 +73,7 @@
             </div>
             <div class="info-item">
               <span class="label">Código ICD:</span>
-              <span class="value">{{ record.icdCode }}</span>
+              <span class="value">{{ record.diagnosisCIE10?.join(', ') || 'No especificado' }}</span>
             </div>
           </div>
         </mat-card-content>
@@ -107,8 +107,8 @@
         </mat-card-header>
         <mat-card-content>
           <div class="info-section">
-            <h4>Tratamiento:</h4>
-            <p class="treatment-text">{{ record.treatment }}</p>
+            <h4>Plan:</h4>
+            <p class="treatment-text">{{ record.treatmentPlan || 'No especificado' }}</p>
           </div>
         </mat-card-content>
       </mat-card>
@@ -121,16 +121,9 @@
         <mat-card-content>
           @if (record.medications && record.medications.length > 0) {
             <div class="medications-list">
-              @for (med of record.medications; track med.name) {
+              @for (med of record.medications; track med) {
                 <div class="medication-item">
-                  <div class="med-header">
-                    <span class="med-name">{{ med.name }}</span>
-                    <span class="med-dose">{{ med.dose }}</span>
-                  </div>
-                  <div class="med-frequency">
-                    <mat-icon>schedule</mat-icon>
-                    {{ med.frequency }}
-                  </div>
+                  <span class="med-name">{{ med }}</span>
                 </div>
               }
             </div>

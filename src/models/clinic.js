@@ -12,83 +12,83 @@ const clinicSchema = new mongoose.Schema(
       required: true,
       trim: true,
       minlength: 3,
-      maxlength: 100,
+      maxlength: 100
     },
     description: {
       type: String,
       trim: true,
-      maxlength: 500,
+      maxlength: 500
     },
     address: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
     phone: {
       type: String,
-      required: true,
+      required: true
     },
     email: {
       type: String,
       required: true,
       lowercase: true,
-      unique: true,
+      unique: true
     },
     website: {
       type: String,
-      trim: true,
+      trim: true
     },
     country: {
       type: String,
-      default: 'Colombia',
+      default: 'Colombia'
     },
     currency: {
       type: String,
       default: 'COP',
-      enum: ['COP', 'USD', 'ARS', 'MXN', 'CLP', 'PEN'],
+      enum: ['COP', 'USD', 'ARS', 'MXN', 'CLP', 'PEN']
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: true
     },
     admins: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'User',
-      default: [],
+      default: []
     },
     status: {
       type: String,
       enum: ['active', 'inactive', 'suspended'],
-      default: 'active',
+      default: 'active'
     },
     isVerified: {
       type: Boolean,
-      default: false,
+      default: false
     },
     logo: {
       type: String,
-      trim: true,
+      trim: true
     },
     settings: {
       appointmentDuration: {
         type: Number,
         default: 60,
-        min: 15,
+        min: 15
       },
       cancellationPolicy: {
         type: String,
-        default: '24',
+        default: '24'
       },
       timezone: {
         type: String,
-        default: 'America/Bogota',
-      },
-    },
+        default: 'America/Bogota'
+      }
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 // Índices

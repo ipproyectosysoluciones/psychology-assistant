@@ -74,17 +74,17 @@
           <mat-card-title>Resumen de Sesiones</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="summary-text">{{ report.sessionsSummary }}</p>
+          <p class="summary-text">{{ report.summary || 'No especificado' }}</p>
         </mat-card-content>
       </mat-card>
 
       <!-- Enfoque Terapéutico -->
       <mat-card class="info-card">
         <mat-card-header>
-          <mat-card-title>Enfoque Terapéutico</mat-card-title>
+          <mat-card-title>Observaciones Clínicas</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="therapy-text">{{ report.therapeuticApproach }}</p>
+          <p class="therapy-text">{{ report.clinicalObservations || 'No especificado' }}</p>
         </mat-card-content>
       </mat-card>
 
@@ -94,12 +94,12 @@
           <mat-card-title>Logros Clave</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          @if (report.keyAchievements && report.keyAchievements.length > 0) {
+          @if (report.improvements && report.improvements.length > 0) {
             <ul class="achievements-list">
-              @for (achievement of report.keyAchievements; track achievement) {
+              @for (improvement of report.improvements; track improvement) {
                 <li>
                   <mat-icon>check_circle</mat-icon>
-                  {{ achievement }}
+                  {{ improvement }}
                 </li>
               }
             </ul>
@@ -115,7 +115,7 @@
           <mat-card-title>Desafíos y Obstáculos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="challenges-text">{{ report.challengesAndObstacles }}</p>
+          <p class="challenges-text">{{ report.areasOfConcern?.join(', ') || 'No especificado' }}</p>
         </mat-card-content>
       </mat-card>
 
@@ -125,7 +125,7 @@
           <mat-card-title>Próximos Pasos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p class="next-steps-text">{{ report.nextSteps }}</p>
+          <p class="next-steps-text">{{ report.suggestedFollowUp || 'No especificado' }}</p>
         </mat-card-content>
       </mat-card>
 
@@ -148,7 +148,7 @@
           <div class="info-grid">
             <div class="info-item">
               <span class="label">Evaluación:</span>
-              <span class="value clinical-rating">{{ report.clinicalRating }}</span>
+              <span class="value clinical-rating">{{ report.overallProgress }}/10</span>
             </div>
             <div class="info-item">
               <span class="label">Revisado Por:</span>

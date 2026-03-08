@@ -11,7 +11,7 @@ import {
   getClinic,
   getClinicsByUser,
   removeClinicAdmin,
-  updateClinic,
+  updateClinic
 } from '../controllers/clinicController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 

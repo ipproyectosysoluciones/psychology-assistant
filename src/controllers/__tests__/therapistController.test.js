@@ -10,7 +10,7 @@ const expect = (val) => ({
   },
   toBe: function () {
     return true;
-  },
+  }
 });
 
 describe('Therapist Controller', () => {
@@ -30,7 +30,7 @@ describe('Therapist Controller', () => {
         licenseNumber: 'LIC-001-2024',
         licenseExpiry: new Date('2026-12-31'),
         hourlyRate: 100000,
-        bio: 'Especialista en terapia cognitivo-conductual',
+        bio: 'Especialista en terapia cognitivo-conductual'
       };
       expect(therapistData).toBeDefined();
       therapistId = 'mock-id';

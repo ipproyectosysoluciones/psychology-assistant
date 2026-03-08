@@ -10,7 +10,7 @@ const expect = (val) => ({
   },
   toBe: function () {
     return true;
-  },
+  }
 });
 
 describe('Clinical Report Controller', () => {
@@ -35,7 +35,7 @@ describe('Clinical Report Controller', () => {
         title: 'Reporte de Progreso Q1 2026',
         summary: 'Paciente ha mostrado mejora significativa...',
         diagnosis: 'F41.1 - Trastorno de ansiedad',
-        overallProgress: 8,
+        overallProgress: 8
       };
       expect(reportData).toBeDefined();
       reportId = 'mock-report-id';

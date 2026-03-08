@@ -1,424 +1,772 @@
-# Psychology Assistant API Documentation
+# Psychology Assistant API Endpoints
 
-## Overview
+> **English** | [📖 Español](#spanish-section)
 
-Complete REST API for Psychology Assistant Platform - a comprehensive solution for psychological practice management.
+## English Section
+
+### Overview
+Complete REST API documentation for the Psychology Assistant platform - a comprehensive solution for psychological practice management.
 
 **Base URL:** `http://localhost:3000`  
-**API Version:** v1  
-**Default Port:** 3000
+**API Version:** `v1`  
+**Default Port:** `3000`
+
+---
+
+## Table of Contents
+1. [Authentication Endpoints](#authentication)
+2. [Appointments Endpoints](#appointments)
+3. [Users Endpoints](#users)
+4. [Clinic Management](#clinic-management)
+5. [Medical Records](#medical-records)
+6. [Billing](#billing)
 
 ---
 
 ## Authentication
 
-### Register
-
-- **Method:** `POST`
-- **Endpoint:** `/api/auth/register`
+### Register User
+- **POST** `/api/auth/register`
 - **Body:**
-
   ```json
   {
     "name": "Dr. Juan Pérez",
     "email": "juan@example.com",
-    "password": "SecurePassword123!",
+    "password": "SecurePassword@2024",
     "role": "psychologist"
   }
   ```
-
 - **Response:** `201 Created`
 
-  ```json
-  {
-    "statusCode": 201,
-    "data": { "id": "...", "email": "..." },
-    "message": "User registered successfully"
-  }
-  ```
-
 ### Login
-
-- **Method:** `POST`
-- **Endpoint:** `/api/auth/login`
+- **POST** `/api/auth/login`
 - **Body:**
-
   ```json
   {
     "email": "juan@example.com",
-    "password": "SecurePassword123!"
+    "password": "SecurePassword@2024"
   }
   ```
-
 - **Response:** `200 OK`
-
   ```json
   {
     "statusCode": 200,
-    "data": { "accessToken": "...", "refreshToken": "..." },
-    "message": "Login successful"
+    "success": true,
+    "data": {
+      "accessToken": "eyJhbGc...",
+      "refreshToken": "eyJhbGc...",
+      "user": { "id": "user_123", "email": "juan@example.com", "role": "psychologist" }
+    },
+    "message": "Logged in successfully"
   }
   ```
+
+### Logout
+- **POST** `/api/auth/logout`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+
+### Enable 2FA
+- **POST** `/api/auth/enable-2fa`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+  ```json
+  {
+    "statusCode": 200,
+    "success": true,
+    "data": {
+      "qrCode": "data:image/png;base64,...",
+      "secret": "JBSWY3DPEBLW65TMMQ======"
+    },
+    "message": "Scan the QR code with your authenticator app"
+  }
+  ```
+
+### Verify 2FA Token
+- **POST** `/api/auth/verify-2fa`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "token": "123456"
+  }
+  ```
+- **Response:** `200 OK`
+
+### Refresh Token
+- **POST** `/api/auth/refresh-token`
+- **Body:**
+  ```json
+  {
+    "refreshToken": "eyJhbGc..."
+  }
+  ```
+- **Response:** `200 OK`
 
 ---
 
-## Clinics (v1)
+## Appointments
 
-Full multi-clinic management system.
-
-### Create Clinic
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/clinics`
-- **Auth:** Bearer Token (Required)
+### Create Appointment
+- **POST** `/api/appointments`
+- **Headers:** `Authorization: Bearer {accessToken}`
 - **Body:**
-
   ```json
   {
-    "name": "Clínica Psicología Integral",
-    "email": "info@clinica.com",
-    "phone": "+57 1 234 5678",
-    "address": "Cra. 5 #45-27",
-    "city": "Bogotá",
-    "country": "Colombia",
-    "currency": "COP"
+    "date": "2024-12-25T10:00:00Z",
+    "description": "Initial consultation",
+    "type": "consultation"
+  }
+  ```
+- **Response:** `201 Created`
+
+### List Appointments
+- **GET** `/api/appointments`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Query Parameters:**
+  - `status`: pending, confirmed, completed, cancelled
+  - `page`: pagination (default: 1)
+  - `limit`: items per page (default: 10)
+- **Response:** `200 OK`
+
+### Get Appointment Details
+- **GET** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+
+### Update Appointment
+- **PUT** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:** Same as create
+- **Response:** `200 OK`
+
+### Cancel Appointment
+- **DELETE** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+
+---
+
+## Users
+
+### Get User Profile
+- **GET** `/api/users/profile`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+
+### Update User Profile
+- **PUT** `/api/users/profile`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "name": "New Name",
+    "email": "newemail@example.com",
+    "bio": "Professional bio"
+  }
+  ```
+- **Response:** `200 OK`
+
+### Change Password
+- **PUT** `/api/users/change-password`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "currentPassword": "OldPassword@2024",
+    "newPassword": "NewPassword@2024",
+    "confirmPassword": "NewPassword@2024"
+  }
+  ```
+- **Response:** `200 OK`
+
+### Get User Statistics
+- **GET** `/api/users/stats`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
+  ```json
+  {
+    "statusCode": 200,
+    "success": true,
+    "data": {
+      "totalAppointments": 15,
+      "completedAppointments": 12,
+      "cancelledAppointments": 2,
+      "upcomingAppointments": 1,
+      "memberSince": "2024-01-01"
+    },
+    "message": "User statistics retrieved"
   }
   ```
 
+### Deactivate Account
+- **DELETE** `/api/users/delete-data`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "password": "CurrentPassword@2024"
+  }
+  ```
+- **Response:** `200 OK`
+
+---
+
+## Clinic Management
+
+### Create Clinic
+- **POST** `/api/clinics`
+- **Headers:** `Authorization: Bearer {accessToken}` (Admin/Owner)
+- **Body:**
+  ```json
+  {
+    "name": "Clinic Name",
+    "address": "Street Address",
+    "phone": "+1234567890",
+    "website": "https://clinic.com"
+  }
+  ```
 - **Response:** `201 Created`
 
-### Get Clinic
+### List Clinics
+- **GET** `/api/clinics`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Query Parameters:**
+  - `page`: pagination
+  - `limit`: items per page
+- **Response:** `200 OK`
 
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/clinics/:id`
-- **Auth:** Bearer Token (Required)
+### Get Clinic Details
+- **GET** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
 - **Response:** `200 OK`
 
 ### Update Clinic
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/clinics/:id`
-- **Auth:** Bearer Token (Required)
+- **PUT** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}` (Clinic Owner)
+- **Body:** Same as create
 - **Response:** `200 OK`
 
 ### Delete Clinic
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/clinics/:id`
-- **Auth:** Bearer Token (Required)
+- **DELETE** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}` (Admin)
 - **Response:** `200 OK`
 
 ---
 
-## Therapists (v1)
-
-Professional psychologist management with licensing and availability.
-
-### Create Therapist
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/therapists`
-- **Auth:** Bearer Token (Required)
-- **Body:**
-
-  ```json
-  {
-    "user": "user_id",
-    "licenseNumber": "12345-PSI",
-    "licenseExpiry": "2026-12-31",
-    "specializations": ["TCB", "Mindfulness"],
-    "hourlyRate": 150,
-    "bio": "Specialista en ansiedad",
-    "clinic": "clinic_id"
-  }
-  ```
-
-### Get Therapist
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/therapists/:id`
-
-### List Therapists by Clinic
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/clinics/:clinicId/therapists`
-
-### Update Therapist
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/therapists/:id`
-
-### Delete Therapist
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/therapists/:id`
-
----
-
-## Patients (v1)
-
-Patient registry with comprehensive demographic and contact information.
-
-### Create Patient
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/patients`
-- **Auth:** Bearer Token (Required)
-- **Body:**
-
-  ```json
-  {
-    "firstName": "Carlos",
-    "lastName": "González",
-    "email": "carlos@example.com",
-    "phone": "+57 301 234 5678",
-    "dateOfBirth": "1990-05-15",
-    "gender": "male",
-    "idType": "CC",
-    "idNumber": "123456789",
-    "clinic": "clinic_id"
-  }
-  ```
-
-### Get Patient
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/patients/:id`
-
-### List Patients by Clinic
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/clinics/:clinicId/patients`
-- **Query Params:** `page=1&limit=10&status=active`
-
-### Update Patient
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/patients/:id`
-
-### Delete Patient
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/patients/:id`
-
----
-
-## Medical Records (v1)
-
-Clinical documentation with CIE-10 diagnosis codes and treatment planning.
+## Medical Records
 
 ### Create Medical Record
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/medical-records`
-- **Auth:** Bearer Token (Required)
+- **POST** `/api/medical-records`
+- **Headers:** `Authorization: Bearer {accessToken}`
 - **Body:**
-
   ```json
   {
-    "patient": "patient_id",
-    "therapist": "therapist_id",
-    "appointmentDate": "2026-03-10",
-    "diagnosis": "F41.1",
-    "symptoms": ["Ansiedad", "Insomnio"],
-    "treatmentPlan": "Terapia semanal + ejercicios",
-    "nextSteps": "Seguimiento en 2 semanas"
+    "patientId": "patient_123",
+    "diagnosis": "Anxiety Disorder",
+    "treatment": "CBT",
+    "notes": "Treatment notes..."
   }
   ```
-
-### Get Medical Record
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/medical-records/:id`
-
-### List Records by Patient
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/patients/:patientId/medical-records`
-
-### Update Medical Record
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/medical-records/:id`
-
-### Delete Medical Record
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/medical-records/:id`
-
----
-
-## Billing (v1)
-
-Integrated invoicing and payment management system.
-
-### Create Invoice
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/billings`
-- **Auth:** Bearer Token (Required)
-- **Body:**
-
-  ```json
-  {
-    "patient": "patient_id",
-    "clinic": "clinic_id",
-    "therapist": "therapist_id",
-    "amount": 150,
-    "description": "Sesión individual",
-    "paymentMethod": "card",
-    "lineItems": [
-      {
-        "description": "Sesión 60 min",
-        "quantity": 1,
-        "unitPrice": 150,
-        "total": 150
-      }
-    ]
-  }
-  ```
-
 - **Response:** `201 Created`
 
-### Get Invoice
+### Get Medical Record
+- **GET** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
 
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/billings/:id`
+### List Records by Patient
+- **GET** `/api/patients/:patientId/medical-records`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
 
-### List Invoices by Patient
+### Update Medical Record
+- **PUT** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:** Same as create
+- **Response:** `200 OK`
 
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/patients/:patientId/billings`
-- **Query Params:** `page=1&limit=10&status=paid`
-
-### Update Invoice
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/billings/:id`
-
-### Mark as Paid
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/billings/:id/pay`
-
-### Delete Invoice
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/billings/:id`
+### Delete Medical Record
+- **DELETE** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
 
 ---
 
-## Clinical Reports (v1)
+## Billing
 
-Progress tracking and clinical documentation system.
-
-### Create Report
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/clinical-reports`
-- **Auth:** Bearer Token (Required)
+### Create Billing Record
+- **POST** `/api/billings`
+- **Headers:** `Authorization: Bearer {accessToken}`
 - **Body:**
-
   ```json
   {
-    "patient": "patient_id",
-    "therapist": "therapist_id",
-    "reportType": "progress",
-    "reportDate": "2026-03-07",
-    "diagnosis": "F41.1",
-    "findings": "Mejoría significativa",
-    "recommendations": "Continuar tratamiento",
-    "status": "completed"
+    "appointmentId": "appointment_123",
+    "amount": 100.00,
+    "currency": "USD",
+    "description": "Session fee"
   }
   ```
+- **Response:** `201 Created`
 
-### Get Report
+### List Billing Records
+- **GET** `/api/billings`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Query Parameters:**
+  - `status`: pending, paid, cancelled
+  - `page`: pagination
+  - `limit`: items per page
+- **Response:** `200 OK`
 
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/clinical-reports/:id`
+### Mark as Paid
+- **PUT** `/api/billings/:id/pay`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
 
-### List Reports by Patient
-
-- **Method:** `GET`
-- **Endpoint:** `/api/v1/patients/:patientId/clinical-reports`
-
-### Update Report
-
-- **Method:** `PUT`
-- **Endpoint:** `/api/v1/clinical-reports/:id`
-
-### Mark as Reviewed
-
-- **Method:** `POST`
-- **Endpoint:** `/api/v1/clinical-reports/:id/review`
-
-### Delete Report
-
-- **Method:** `DELETE`
-- **Endpoint:** `/api/v1/clinical-reports/:id`
+### Delete Billing Record
+- **DELETE** `/api/billings/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Response:** `200 OK`
 
 ---
 
 ## Error Responses
 
-All error responses follow this format:
+All endpoints may return the following error responses:
 
+### 400 Bad Request
 ```json
 {
   "statusCode": 400,
-  "data": null,
-  "message": "Error description",
-  "success": false
+  "success": false,
+  "message": "Validation failed",
+  "errors": ["field1 is required"]
 }
 ```
 
-### Common Error Codes
+### 401 Unauthorized
+```json
+{
+  "statusCode": 401,
+  "success": false,
+  "message": "No token provided"
+}
+```
 
-- **400** Bad Request - Invalid input
-- **401** Unauthorized - Missing or invalid token
-- **403** Forbidden - Permission denied
-- **404** Not Found - Resource doesn't exist
-- **409** Conflict - Resource already exists
-- **500** Internal Server Error
+### 403 Forbidden
+```json
+{
+  "statusCode": 403,
+  "success": false,
+  "message": "Insufficient permissions"
+}
+```
 
----
+### 404 Not Found
+```json
+{
+  "statusCode": 404,
+  "success": false,
+  "message": "Resource not found"
+}
+```
 
-## Rate Limiting
-
-- General API: 100 requests/hour
-- Auth endpoints: 5 requests/hour
-- Includes `X-RateLimit-*` headers in responses
-
----
-
-## Best Practices
-
-1. **Always include Authorization header** with Bearer token
-2. **Use pagination** for list endpoints (page, limit)
-3. **Validate input** before sending requests
-4. **Handle errors** gracefully with appropriate error codes
-5. **Cache responses** when appropriate (GET requests)
-
----
-
-## Getting Started
-
-1. **Register:** Create account via `/api/auth/register`
-2. **Login:** Get tokens via `/api/auth/login`
-3. **Create Clinic:** Set up your first clinic
-4. **Add Therapists:** Register your professionals
-5. **Add Patients:** Register patient information
-6. **Start Managing:** Create appointments, records, and billing
-
----
-
-## Support
-
-- **Email:** support@psychologyassistant.com
-- **Documentation:** https://docs.psychologyassistant.com
-- **Status:** https://status.psychologyassistant.com
+### 500 Internal Server Error
+```json
+{
+  "statusCode": 500,
+  "success": false,
+  "message": "Internal server error",
+  "error": "Error details..."
+}
+```
 
 ---
 
-*Last Updated: March 7, 2026*  
-*API Version: 1.0.0*
+<a id="spanish-section"></a>
+
+# Endpoints de la API de Psychology Assistant
+
+> [📖 English](#overview) | **Español**
+
+## Descripción General
+Documentación completa de la API REST de la plataforma Psychology Assistant - una solución integral para la gestión de consultorios psicológicos.
+
+**URL Base:** `http://localhost:3000`  
+**Versión de API:** `v1`  
+**Puerto por Defecto:** `3000`
+
+---
+
+## Tabla de Contenidos
+1. [Endpoints de Autenticación](#autenticación)
+2. [Endpoints de Citas](#citas)
+3. [Endpoints de Usuarios](#usuarios)
+4. [Gestión de Clínicas](#gestión-de-clínicas)
+5. [Historiales Médicos](#historiales-médicos)
+6. [Facturación](#facturación)
+
+---
+
+## Autenticación
+
+### Registrar Usuario
+- **POST** `/api/auth/register`
+- **Body:**
+  ```json
+  {
+    "name": "Dra. María López",
+    "email": "maria@example.com",
+    "password": "ContraseñaSegura@2024",
+    "role": "psicólogo"
+  }
+  ```
+- **Respuesta:** `201 Created`
+
+### Iniciar Sesión
+- **POST** `/api/auth/login`
+- **Body:**
+  ```json
+  {
+    "email": "maria@example.com",
+    "password": "ContraseñaSegura@2024"
+  }
+  ```
+- **Respuesta:** `200 OK`
+  ```json
+  {
+    "statusCode": 200,
+    "success": true,
+    "data": {
+      "accessToken": "eyJhbGc...",
+      "refreshToken": "eyJhbGc...",
+      "user": { "id": "user_123", "email": "maria@example.com", "role": "psicólogo" }
+    },
+    "message": "Sesión iniciada correctamente"
+  }
+  ```
+
+### Cerrar Sesión
+- **POST** `/api/auth/logout`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Habilitar 2FA
+- **POST** `/api/auth/enable-2fa`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+  ```json
+  {
+    "statusCode": 200,
+    "success": true,
+    "data": {
+      "qrCode": "data:image/png;base64,...",
+      "secret": "JBSWY3DPEBLW65TMMQ======"
+    },
+    "message": "Escanee el código QR con su aplicación de autenticación"
+  }
+  ```
+
+### Verificar Token 2FA
+- **POST** `/api/auth/verify-2fa`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "token": "123456"
+  }
+  ```
+- **Respuesta:** `200 OK`
+
+### Refrescar Token
+- **POST** `/api/auth/refresh-token`
+- **Body:**
+  ```json
+  {
+    "refreshToken": "eyJhbGc..."
+  }
+  ```
+- **Respuesta:** `200 OK`
+
+---
+
+## Citas
+
+### Crear Cita
+- **POST** `/api/appointments`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "date": "2024-12-25T10:00:00Z",
+    "description": "Consulta inicial",
+    "type": "consulta"
+  }
+  ```
+- **Respuesta:** `201 Created`
+
+### Listar Citas
+- **GET** `/api/appointments`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Parámetros de Consulta:**
+  - `status`: pendiente, confirmada, completada, cancelada
+  - `page`: paginación (por defecto: 1)
+  - `limit`: items por página (por defecto: 10)
+- **Respuesta:** `200 OK`
+
+### Detalles de Cita
+- **GET** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Actualizar Cita
+- **PUT** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:** Mismo que crear cita
+- **Respuesta:** `200 OK`
+
+### Cancelar Cita
+- **DELETE** `/api/appointments/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+---
+
+## Usuarios
+
+### Obtener Perfil de Usuario
+- **GET** `/api/users/profile`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Actualizar Perfil de Usuario
+- **PUT** `/api/users/profile`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "name": "Nuevo Nombre",
+    "email": "nuevoemail@example.com",
+    "bio": "Biografía profesional"
+  }
+  ```
+- **Respuesta:** `200 OK`
+
+### Cambiar Contraseña
+- **PUT** `/api/users/change-password`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "currentPassword": "ContraseñaAntigua@2024",
+    "newPassword": "ContraseñaNueva@2024",
+    "confirmPassword": "ContraseñaNueva@2024"
+  }
+  ```
+- **Respuesta:** `200 OK`
+
+### Obtener Estadísticas de Usuario
+- **GET** `/api/users/stats`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+  ```json
+  {
+    "statusCode": 200,
+    "success": true,
+    "data": {
+      "totalAppointments": 15,
+      "completedAppointments": 12,
+      "cancelledAppointments": 2,
+      "upcomingAppointments": 1,
+      "memberSince": "2024-01-01"
+    },
+    "message": "Estadísticas del usuario obtenidas"
+  }
+  ```
+
+### Desactivar Cuenta
+- **DELETE** `/api/users/delete-data`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "password": "ContraseñaActual@2024"
+  }
+  ```
+- **Respuesta:** `200 OK`
+
+---
+
+## Gestión de Clínicas
+
+### Crear Clínica
+- **POST** `/api/clinics`
+- **Headers:** `Authorization: Bearer {accessToken}` (Admin/Propietario)
+- **Body:**
+  ```json
+  {
+    "name": "Nombre de la Clínica",
+    "address": "Dirección",
+    "phone": "+1234567890",
+    "website": "https://clinica.com"
+  }
+  ```
+- **Respuesta:** `201 Created`
+
+### Listar Clínicas
+- **GET** `/api/clinics`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Parámetros de Consulta:**
+  - `page`: paginación
+  - `limit`: items por página
+- **Respuesta:** `200 OK`
+
+### Detalles de Clínica
+- **GET** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Actualizar Clínica
+- **PUT** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}` (Propietario)
+- **Body:** Mismo que crear clínica
+- **Respuesta:** `200 OK`
+
+### Eliminar Clínica
+- **DELETE** `/api/clinics/:id`
+- **Headers:** `Authorization: Bearer {accessToken}` (Admin)
+- **Respuesta:** `200 OK`
+
+---
+
+## Historiales Médicos
+
+### Crear Historial Médico
+- **POST** `/api/medical-records`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "patientId": "patient_123",
+    "diagnosis": "Trastorno de Ansiedad",
+    "treatment": "TCC",
+    "notes": "Notas del tratamiento..."
+  }
+  ```
+- **Respuesta:** `201 Created`
+
+### Obtener Historial Médico
+- **GET** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Listar Historiales por Paciente
+- **GET** `/api/patients/:patientId/medical-records`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Actualizar Historial Médico
+- **PUT** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:** Mismo que crear historial
+- **Respuesta:** `200 OK`
+
+### Eliminar Historial Médico
+- **DELETE** `/api/medical-records/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+---
+
+## Facturación
+
+### Crear Factura
+- **POST** `/api/billings`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Body:**
+  ```json
+  {
+    "appointmentId": "appointment_123",
+    "amount": 100.00,
+    "currency": "USD",
+    "description": "Costo de sesión"
+  }
+  ```
+- **Respuesta:** `201 Created`
+
+### Listar Facturas
+- **GET** `/api/billings`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Parámetros de Consulta:**
+  - `status`: pendiente, pagada, cancelada
+  - `page`: paginación
+  - `limit`: items por página
+- **Respuesta:** `200 OK`
+
+### Marcar como Pagada
+- **PUT** `/api/billings/:id/pay`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+### Eliminar Factura
+- **DELETE** `/api/billings/:id`
+- **Headers:** `Authorization: Bearer {accessToken}`
+- **Respuesta:** `200 OK`
+
+---
+
+## Respuestas de Error
+
+Todos los endpoints pueden devolver las siguientes respuestas de error:
+
+### 400 Solicitud Incorrecta
+```json
+{
+  "statusCode": 400,
+  "success": false,
+  "message": "Validación fallida",
+  "errors": ["el campo1 es requerido"]
+}
+```
+
+### 401 No Autorizado
+```json
+{
+  "statusCode": 401,
+  "success": false,
+  "message": "No se proporcionó token"
+}
+```
+
+### 403 Prohibido
+```json
+{
+  "statusCode": 403,
+  "success": false,
+  "message": "Permisos insuficientes"
+}
+```
+
+### 404 No Encontrado
+```json
+{
+  "statusCode": 404,
+  "success": false,
+  "message": "Recurso no encontrado"
+}
+```
+
+### 500 Error Interno del Servidor
+```json
+{
+  "statusCode": 500,
+  "success": false,
+  "message": "Error interno del servidor",
+  "error": "Detalles del error..."
+}
+```
+
+---
+
+**Última Actualización:** 2024-12-21  
+**Versión de API:** v1 (Psychology Assistant)

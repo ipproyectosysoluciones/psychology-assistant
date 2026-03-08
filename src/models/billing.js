@@ -10,87 +10,87 @@ const billingSchema = new mongoose.Schema(
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patient',
-      required: true,
+      required: true
     },
     clinic: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Clinic',
-      required: true,
+      required: true
     },
     therapist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Therapist',
-      required: true,
+      required: true
     },
     appointment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Appointment',
+      ref: 'Appointment'
     },
     invoiceNumber: {
       type: String,
       unique: true,
-      required: true,
+      required: true
     },
     invoiceDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     dueDate: {
-      type: Date,
+      type: Date
     },
     amount: {
       type: Number,
       required: true,
-      min: 0,
+      min: 0
     },
     currency: {
       type: String,
-      default: 'COP',
+      default: 'COP'
     },
     description: {
       type: String,
-      required: true,
+      required: true
     },
     lineItems: [
       {
         description: String,
         quantity: Number,
         unitPrice: Number,
-        total: Number,
-      },
+        total: Number
+      }
     ],
     discount: {
       type: Number,
-      default: 0,
+      default: 0
     },
     tax: {
       type: Number,
-      default: 0,
+      default: 0
     },
     paymentMethod: {
       type: String,
       enum: ['cash', 'card', 'transfer', 'check', 'insurance'],
-      default: 'cash',
+      default: 'cash'
     },
     status: {
       type: String,
       enum: ['draft', 'sent', 'paid', 'overdue', 'cancelled'],
-      default: 'draft',
+      default: 'draft'
     },
     paymentDate: {
-      type: Date,
+      type: Date
     },
     notes: {
       type: String,
-      maxlength: 500,
+      maxlength: 500
     },
     insurance: {
-      type: String,
-    },
+      type: String
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 billingSchema.index({ patient: 1, clinic: 1 });
@@ -105,7 +105,7 @@ billingSchema.methods.isPaid = function () {
 billingSchema.methods.calculateTotal = function () {
   const subtotal = this.lineItems.reduce(
     (sum, item) => sum + (item.total || 0),
-    0,
+    0
   );
   return subtotal - this.discount + this.tax;
 };

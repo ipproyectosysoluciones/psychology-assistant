@@ -10,89 +10,89 @@ const medicalRecordSchema = new mongoose.Schema(
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patient',
-      required: true,
+      required: true
     },
     clinic: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Clinic',
-      required: true,
+      required: true
     },
     therapist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Therapist',
-      required: true,
+      required: true
     },
     appointment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Appointment',
+      ref: 'Appointment'
     },
     recordDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     diagnosisCIE10: {
       type: [String],
-      default: [],
+      default: []
     },
     primaryDiagnosis: {
       type: String,
-      required: true,
+      required: true
     },
     secondaryDiagnosis: {
       type: [String],
-      default: [],
+      default: []
     },
     symptoms: {
       type: [String],
-      default: [],
+      default: []
     },
     treatmentPlan: {
       type: String,
-      maxlength: 2000,
+      maxlength: 2000
     },
     interventions: {
       type: [String],
-      default: [],
+      default: []
     },
     clinicalNotes: {
       type: String,
       maxlength: 3000,
-      required: true,
+      required: true
     },
     progressRating: {
       type: Number,
       min: 1,
-      max: 10,
+      max: 10
     },
     nextSteps: {
       type: String,
-      maxlength: 1000,
+      maxlength: 1000
     },
     medications: {
       type: [String],
-      default: [],
+      default: []
     },
     referrals: {
       type: [String],
-      default: [],
+      default: []
     },
     attachments: {
       type: [String],
-      default: [],
+      default: []
     },
     isConfidential: {
       type: Boolean,
-      default: true,
+      default: true
     },
     status: {
       type: String,
       enum: ['draft', 'completed', 'archived'],
-      default: 'completed',
-    },
+      default: 'completed'
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 medicalRecordSchema.index({ patient: 1, clinic: 1 });
@@ -110,5 +110,5 @@ medicalRecordSchema.methods.canEdit = function () {
 
 export const MedicalRecord = mongoose.model(
   'MedicalRecord',
-  medicalRecordSchema,
+  medicalRecordSchema
 );

@@ -10,7 +10,7 @@ const expect = (val) => ({
   },
   toBe: function () {
     return true;
-  },
+  }
 });
 
 describe('Medical Record Controller', () => {
@@ -31,7 +31,7 @@ describe('Medical Record Controller', () => {
         therapist: '507f1f77bcf86cd799439014',
         primaryDiagnosis: 'F41.1 - Trastorno de ansiedad generalizada',
         symptoms: ['Ansiedad', 'Insomnio'],
-        clinicalNotes: 'Paciente presenta síntomas de ansiedad...',
+        clinicalNotes: 'Paciente presenta síntomas de ansiedad...'
       };
       expect(recordData).toBeDefined();
       recordId = 'mock-record-id';

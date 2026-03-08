@@ -3,19 +3,35 @@ import { totp } from 'otplib';
 
 /**
  * @module generateSecret
- * @description Genera un nuevo secreto TOTP.
+ * @description Genera un nuevo secreto TOTP base32 válido.
  *
  * @returns { string } - El nuevo secreto TOTP generado.
  */
 export const generateSecret = () => {
-  // Generate random bytes and convert to a base32-compatible string
+  // Generate 32 random bytes
   const randomBytes = crypto.randomBytes(32);
-  const secret = randomBytes
-    .toString('base64')
-    .replace(/\//g, '+')
-    .replace(/\+/g, '-')
-    .substring(0, 32);
-  return secret;
+
+  // Convert to base32 (A-Z, 2-7)
+  const base32chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  let base32 = '';
+  let bits = 0;
+  let value = 0;
+
+  for (let i = 0; i < randomBytes.length; i++) {
+    value = (value << 8) | randomBytes[i];
+    bits += 8;
+
+    while (bits >= 5) {
+      bits -= 5;
+      base32 += base32chars[(value >> bits) & 31];
+    }
+  }
+
+  if (bits > 0) {
+    base32 += base32chars[(value << (5 - bits)) & 31];
+  }
+
+  return base32;
 };
 
 /**

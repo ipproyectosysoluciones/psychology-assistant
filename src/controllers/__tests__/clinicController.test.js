@@ -2,19 +2,41 @@
  * Clinic Controller Tests
  */
 
-import { beforeAll, describe, expect, it } from '@jest/globals';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import request from 'supertest';
 import app from '../../app.js';
+import { Clinic } from '../../models/index.js';
+import { User } from '../../models/user.js';
+
+let authToken;
+
+beforeEach(async () => {
+  // Clean up database
+  await User.deleteMany({});
+  await Clinic.deleteMany({});
+
+  // Create test user directly in database
+  await User.create({
+    name: 'Clinic Test User',
+    email: 'clinictest@example.com',
+    password: 'ClinicTest@123'
+  });
+
+  // Login to get valid token
+  const loginResponse = await request(app).post('/api/auth/login').send({
+    email: 'clinictest@example.com',
+    password: 'ClinicTest@123'
+  });
+
+  if (loginResponse.status === 200) {
+    authToken = loginResponse.body.data.accessToken;
+  } else {
+    throw new Error(`Failed to login: ${JSON.stringify(loginResponse.body)}`);
+  }
+});
 
 describe('Clinic Controller', () => {
   let clinicId;
-  let userId;
-  let authToken;
-
-  beforeAll(async () => {
-    userId = '507f1f77bcf86cd799439011';
-    authToken = 'test-token-placeholder';
-  });
 
   describe('POST /api/v1/clinics', () => {
     it('should create a new clinic', async () => {
@@ -28,7 +50,7 @@ describe('Clinic Controller', () => {
           phone: '+57 1 2345678',
           email: 'clinic@test.com',
           country: 'Colombia',
-          currency: 'COP',
+          currency: 'COP'
         });
 
       expect(response.status).toBe(201);
@@ -43,14 +65,34 @@ describe('Clinic Controller', () => {
         .post('/api/v1/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          name: 'Test Clinic',
+          name: 'Test Clinic'
         });
 
       expect(response.status).toBe(400);
     });
   });
 
-  describe('GET /api/v1/clinics/:id', () => {
+  describe('GET Clinic by ID', () => {
+    beforeEach(async () => {
+      // Create a clinic for this test suite
+      const createResponse = await request(app)
+        .post('/api/v1/clinics')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Get Test Clinic',
+          description: 'A clinic for GET tests',
+          address: '456 Main St',
+          phone: '+57 1 2345678',
+          email: 'getclinic@test.com',
+          country: 'Colombia',
+          currency: 'COP'
+        });
+
+      if (createResponse.status === 201) {
+        clinicId = createResponse.body.data._id;
+      }
+    });
+
     it('should get a clinic by id', async () => {
       const response = await request(app)
         .get(`/api/v1/clinics/${clinicId}`)
@@ -71,13 +113,33 @@ describe('Clinic Controller', () => {
   });
 
   describe('PUT /api/v1/clinics/:id', () => {
+    beforeEach(async () => {
+      // Create a clinic for this test suite
+      const createResponse = await request(app)
+        .post('/api/v1/clinics')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Update Test Clinic',
+          description: 'A clinic for update tests',
+          address: '789 Main St',
+          phone: '+57 1 2345678',
+          email: 'updateclinic@test.com',
+          country: 'Colombia',
+          currency: 'COP'
+        });
+
+      if (createResponse.status === 201) {
+        clinicId = createResponse.body.data._id;
+      }
+    });
+
     it('should update a clinic', async () => {
       const response = await request(app)
         .put(`/api/v1/clinics/${clinicId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Updated Clinic',
-          description: 'Updated description',
+          description: 'Updated description'
         });
 
       expect(response.status).toBe(200);
@@ -86,6 +148,26 @@ describe('Clinic Controller', () => {
   });
 
   describe('DELETE /api/v1/clinics/:id', () => {
+    beforeEach(async () => {
+      // Create a clinic for this test suite
+      const createResponse = await request(app)
+        .post('/api/v1/clinics')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Delete Test Clinic',
+          description: 'A clinic for delete tests',
+          address: '321 Main St',
+          phone: '+57 1 2345678',
+          email: 'deleteclinic@test.com',
+          country: 'Colombia',
+          currency: 'COP'
+        });
+
+      if (createResponse.status === 201) {
+        clinicId = createResponse.body.data._id;
+      }
+    });
+
     it('should delete a clinic', async () => {
       const response = await request(app)
         .delete(`/api/v1/clinics/${clinicId}`)

@@ -21,7 +21,7 @@ export const createClinic = async (req, res, next) => {
       email,
       website,
       country,
-      currency,
+      currency
     } = req.body;
 
     const clinic = await Clinic.create({
@@ -33,7 +33,7 @@ export const createClinic = async (req, res, next) => {
       website,
       country,
       currency,
-      owner: req.user.id,
+      owner: req.user.id
     });
 
     return res
@@ -94,7 +94,7 @@ export const updateClinic = async (req, res, next) => {
 
     if (!clinic.isAdmin(req.user.id)) {
       return next(
-        new AppError('No tienes permisos para actualizar esta clínica', 403),
+        new AppError('No tienes permisos para actualizar esta clínica', 403)
       );
     }
 
@@ -106,7 +106,7 @@ export const updateClinic = async (req, res, next) => {
       email,
       website,
       status,
-      settings,
+      settings
     } = req.body;
 
     if (name) clinic.name = name;
@@ -225,8 +225,8 @@ export const getAllClinics = async (req, res, next) => {
         new ApiResponse(
           200,
           { clinics, total, page, pages: Math.ceil(total / limit) },
-          'Clínicas obtenidas',
-        ),
+          'Clínicas obtenidas'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));

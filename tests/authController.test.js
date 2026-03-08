@@ -11,7 +11,9 @@ import Session from '../src/models/session.js';
 import User from '../src/models/user.js';
 
 describe('Authentication Controller', () => {
-  let mockReq, mockRes, mockNext;
+  let mockReq, mockRes;
+  // eslint-disable-next-line no-unused-vars
+  let mockNext;
 
   beforeEach(() => {
     // Clear all mocks before each test
@@ -23,7 +25,7 @@ describe('Authentication Controller', () => {
       ip: '127.0.0.1',
       get: jest.fn((header) => {
         const headers = {
-          'User-Agent': 'Mozilla/5.0 Test'
+          'User-Agent': 'Mozilla/5.0 Test',
         };
         return headers[header];
       }),
@@ -31,15 +33,15 @@ describe('Authentication Controller', () => {
         _id: 'test-user-id',
         email: 'test@example.com',
         twoFAEnabled: false,
-        save: jest.fn()
-      }
+        save: jest.fn(),
+      },
     };
 
     // Create mock response object
     mockRes = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
-      setHeader: jest.fn()
+      setHeader: jest.fn(),
     };
 
     mockNext = jest.fn();
@@ -50,7 +52,7 @@ describe('Authentication Controller', () => {
       mockReq.body = {
         name: 'Test User',
         email: 'newuser@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       // Mock User.findOne to return null (user doesn't exist)
@@ -61,7 +63,7 @@ describe('Authentication Controller', () => {
         _id: 'user-123',
         name: 'Test User',
         email: 'newuser@example.com',
-        role: 'user'
+        role: 'user',
       };
       jest.spyOn(User, 'create').mockResolvedValueOnce(mockUser);
 
@@ -73,7 +75,7 @@ describe('Authentication Controller', () => {
       // Mock sendResponse function
       const sendResponseMock = jest.fn();
       jest.doMock('../src/utils/apiResponse.js', () => ({
-        sendResponse: sendResponseMock
+        sendResponse: sendResponseMock,
       }));
 
       // Call the function
@@ -81,7 +83,7 @@ describe('Authentication Controller', () => {
 
       // Verify User.findOne was called with lowercase email
       expect(User.findOne).toHaveBeenCalledWith({
-        email: 'newuser@example.com'
+        email: 'newuser@example.com',
       });
     });
 
@@ -89,13 +91,13 @@ describe('Authentication Controller', () => {
       mockReq.body = {
         name: 'Test User',
         email: 'existing@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       // Mock User.findOne to return existing user
       jest.spyOn(User, 'findOne').mockResolvedValueOnce({
         _id: 'existing-user',
-        email: 'existing@example.com'
+        email: 'existing@example.com',
       });
 
       // Should throw error
@@ -110,7 +112,7 @@ describe('Authentication Controller', () => {
       mockReq.body = {
         name: 'Test User',
         email: 'invalid-email',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       // Should throw validation error
@@ -125,7 +127,7 @@ describe('Authentication Controller', () => {
       mockReq.body = {
         name: 'Test User',
         email: 'newuser@example.com',
-        password: '123' // Too short and weak
+        password: '123', // Too short and weak
       };
 
       // Should throw validation error
@@ -141,7 +143,7 @@ describe('Authentication Controller', () => {
     test('should successfully login with valid credentials', async () => {
       mockReq.body = {
         email: 'user@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       // Mock User with comparePassword method
@@ -154,7 +156,7 @@ describe('Authentication Controller', () => {
         isActive: true,
         lastLogin: null,
         comparePassword: jest.fn().mockResolvedValue(true),
-        save: jest.fn().mockResolvedValue(true)
+        save: jest.fn().mockResolvedValue(true),
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
@@ -178,7 +180,7 @@ describe('Authentication Controller', () => {
     test('should reject login with non-existent user', async () => {
       mockReq.body = {
         email: 'nonexistent@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(null);
@@ -193,7 +195,7 @@ describe('Authentication Controller', () => {
     test('should reject login with incorrect password', async () => {
       mockReq.body = {
         email: 'user@example.com',
-        password: 'WrongPassword123'
+        password: 'WrongPassword123',
       };
 
       const mockUser = {
@@ -201,7 +203,7 @@ describe('Authentication Controller', () => {
         email: 'user@example.com',
         isActive: true,
         comparePassword: jest.fn().mockResolvedValue(false),
-        save: jest.fn()
+        save: jest.fn(),
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
@@ -216,7 +218,7 @@ describe('Authentication Controller', () => {
     test('should reject login for deactivated account', async () => {
       mockReq.body = {
         email: 'user@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       const mockUser = {
@@ -224,7 +226,7 @@ describe('Authentication Controller', () => {
         email: 'user@example.com',
         isActive: false,
         comparePassword: jest.fn().mockResolvedValue(true),
-        save: jest.fn()
+        save: jest.fn(),
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
@@ -239,7 +241,7 @@ describe('Authentication Controller', () => {
     test('should update lastLogin timestamp on successful login', async () => {
       mockReq.body = {
         email: 'user@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       const mockUser = {
@@ -250,7 +252,7 @@ describe('Authentication Controller', () => {
         isActive: true,
         lastLogin: null,
         comparePassword: jest.fn().mockResolvedValue(true),
-        save: jest.fn().mockResolvedValue(true)
+        save: jest.fn().mockResolvedValue(true),
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
@@ -277,12 +279,12 @@ describe('Authentication Controller', () => {
 
       // Mock twoFAService
       jest.doMock('../src/services/twoFAService.js', () => ({
-        generate2FACode: jest.fn().mockReturnValue('TESTSECRET123456')
+        generate2FACode: jest.fn().mockReturnValue('TESTSECRET123456'),
       }));
 
       // Mock qrService
       jest.doMock('../src/services/qrService.js', () => ({
-        generateQR: jest.fn().mockResolvedValue('data:image/png;base64,TESTQR')
+        generateQR: jest.fn().mockResolvedValue('data:image/png;base64,TESTQR'),
       }));
 
       try {
@@ -309,7 +311,7 @@ describe('Authentication Controller', () => {
   describe('logout', () => {
     test('should successfully logout and invalidate session', async () => {
       mockReq.user = {
-        _id: 'user-123'
+        _id: 'user-123',
       };
 
       jest
@@ -331,7 +333,7 @@ describe('Authentication Controller', () => {
       mockReq.body = {
         name: 'Test User',
         email: '  TEST@EXAMPLE.COM  ',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(null);
@@ -339,7 +341,7 @@ describe('Authentication Controller', () => {
         _id: 'user-123',
         name: 'Test User',
         email: 'test@example.com',
-        role: 'user'
+        role: 'user',
       });
       jest
         .spyOn(Session, 'create')
@@ -358,7 +360,7 @@ describe('Authentication Controller', () => {
     test('should create session with user IP and User-Agent', async () => {
       mockReq.body = {
         email: 'user@example.com',
-        password: 'SecurePassword123'
+        password: 'SecurePassword123',
       };
 
       const mockUser = {
@@ -368,7 +370,7 @@ describe('Authentication Controller', () => {
         twoFAEnabled: false,
         isActive: true,
         comparePassword: jest.fn().mockResolvedValue(true),
-        save: jest.fn()
+        save: jest.fn(),
       };
 
       jest.spyOn(User, 'findOne').mockResolvedValueOnce(mockUser);
@@ -387,8 +389,8 @@ describe('Authentication Controller', () => {
         expect.objectContaining({
           user: 'user-123',
           ipAddress: '127.0.0.1',
-          userAgent: 'Mozilla/5.0 Test'
-        })
+          userAgent: 'Mozilla/5.0 Test',
+        }),
       );
     });
   });

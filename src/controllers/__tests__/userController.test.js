@@ -257,10 +257,10 @@ describe('User Controller', () => {
         },
         {
           user: user._id,
-          date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          date: new Date(Date.now() + 72 * 60 * 60 * 1000),
           description: 'Completed appointment',
           status: 'completed'
-        }
+        },
       ]);
     });
 
@@ -355,6 +355,7 @@ describe('User Controller', () => {
       expect(response.body.message).toBe('Password is incorrect');
 
       // Verify user data is NOT deleted
+      // eslint-disable-next-line no-unused-vars
       const appointments = await Appointment.countDocuments({
         user: user._id
       });

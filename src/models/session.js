@@ -5,28 +5,28 @@ const sessionSchema = Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'User is required'],
+      required: [true, 'User is required']
     },
     appointment: {
       type: Schema.Types.ObjectId,
       ref: 'Appointment',
-      required: false,
+      required: false
     },
     loginTime: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     logoutTime: Date,
     ipAddress: String,
     userAgent: String,
     isActive: {
       type: Boolean,
-      default: true,
+      default: true
     },
     duration: Number, // en segundos
-    notes: String,
+    notes: String
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Índices

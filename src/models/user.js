@@ -8,7 +8,7 @@ const userSchema = Schema(
       required: [true, 'Name is required'],
       trim: true,
       minlength: [2, 'Name must be at least 2 characters'],
-      maxlength: [50, 'Name cannot exceed 50 characters'],
+      maxlength: [50, 'Name cannot exceed 50 characters']
     },
     email: {
       type: String,
@@ -16,34 +16,34 @@ const userSchema = Schema(
       unique: [true, 'Email already exists'],
       lowercase: true,
       trim: true,
-      match: [/^[\w.-]+@[\w.-]+\.\w{2,3}$/, 'Please provide a valid email'],
+      match: [/^[\w.-]+@[\w.-]+\.\w{2,3}$/, 'Please provide a valid email']
     },
     password: {
       type: String,
       required: [true, 'Password is required'],
       minlength: [8, 'Password must be at least 8 characters'],
-      select: false, // No incluir password en queries por defecto
+      select: false // No incluir password en queries por defecto
     },
     role: {
       type: String,
       enum: ['user', 'psychologist', 'admin'],
-      default: 'user',
+      default: 'user'
     },
     twoFAEnabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     twoFASecret: {
       type: String,
-      select: false,
+      select: false
     },
     lastLogin: Date,
     isActive: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // Índices

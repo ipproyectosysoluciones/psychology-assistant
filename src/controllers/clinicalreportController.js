@@ -33,7 +33,7 @@ export const createClinicalReport = async (req, res, next) => {
       clinicalObservations,
       diagnosis,
       prognosis,
-      suggestedFollowUp,
+      suggestedFollowUp
     } = req.body;
 
     const report = await ClinicalReport.create({
@@ -57,7 +57,7 @@ export const createClinicalReport = async (req, res, next) => {
       diagnosis,
       prognosis,
       suggestedFollowUp,
-      status: 'completed',
+      status: 'completed'
     });
 
     return res
@@ -117,8 +117,8 @@ export const getPatientClinicalReports = async (req, res, next) => {
         new ApiResponse(
           200,
           { reports, total, page, pages: Math.ceil(total / limit) },
-          'Reportes obtenidos',
-        ),
+          'Reportes obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));
@@ -139,7 +139,7 @@ export const updateClinicalReport = async (req, res, next) => {
 
     if (!report.canEdit()) {
       return next(
-        new AppError('No se puede editar un reporte completado', 400),
+        new AppError('No se puede editar un reporte completado', 400)
       );
     }
 
@@ -224,8 +224,8 @@ export const getClinicClinicalReports = async (req, res, next) => {
         new ApiResponse(
           200,
           { reports, total, page, pages: Math.ceil(total / limit) },
-          'Reportes obtenidos',
-        ),
+          'Reportes obtenidos'
+        )
       );
   } catch (error) {
     return next(new AppError(error.message, 400));

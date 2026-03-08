@@ -10,89 +10,89 @@ const clinicalReportSchema = new mongoose.Schema(
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patient',
-      required: true,
+      required: true
     },
     clinic: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Clinic',
-      required: true,
+      required: true
     },
     therapist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Therapist',
-      required: true,
+      required: true
     },
     reportType: {
       type: String,
       enum: ['progress', 'discharge', 'assessment', 'evaluation', 'summary'],
-      required: true,
+      required: true
     },
     reportDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
     fromDate: {
       type: Date,
-      required: true,
+      required: true
     },
     toDate: {
       type: Date,
-      required: true,
+      required: true
     },
     title: {
       type: String,
-      required: true,
+      required: true
     },
     summary: {
       type: String,
       maxlength: 1000,
-      required: true,
+      required: true
     },
     keyFindings: {
       type: [String],
-      default: [],
+      default: []
     },
     improvements: {
       type: [String],
-      default: [],
+      default: []
     },
     areasOfConcern: {
       type: [String],
-      default: [],
+      default: []
     },
     recommendations: {
       type: [String],
-      default: [],
+      default: []
     },
     treatmentGoals: {
       type: [String],
-      default: [],
+      default: []
     },
     sessionCount: {
       type: Number,
-      default: 0,
+      default: 0
     },
     attackanceRate: {
       type: Number,
       min: 0,
-      max: 100,
+      max: 100
     },
     overallProgress: {
       type: Number,
       min: 1,
-      max: 10,
+      max: 10
     },
     clinicalObservations: {
       type: String,
-      maxlength: 2000,
+      maxlength: 2000
     },
     diagnosis: {
       type: String,
-      required: true,
+      required: true
     },
     prognosis: {
       type: String,
-      maxlength: 1000,
+      maxlength: 1000
     },
     suggestedFollowUp: {
       type: String,
@@ -101,37 +101,37 @@ const clinicalReportSchema = new mongoose.Schema(
         'reduce_frequency',
         'increase_frequency',
         'discharge',
-        'referral',
+        'referral'
       ],
-      default: 'continue',
+      default: 'continue'
     },
     nextAppointmentDate: {
-      type: Date,
+      type: Date
     },
     attachments: {
       type: [String],
-      default: [],
+      default: []
     },
     status: {
       type: String,
       enum: ['draft', 'completed', 'reviewed', 'archived'],
-      default: 'completed',
+      default: 'completed'
     },
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'User'
     },
     reviewDate: {
-      type: Date,
+      type: Date
     },
     isConfidential: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 clinicalReportSchema.index({ patient: 1, clinic: 1 });
@@ -156,5 +156,5 @@ clinicalReportSchema.methods.markAsReviewed = function (reviewerId) {
 
 export const ClinicalReport = mongoose.model(
   'ClinicalReport',
-  clinicalReportSchema,
+  clinicalReportSchema
 );
