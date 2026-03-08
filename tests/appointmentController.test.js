@@ -22,14 +22,14 @@ describe('Appointment Controller', () => {
       query: {},
       user: {
         _id: 'user-123',
-        email: 'test@example.com',
-      },
+        email: 'test@example.com'
+      }
     };
 
     mockRes = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn().mockReturnThis(),
-      setHeader: jest.fn(),
+      setHeader: jest.fn()
     };
 
     mockNext = jest.fn();
@@ -42,7 +42,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: futureDate.toISOString(),
-        description: 'Initial consultation session',
+        description: 'Initial consultation session'
       };
 
       const mockAppointment = {
@@ -51,7 +51,7 @@ describe('Appointment Controller', () => {
         date: futureDate,
         description: 'Initial consultation session',
         status: 'scheduled',
-        save: jest.fn(),
+        save: jest.fn()
       };
 
       jest.spyOn(Appointment, 'create').mockResolvedValueOnce(mockAppointment);
@@ -65,8 +65,8 @@ describe('Appointment Controller', () => {
       expect(Appointment.create).toHaveBeenCalledWith(
         expect.objectContaining({
           user: 'user-123',
-          description: 'Initial consultation session',
-        }),
+          description: 'Initial consultation session'
+        })
       );
     });
 
@@ -76,7 +76,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: pastDate.toISOString(),
-        description: 'Session',
+        description: 'Session'
       };
 
       try {
@@ -92,7 +92,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: todayPast.toISOString(),
-        description: 'Session',
+        description: 'Session'
       };
 
       try {
@@ -105,7 +105,7 @@ describe('Appointment Controller', () => {
     test('should reject appointment with invalid date format', async () => {
       mockReq.body = {
         date: 'invalid-date',
-        description: 'Session',
+        description: 'Session'
       };
 
       try {
@@ -121,7 +121,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: futureDate.toISOString(),
-        description: 'short', // Less than 10 characters
+        description: 'short' // Less than 10 characters
       };
 
       try {
@@ -137,7 +137,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: futureDate.toISOString(),
-        description: 'a'.repeat(501), // More than 500 characters
+        description: 'a'.repeat(501) // More than 500 characters
       };
 
       try {
@@ -155,22 +155,22 @@ describe('Appointment Controller', () => {
           _id: 'apt-1',
           user: 'user-123',
           date: new Date(),
-          status: 'scheduled',
+          status: 'scheduled'
         },
         {
           _id: 'apt-2',
           user: 'user-123',
           date: new Date(),
-          status: 'completed',
-        },
+          status: 'completed'
+        }
       ];
 
       jest.spyOn(Appointment, 'find').mockReturnValueOnce({
         sort: jest.fn().mockReturnValueOnce({
           limit: jest.fn().mockReturnValueOnce({
-            skip: jest.fn().mockResolvedValueOnce(mockAppointments),
-          }),
-        }),
+            skip: jest.fn().mockResolvedValueOnce(mockAppointments)
+          })
+        })
       });
 
       try {
@@ -189,16 +189,16 @@ describe('Appointment Controller', () => {
         {
           _id: 'apt-1',
           user: 'user-123',
-          status: 'scheduled',
-        },
+          status: 'scheduled'
+        }
       ];
 
       jest.spyOn(Appointment, 'find').mockReturnValueOnce({
         sort: jest.fn().mockReturnValueOnce({
           limit: jest.fn().mockReturnValueOnce({
-            skip: jest.fn().mockResolvedValueOnce(mockAppointments),
-          }),
-        }),
+            skip: jest.fn().mockResolvedValueOnce(mockAppointments)
+          })
+        })
       });
 
       try {
@@ -216,9 +216,9 @@ describe('Appointment Controller', () => {
       jest.spyOn(Appointment, 'find').mockReturnValueOnce({
         sort: jest.fn().mockReturnValueOnce({
           limit: jest.fn().mockReturnValueOnce({
-            skip: jest.fn().mockResolvedValueOnce([]),
-          }),
-        }),
+            skip: jest.fn().mockResolvedValueOnce([])
+          })
+        })
       });
 
       try {
@@ -261,7 +261,7 @@ describe('Appointment Controller', () => {
         user: 'user-123',
         date: new Date(),
         description: 'Session',
-        status: 'scheduled',
+        status: 'scheduled'
       };
 
       jest
@@ -284,7 +284,7 @@ describe('Appointment Controller', () => {
         _id: 'apt-123',
         user: 'other-user-123',
         date: new Date(),
-        status: 'scheduled',
+        status: 'scheduled'
       };
 
       jest
@@ -329,7 +329,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: futureDate.toISOString(),
-        description: 'Updated session description',
+        description: 'Updated session description'
       };
 
       const mockAppointment = {
@@ -338,7 +338,7 @@ describe('Appointment Controller', () => {
         date: futureDate,
         description: 'Updated session description',
         status: 'scheduled',
-        save: jest.fn(),
+        save: jest.fn()
       };
 
       jest
@@ -361,7 +361,7 @@ describe('Appointment Controller', () => {
       const mockAppointment = {
         _id: 'apt-123',
         user: 'user-123',
-        status: 'scheduled',
+        status: 'scheduled'
       };
 
       jest
@@ -381,13 +381,13 @@ describe('Appointment Controller', () => {
       pastDate.setDate(pastDate.getDate() - 1);
 
       mockReq.body = {
-        date: pastDate.toISOString(),
+        date: pastDate.toISOString()
       };
 
       const mockAppointment = {
         _id: 'apt-123',
         user: 'user-123',
-        status: 'scheduled',
+        status: 'scheduled'
       };
 
       jest
@@ -407,7 +407,7 @@ describe('Appointment Controller', () => {
       const mockAppointment = {
         _id: 'apt-123',
         user: 'user-123',
-        status: 'completed',
+        status: 'completed'
       };
 
       jest
@@ -430,7 +430,7 @@ describe('Appointment Controller', () => {
         _id: 'apt-123',
         user: 'user-123',
         status: 'scheduled',
-        save: jest.fn(),
+        save: jest.fn()
       };
 
       jest
@@ -452,7 +452,7 @@ describe('Appointment Controller', () => {
       const mockAppointment = {
         _id: 'apt-123',
         user: 'user-123',
-        status: 'cancelled',
+        status: 'cancelled'
       };
 
       jest
@@ -472,7 +472,7 @@ describe('Appointment Controller', () => {
       const mockAppointment = {
         _id: 'apt-123',
         user: 'user-123',
-        status: 'completed',
+        status: 'completed'
       };
 
       jest
@@ -494,7 +494,7 @@ describe('Appointment Controller', () => {
 
       mockReq.body = {
         date: futureDate.toISOString(),
-        description: '<script>alert("xss")</script>Legitimate content',
+        description: '<script>alert("xss")</script>Legitimate content'
       };
 
       // XSS should be sanitized before reaching controller
@@ -517,7 +517,7 @@ describe('Appointment Controller', () => {
 
     test('should validate all input fields are present', async () => {
       mockReq.body = {
-        description: 'Missing date field',
+        description: 'Missing date field'
       };
 
       try {
@@ -531,7 +531,7 @@ describe('Appointment Controller', () => {
   describe('Error handling', () => {
     test('should return meaningful error messages', async () => {
       mockReq.body = {
-        date: 'invalid',
+        date: 'invalid'
       };
 
       try {

@@ -1,13 +1,31 @@
 {
   "info": {
-    "_postman_id": "psychology-assistant-api",
+    "_postman_id": "psychology-assistant-api-v1",
     "name": "Psychology Assistant API",
-    "description": "Complete API collection for Psychology Assistant Platform\nPlataforma integral para consultorios psicológicos",
+    "description": "Complete REST API collection for Psychology Assistant Platform\nDocumentación completa de la API REST de Psychology Assistant",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
   "item": [
     {
       "name": "Authentication",
+      "description": "Endpoints de Autenticación | Authentication Endpoints",
       "item": [
         {
           "name": "Register User",
@@ -21,7 +39,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Dr. Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword123!\",\n  \"role\": \"psychologist\"\n}"
+              "raw": "{\n  \"name\": \"Dr. Juan Pérez\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword@2024\",\n  \"role\": \"psychologist\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
@@ -32,6 +50,20 @@
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"access_token\", jsonData.data.accessToken);",
+                  "    pm.environment.set(\"refresh_token\", jsonData.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -42,7 +74,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+              "raw": "{\n  \"email\": \"juan@example.com\",\n  \"password\": \"SecurePassword@2024\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
@@ -50,11 +82,419 @@
               "path": ["api", "auth", "login"]
             }
           }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Enable 2FA",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/enable-2fa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "enable-2fa"]
+            }
+          }
+        },
+        {
+          "name": "Verify 2FA",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify-2fa",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "verify-2fa"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"access_token\", jsonData.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh-token"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "description": "Endpoints de Citas | Appointments Endpoints",
+      "item": [
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2024-12-25T10:00:00Z\",\n  \"description\": \"Initial consultation\",\n  \"type\": \"consultation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/appointments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"]
+            }
+          }
+        },
+        {
+          "name": "List Appointments",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/appointments?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Appointment",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/appointments/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Appointment",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2024-12-25T14:00:00Z\",\n  \"description\": \"Follow-up consultation\",\n  \"type\": \"consultation\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/appointments/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/appointments/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "appointments", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "Endpoints de Usuarios | Users Endpoints",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Juan Pérez González\",\n  \"email\": \"juan.perez@example.com\",\n  \"bio\": \"Psychologist with 10 years of experience\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"SecurePassword@2024\",\n  \"newPassword\": \"NewSecurePassword@2024\",\n  \"confirmPassword\": \"NewSecurePassword@2024\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/change-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "change-password"]
+            }
+          }
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate Account",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"SecurePassword@2024\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/delete-data",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "delete-data"]
+            }
+          }
         }
       ]
     },
     {
       "name": "Clinics (v1)",
+      "description": "Endpoints de Clínicas | Clinics Endpoints",
       "item": [
         {
           "name": "Create Clinic",
@@ -78,12 +518,43 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Clínica Psicología Integral\",\n  \"email\": \"info@clinica.com\",\n  \"phone\": \"+57 1 234 5678\",\n  \"address\": \"Cra. 5 #45-27\",\n  \"city\": \"Bogotá\",\n  \"country\": \"Colombia\",\n  \"postalCode\": \"110111\",\n  \"currency\": \"COP\",\n  \"website\": \"https://www.clinica.com\"\n}"
+              "raw": "{\n  \"name\": \"Clínica Psicología Integral\",\n  \"address\": \"Cra. 5 #45-27\",\n  \"phone\": \"+57 1 234 5678\",\n  \"website\": \"https://www.clinica.com\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics",
               "host": ["{{base_url}}"],
               "path": ["api", "v1", "clinics"]
+            }
+          }
+        },
+        {
+          "name": "List Clinics",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinics?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinics"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
             }
           }
         },
@@ -104,7 +575,77 @@
             "url": {
               "raw": "{{base_url}}/api/v1/clinics/:id",
               "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics", ":id"]
+              "path": ["api", "v1", "clinics", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Clinic",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Clínica Actualizada\",\n  \"phone\": \"+57 1 999 9999\",\n  \"website\": \"https://www.clinicaactualizada.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinics/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinics", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Clinic",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinics/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinics", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
             }
           }
         }
@@ -112,6 +653,7 @@
     },
     {
       "name": "Therapists (v1)",
+      "description": "Endpoints de Terapeutas | Therapists Endpoints",
       "item": [
         {
           "name": "Create Therapist",
@@ -135,7 +677,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"user\": \"user_id_here\",\n  \"licenseNumber\": \"12345-PSI\",\n  \"licenseExpiry\": \"2026-12-31\",\n  \"specializations\": [\"Terapia Cognitivo Conductual\", \"Mindfulness\"],\n  \"hourlyRate\": 150,\n  \"bio\": \"Specialista en ansiedad y depresión\",\n  \"clinic\": \"clinic_id_here\"\n}"
+              "raw": "{\n  \"name\": \"Dr. Carlos López\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"+57 123 456 7890\",\n  \"specialization\": \"CBT\",\n  \"clinicId\": \"clinic_id_here\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists",
@@ -143,11 +685,134 @@
               "path": ["api", "v1", "therapists"]
             }
           }
+        },
+        {
+          "name": "List Therapists",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/therapists?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "therapists"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Therapist",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/therapists/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "therapists", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Therapist",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"specialization\": \"DBT\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/therapists/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "therapists", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Therapist",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/therapists/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "therapists", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
     },
     {
       "name": "Patients (v1)",
+      "description": "Endpoints de Pacientes | Patients Endpoints",
       "item": [
         {
           "name": "Create Patient",
@@ -171,7 +836,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"González\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"+57 301 234 5678\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"male\",\n  \"idType\": \"CC\",\n  \"idNumber\": \"123456789\",\n  \"clinic\": \"clinic_id_here\"\n}"
+              "raw": "{\n  \"name\": \"María García\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"+57 123 456 7890\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"clinicId\": \"clinic_id_here\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients",
@@ -179,11 +844,134 @@
               "path": ["api", "v1", "patients"]
             }
           }
+        },
+        {
+          "name": "List Patients",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Patient",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+57 999 999 9999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
     },
     {
       "name": "Medical Records (v1)",
+      "description": "Endpoints de Historiales Médicos | Medical Records Endpoints",
       "item": [
         {
           "name": "Create Medical Record",
@@ -207,7 +995,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"appointmentDate\": \"2026-03-10\",\n  \"diagnosis\": \"F41.1\",\n  \"symptoms\": [\"Ansiedad\", \"Insomnio\"],\n  \"treatmentPlan\": \"Terapia semanal + ejercicios de relajación\",\n  \"nextSteps\": \"Seguimiento en 2 semanas\"\n}"
+              "raw": "{\n  \"patientId\": \"patient_id_here\",\n  \"diagnosis\": \"Anxiety Disorder\",\n  \"treatment\": \"CBT\",\n  \"notes\": \"Patient shows good progress with treatment\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/medical-records",
@@ -215,14 +1003,133 @@
               "path": ["api", "v1", "medical-records"]
             }
           }
+        },
+        {
+          "name": "Get Medical Record",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/medical-records/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "medical-records", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Records by Patient",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/patients/:patientId/medical-records",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "patients", ":patientId", "medical-records"],
+              "variable": [
+                {
+                  "key": "patientId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Medical Record",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Updated notes\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/medical-records/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "medical-records", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Medical Record",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/medical-records/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "medical-records", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
     },
     {
-      "name": "Billing (v1)",
+      "name": "Billings (v1)",
+      "description": "Endpoints de Facturación | Billing Endpoints",
       "item": [
         {
-          "name": "Create Invoice",
+          "name": "Create Billing",
           "request": {
             "method": "POST",
             "auth": {
@@ -243,7 +1150,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"clinic\": \"clinic_id_here\",\n  \"therapist\": \"therapist_id_here\",\n  \"appointmentId\": \"appointment_id_here\",\n  \"amount\": 150,\n  \"description\": \"Sesión de terapia individual\",\n  \"paymentMethod\": \"card\",\n  \"lineItems\": [\n    {\n      \"description\": \"Sesión 60 min\",\n      \"quantity\": 1,\n      \"unitPrice\": 150,\n      \"total\": 150\n    }\n  ]\n}"
+              "raw": "{\n  \"appointmentId\": \"appointment_id_here\",\n  \"amount\": 100.00,\n  \"currency\": \"USD\",\n  \"description\": \"Consultation session\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/billings",
@@ -251,14 +1158,104 @@
               "path": ["api", "v1", "billings"]
             }
           }
+        },
+        {
+          "name": "List Billings",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/billings?status=pending&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "billings"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark as Paid",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/billings/:id/pay",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "billings", ":id", "pay"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Billing",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/billings/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "billings", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
     },
     {
       "name": "Clinical Reports (v1)",
+      "description": "Endpoints de Reportes Clínicos | Clinical Reports Endpoints",
       "item": [
         {
-          "name": "Create Report",
+          "name": "Create Clinical Report",
           "request": {
             "method": "POST",
             "auth": {
@@ -279,7 +1276,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient\": \"patient_id_here\",\n  \"therapist\": \"therapist_id_here\",\n  \"reportType\": \"progress\",\n  \"reportDate\": \"2026-03-07\",\n  \"diagnosis\": \"F41.1 - Trastorno de Ansiedad\",\n  \"findings\": \"Paciente muestra mejoría significativa en síntomas de ansiedad\",\n  \"recommendations\": \"Continuar con sesiones semanales y práctica de técnicas aprendidas\",\n  \"status\": \"completed\"\n}"
+              "raw": "{\n  \"patientId\": \"patient_id_here\",\n  \"title\": \"Quarterly Progress Report\",\n  \"content\": \"Patient has shown significant improvement...\",\n  \"reportDate\": \"2024-12-21\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports",
@@ -287,20 +1284,130 @@
               "path": ["api", "v1", "clinical-reports"]
             }
           }
+        },
+        {
+          "name": "List Clinical Reports",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinical-reports?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinical-reports"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Clinical Report",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinical-reports/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinical-reports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Clinical Report",
+          "request": {
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Updated report content\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinical-reports/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinical-reports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Clinical Report",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/clinical-reports/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "clinical-reports", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
-    }
-  ],
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "access_token",
-      "value": "",
-      "type": "string"
     }
   ]
 }

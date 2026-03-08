@@ -260,7 +260,7 @@ describe('User Controller', () => {
           date: new Date(Date.now() + 72 * 60 * 60 * 1000),
           description: 'Completed appointment',
           status: 'completed'
-        },
+        }
       ]);
     });
 

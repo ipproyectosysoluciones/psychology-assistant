@@ -1,6 +1,8 @@
 # 🚀 Quick Start Guide - Resume Development
 
-**Last Updated**: March 6, 2026 | **Status**: Ready to Code
+> **English** | [📖 Español](#spanish-section)
+
+**Last Updated**: March 8, 2026 | **Status**: ✅ Ready to Code
 
 ---
 
