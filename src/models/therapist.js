@@ -10,38 +10,38 @@ const therapistSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     clinic: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Clinic',
-      required: true
+      required: true,
     },
     specializations: {
       type: [String],
-      default: []
+      default: [],
     },
     licenseNumber: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     licenseExpiry: {
       type: Date,
-      required: true
+      required: true,
     },
     bio: {
       type: String,
-      maxlength: 1000
+      maxlength: 1000,
     },
     qualifications: {
       type: [String],
-      default: []
+      default: [],
     },
     hourlyRate: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     availability: {
       monday: [{ start: String, end: String }],
@@ -50,34 +50,34 @@ const therapistSchema = new mongoose.Schema(
       thursday: [{ start: String, end: String }],
       friday: [{ start: String, end: String }],
       saturday: [{ start: String, end: String }],
-      sunday: [{ start: String, end: String }]
+      sunday: [{ start: String, end: String }],
     },
     status: {
       type: String,
       enum: ['active', 'inactive', 'on_leave'],
-      default: 'active'
+      default: 'active',
     },
     isVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
     languages: {
       type: [String],
-      default: ['Español']
+      default: ['Español'],
     },
     profileImage: {
-      type: String
-    }
+      type: String,
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 therapistSchema.index({ clinic: 1 });
 therapistSchema.index({ user: 1 });
 therapistSchema.index({ status: 1 });
-therapistSchema.index({ licenseNumber: 1 });
+// licenseNumber index: Removed - unique: true already creates index
 
 therapistSchema.methods.isLicenseValid = function () {
   return new Date() < this.licenseExpiry;

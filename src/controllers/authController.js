@@ -357,7 +357,7 @@ export const logout = asyncHandler(async (req, res) => {
       isRevoked: true,
       revokedAt: new Date(),
       revokedReason: 'Logout'
-    }
+    },
   );
 
   auditLog(req.user._id, AUDIT_EVENTS.LOGOUT, 'User', {}, 'SUCCESS');

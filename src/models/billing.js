@@ -57,7 +57,7 @@ const billingSchema = new mongoose.Schema(
         quantity: Number,
         unitPrice: Number,
         total: Number
-      }
+      },
     ],
     discount: {
       type: Number,
@@ -86,15 +86,15 @@ const billingSchema = new mongoose.Schema(
     },
     insurance: {
       type: String
-    }
+    },
   },
   {
     timestamps: true
-  }
+  },
 );
 
 billingSchema.index({ patient: 1, clinic: 1 });
-billingSchema.index({ invoiceNumber: 1 });
+// invoiceNumber index: Removed - unique: true already creates index
 billingSchema.index({ status: 1 });
 billingSchema.index({ paymentDate: -1 });
 

@@ -1,11 +1,3 @@
-import dotenv from 'dotenv';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import mongoose from 'mongoose';
-
-dotenv.config({ path: '.env.test' });
-
-let mongoServer;
-
 /**
  * @module setupTests
  * @description Configuración global para tests con Jest.
@@ -13,8 +5,13 @@ let mongoServer;
  * EN: Sets up in-memory database and automatic cleanup.
  */
 
-// Configurar Jest
-jest.setTimeout(30000);
+import dotenv from 'dotenv';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+
+dotenv.config({ path: '.env.test' });
+
+let mongoServer;
 
 // Setup antes de todos los tests
 beforeAll(async () => {
@@ -45,8 +42,12 @@ afterAll(async () => {
 // Mock para console.log en tests
 global.console = {
   ...console,
+  // eslint-disable-next-line no-undef
   log: jest.fn(),
+  // eslint-disable-next-line no-undef
   error: jest.fn(),
+  // eslint-disable-next-line no-undef
   warn: jest.fn(),
+  // eslint-disable-next-line no-undef
   info: jest.fn()
 };

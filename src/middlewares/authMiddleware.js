@@ -28,8 +28,10 @@ export const protect = asyncHandler(async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, environment.JWT_SECRET);
 
-    // Get user from token
-    const user = await User.findById(decoded.id).select('-password');
+    // Get user from token - select twoFASecret explicitly since it has select: false
+    const user = await User.findById(decoded.id).select(
+      '-password +twoFASecret',
+    );
 
     if (!user) {
       throw new AppError('No user found with this token', 401);
@@ -67,7 +69,7 @@ export const authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       throw new AppError(
         `User role ${req.user.role} is not authorized to access this route`,
-        403
+        403,
       );
     }
 
@@ -112,7 +114,7 @@ export const authorizeAppointmentOwner = asyncHandler(
     // Ownership verification will be done in the controller
     req.appointment = appointment;
     next();
-  }
+  },
 );
 
 // Alias for backward compatibility
