@@ -3,10 +3,12 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # Install dependencies
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && \
-    pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -14,5 +16,9 @@ COPY . .
 # Expose Angular dev server port
 EXPOSE 4200
 
-# Run Angular dev server
-CMD ["npm", "start"]
+# Health check for dev (optional)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:4200/ || exit 1
+
+# Run Angular dev server with polling for container compatibility
+CMD ["pnpm", "start"]

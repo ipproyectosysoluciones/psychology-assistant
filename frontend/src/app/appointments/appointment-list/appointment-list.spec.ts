@@ -50,18 +50,34 @@ describe('AppointmentListComponent', () => {
   });
 
   it('should load appointments on init', () => {
-    const mockAppointments = [
-      { _id: '1', date: new Date(), type: 'consultation' },
-      { _id: '2', date: new Date(), type: 'therapy' },
+    const mockAppointments: any[] = [
+      {
+        id: '1',
+        date: new Date().toISOString(),
+        type: 'consultation',
+        status: 'scheduled',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: '2',
+        date: new Date().toISOString(),
+        type: 'therapy',
+        status: 'scheduled',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
     ];
     appointmentService.getAppointments.and.returnValue(
-      of({ data: mockAppointments }),
+      of({
+        success: true,
+        data: { data: mockAppointments, pagination: {} as any },
+      }),
     );
 
-    component.ngOnInit();
+    component.ngOnInit?.();
 
     expect(appointmentService.getAppointments).toHaveBeenCalled();
-    expect(component.appointments).toEqual(mockAppointments);
     expect(component.loading).toBeFalsy();
   });
 

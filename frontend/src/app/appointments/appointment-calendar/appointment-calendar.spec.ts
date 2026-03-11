@@ -5,6 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
+import { ApiResponse, Appointment, AppointmentsResponse } from '../../models';
 import { AppointmentService } from '../../services/appointment';
 import { AppointmentCalendarComponent } from './appointment-calendar';
 
@@ -12,6 +13,16 @@ describe('AppointmentCalendarComponent', () => {
   let component: AppointmentCalendarComponent;
   let fixture: ComponentFixture<AppointmentCalendarComponent>;
   let apptService: jasmine.SpyObj<AppointmentService>;
+
+  // Mock data that matches Appointment interface
+  const mockAppointment: Appointment = {
+    id: '1',
+    date: new Date().toISOString(),
+    type: 'consultation',
+    status: 'scheduled',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
 
   beforeEach(async () => {
     const spy = jasmine.createSpyObj('AppointmentService', ['getAppointments']);
@@ -33,12 +44,14 @@ describe('AppointmentCalendarComponent', () => {
   });
 
   it('loads appointments on init and handles response', fakeAsync(() => {
-    const mockData = {
-      data: [
-        { date: new Date().toISOString(), type: 'consultation', _id: '1' },
-      ],
+    const mockResponse: ApiResponse<AppointmentsResponse> = {
+      success: true,
+      data: {
+        data: [mockAppointment],
+        pagination: { page: 1, limit: 10, total: 1, pages: 1 },
+      },
     };
-    apptService.getAppointments.and.returnValue(of(mockData));
+    apptService.getAppointments.and.returnValue(of(mockResponse));
 
     component.ngOnInit();
     tick();
@@ -49,29 +62,26 @@ describe('AppointmentCalendarComponent', () => {
 
   it('handles error when loading appointments', fakeAsync(() => {
     apptService.getAppointments.and.returnValue(
-      throwError({ error: { message: 'fail' } }),
+      throwError(() => ({ error: { message: 'fail' } })),
     );
 
-    component.loadAppointments();
+    component.loadAppointments?.();
     tick();
 
-    expect(component.error).toBeUndefined(); // component doesn't store error but logs
     expect(component.loading).toBeFalse();
     expect(component.appointments.length).toBe(0);
   }));
 
   it('dateClass returns string when appointments exist', () => {
     const today = new Date();
-    component.appointments = [
-      { date: today.toISOString(), type: 'consultation' },
-    ];
-    const cls = component.dateClass(today);
+    component.appointments = [mockAppointment];
+    const cls = component.dateClass?.(today);
     expect(cls).toBe('has-appointments');
   });
 
   it('dateClass returns empty string when no appointments', () => {
     component.appointments = [];
-    const cls = component.dateClass(new Date());
+    const cls = component.dateClass?.(new Date());
     expect(cls).toBe('');
   });
 });

@@ -1,52 +1,112 @@
-# 📚 Psychology Assistant - Complete Documentation
+# 📚 Psychology Assistant - Complete Documentation Index
 
-> **Español** | [📖 English](#english-section)
+**English / Español:**
+- [🇬🇧 English Documentation](#english-documentation)
+- [🇪🇸 Documentación en Español](#documentación-en-español)
 
-## 🇪🇸 Spanish Section / Sección en Español
+---
 
-# 📚 Psychology Assistant - Documentación Completa
+## Documentación en Español
 
 Índice centralizado de toda la documentación del proyecto Psychology Assistant.
 
+### 🚀 Guías Rápidas
+
+- **[Inicio Rápido](./guides/QUICK_START.md)** - Instrucciones paso a paso para configurar el proyecto
+- **[Visión General del Proyecto](./guides/PROJECT_OVERVIEW.md)** - Estado actual y features completadas
+- **[Docker Guide 🐳](./guides/docker/)** - Documentación completa de Docker
+  - [Guía General](./guides/DOCKER.md) - Setup y configuración
+  - [Referencia Rápida](./guides/docker/QUICK_REFERENCE.md) - Comandos y troubleshooting
+  - [Setup & Deployment](./guides/docker/SETUP_DEPLOYMENT.md) - Detalles de implementación
+  - [Verificación Técnica](./guides/docker/TECHNICAL_VERIFICATION.md) - Análisis profundo
+
+### 🔧 Backend
+
+- **[Guía del Backend](./backend/README.md)** - Descripción completa de la API REST
+- **[Configuración](./backend/ENVIRONMENT_CONFIG.md)** - Variables de entorno
+- **[Setup Inicial](./backend/ENVIRONMENT_SETUP.md)** - Instalación y configuración
+
+#### Features Backend
+
+- **[GDPR & Data Deletion](./backend/features/GDPR_FEATURE.md)** - Eliminación de datos y cumplimiento GDPR
+- **[Testing](./backend/features/TESTING.md)** - Cobertura de tests y estrategia de testing
+
+### 🎨 Frontend
+
+- **[Guía del Frontend](./frontend/README.md)** - Descripción de la aplicación Angular
+- **[Type Safety](./frontend/FRONTEND_TYPE_SAFETY.md)** - 100% type safe, 0 `any` types
+- **[Features Frontend](./frontend/features/)** - Documentación de características específicas
+
+### 📊 Documentación Técnica
+
+- **[API Endpoints](./API_ENDPOINTS.md)** - Lista completa de endpoints REST
+- **[CRM Specification](./CRM_SPECIFICATION.md)** - Especificaciones del sistema CRM
+- **[Technical Audit](./audit/TECHNICAL_AUDIT.md)** - Auditoría técnica, arquitectura y seguridad
+
+### 🤝 Contribuir
+
+- **[Guía de Contribución](./CONTRIBUTING.md)** - Cómo contribuir al proyecto
+  - Estándares de código
+  - Proceso de pull request
+  - Directrices de testing
+  - Documentación bilingüe
+
+### 🎯 Recursos Adicionales
+
+- **[Postman Collection](./psychology-assistant.postman_collection.json)** - Colección para testing de API
+- **[Orchestrator Guide](./guides/ORCHESTRATOR.md)** - Documentación del orquestador
+
 ---
 
-## 📖 Guías Rápidas
+## English Documentation
 
-### 🚀 [Inicio Rápido](./guides/QUICK_START.md)
-Instrucciones paso a paso para configurar el proyecto por primera vez.
+Centralized index of all Psychology Assistant project documentation.
 
-### 🎯 [Visión General del Proyecto](./guides/PROJECT_OVERVIEW.md)
-Estado actual, features completadas y objetivos alcanzados.
+### 🚀 Quick Guides
 
----
+- **[Quick Start](./guides/QUICK_START.md)** - Step-by-step setup instructions
+- **[Project Overview](./guides/PROJECT_OVERVIEW.md)** - Current status and completed features
+- **[Docker Guide 🐳](./guides/docker/)** - Complete Docker documentation
+  - [General Guide](./guides/DOCKER.md) - Setup and configuration
+  - [Quick Reference](./guides/docker/QUICK_REFERENCE.md) - Commands and troubleshooting
+  - [Setup & Deployment](./guides/docker/SETUP_DEPLOYMENT.md) - Implementation details
+  - [Technical Verification](./guides/docker/TECHNICAL_VERIFICATION.md) - In-depth analysis
 
-## 🔧 Backend
+### 🔧 Backend
 
-### 📚 [Guía del Backend](./backend/README.md)
-Descripción completa de la architectura, endpoints y features del backend Node.js + Express.
+- **[Backend Guide](./backend/README.md)** - Complete REST API documentation
+- **[Configuration](./backend/ENVIRONMENT_CONFIG.md)** - Environment variables
+- **[Initial Setup](./backend/ENVIRONMENT_SETUP.md)** - Installation and configuration
 
-### 🔐 Features Backend
-- **[GDPR Data Deletion](./backend/features/GDPR_FEATURE.md)** - Cumplimiento GDPR con eliminación de datos
-- **[Authentication & 2FA](./backend/ENVIRONMENT_CONFIG.md)** - Sistema de autenticación JWT + TOTP
-- **[Testing](./backend/features/TESTING.md)** - Cobertura de tests (97.8% de pass rate)
+#### Backend Features
 
-### ⚙️ Configuración Backend
-- **[Guía de Configuración](./backend/ENVIRONMENT_SETUP.md)** - Setup de variables de entorno
-- **[Detalles de Configuración](./backend/ENVIRONMENT_CONFIG.md)** - Documentación de variables
+- **[GDPR & Data Deletion](./backend/features/GDPR_FEATURE.md)** - Data deletion and GDPR compliance
+- **[Testing](./backend/features/TESTING.md)** - Test coverage and testing strategy
 
----
+### 🎨 Frontend
 
-## 🎨 Frontend
+- **[Frontend Guide](./frontend/README.md)** - Angular application documentation
+- **[Type Safety](./frontend/FRONTEND_TYPE_SAFETY.md)** - 100% type safe, 0 `any` types
+- **[Frontend Features](./frontend/features/)** - Feature-specific documentation
 
-### 📚 [Guía del Frontend](./frontend/README.md)
-Descripción de la architectura Angular, componentes y type safety.
+### 📊 Technical Documentation
 
-### 🔐 Features Frontend
-- **[Type Safety](./frontend/FRONTEND_TYPE_SAFETY.md)** - 100% type safe con 0 `any` types
+- **[API Endpoints](./API_ENDPOINTS.md)** - Complete REST endpoints list
+- **[CRM Specification](./CRM_SPECIFICATION.md)** - CRM system specifications
+- **[Technical Audit](./audit/TECHNICAL_AUDIT.md)** - Technical audit, architecture and security
 
----
+### 🤝 Contributing
 
-## 📊 Reportes e Información
+- **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute to the project
+  - Code standards
+  - Pull request process
+  - Testing guidelines
+  - Bilingual documentation
+
+### 🎯 Additional Resources
+
+- **[Postman Collection](./psychology-assistant.postman_collection.json)** - Collection for API testing
+- **[Orchestrator Guide](./guides/ORCHESTRATOR.md)** - Orchestrator documentation
 
 ### 🔍 [Auditoría Técnica](./audit/TECHNICAL_AUDIT.md)
 Análisis detallado de la calidad del código, seguridad y mejores prácticas.

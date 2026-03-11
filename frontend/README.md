@@ -3,7 +3,31 @@
 **Modern Angular Application for Psychology Appointment Management**  
 Built with Angular 21+, TypeScript, Angular Material, RxJS & 100% Type Safe
 
+**English / Español:**
+
+- [🇬🇧 English Guide](#-english-guide)
+- [🇪🇸 Guía en Español](#-guía-en-español)
+
 ---
+
+## 🇪🇸 Guía en Español
+
+### Descripción
+
+Aplicación Angular moderna para la gestión de citas psicológicas con:
+
+- **100% Type Safe** - Cero `any` types, 14 interfaces completas
+- **Todos los Componentes** - Autenticación, dashboard, citas, perfil
+- **UI Moderna** - Angular Material, responsive, SCSS
+- **Herramientas Calidad** - ESLint, Prettier, Vitest
+
+Para más detalles ver la documentación completa en [`docs/frontend/README.md`](../docs/frontend/README.md)
+
+---
+
+## 🇬🇧 English Guide
+
+### Description
 
 ## 📊 Quick Facts
 
