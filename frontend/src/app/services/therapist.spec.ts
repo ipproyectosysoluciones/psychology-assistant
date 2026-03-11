@@ -5,8 +5,8 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
 import { ApiResponse, Therapist } from '../models';
+import { createMockTherapist } from '../test-fixtures';
 import { TherapistService } from './therapist';
-import { createMockTherapist, createMockApiResponse } from '../test-fixtures';
 
 const apiUrl = environment.apiUrl || '/api/v1';
 
@@ -76,7 +76,9 @@ describe('TherapistService', () => {
   it('should createTherapist', () => {
     const newTherapist: Partial<Therapist> = {
       licenseNumber: 'LIC-789012',
-      licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+      licenseExpiry: new Date(
+        Date.now() + 365 * 24 * 60 * 60 * 1000,
+      ).toISOString(),
     };
 
     const mockResponse: ApiResponse<Therapist> = {

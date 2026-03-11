@@ -2,9 +2,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { PatientDetailComponent } from './patient-detail.component';
 import { PatientService } from '../../services/patient';
-import { createMockApiResponse, createMockPatient } from '../../test-fixtures';
+import { createMockPatient } from '../../test-fixtures';
+import { PatientDetailComponent } from './patient-detail.component';
 
 /**
  * ES: Tests para el PatientDetailComponent
@@ -36,7 +36,7 @@ describe('PatientDetailComponent', () => {
     }).compileComponents();
 
     patientService = TestBed.inject(
-      PatientService
+      PatientService,
     ) as jasmine.SpyObj<PatientService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     activatedRoute = TestBed.inject(ActivatedRoute);

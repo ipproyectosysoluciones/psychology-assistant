@@ -3,9 +3,8 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { createMockBillingRecord } from '../test-fixtures';
 import { BillingService } from './billing';
-import { createMockBillingRecord, createMockApiResponse } from '../test-fixtures';
-import { ApiResponse, BillingRecord } from '../models';
 
 const apiUrl = '/api/v1';
 
@@ -33,4 +32,9 @@ describe('BillingService', () => {
 
   /**
    * ES: Verificar que el servicio sea creado
+   * EN: Verify service is created
+   */
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });
