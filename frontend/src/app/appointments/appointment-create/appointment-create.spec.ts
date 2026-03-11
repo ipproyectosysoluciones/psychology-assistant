@@ -62,7 +62,7 @@ describe('AppointmentCreateComponent', () => {
     };
     apptService.createAppointment.and.returnValue(of(mockResponse));
 
-    component.onSubmit?.();
+    component.submit?.();
     tick(1500);
 
     expect(routerSpy.navigate).toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('AppointmentCreateComponent', () => {
       throwError(() => ({ error: { message: 'failed' } })),
     );
 
-    component.onSubmit?.();
+    component.submit?.();
     tick();
 
     expect(component.errorMessage).toBeTruthy();

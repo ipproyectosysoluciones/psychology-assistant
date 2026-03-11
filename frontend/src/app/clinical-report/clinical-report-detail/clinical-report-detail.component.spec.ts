@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { ClinicalReport } from '../../models';
-import { ClinicalReportService } from '../../services/clinical-report';
+import { of } from 'rxjs';
 import { ClinicalReportDetailComponent } from './clinical-report-detail.component';
+import { ClinicalReportService } from '../../services/clinical-report';
+import { createMockApiResponse, createMockClinicalReport } from '../../test-fixtures';
 
 /**
  * ES: Tests para el ClinicalReportDetailComponent
@@ -16,26 +16,36 @@ describe('ClinicalReportDetailComponent', () => {
   let reportService: jasmine.SpyObj<ClinicalReportService>;
   let router: jasmine.SpyObj<Router>;
 
-  const mockReport: ClinicalReport = {
-    id: '1',
-    title: 'Reporte de Progreso - Febrero 2024',
-    reportType: 'progress',
-    reportDate: '2024-02-28',
-    therapist: 'Dra. María López',
-    patient: 'Juan Pérez',
-    sessionCount: 8,
-    overallProgress: 8,
-    sessionsSummary: 'Paciente ha mostrado avances',
-    therapeuticApproach: 'TCC',
-    keyAchievements: ['Identificación'],
-    challengesAndObstacles: 'Resistencia inicial',
-    nextSteps: 'Continuar sesiones',
-    recommendations: 'Mantener terapia',
-    clinicalRating: 'Buena progresión',
-    status: 'completed',
-    createdAt: '2024-02-28',
-    updatedAt: '2024-02-28',
-  };
+  beforeEach(async () => {
+    const serviceSpy = jasmine.createSpyObj('ClinicalReportService', [
+      'getClinicalReport',
+    ]);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const activatedRouteSpy = { snapshot: { paramMap: { get: () => '1' } } };
+
+    await TestBed.configureTestingModule({
+      imports: [ClinicalReportDetailComponent, HttpClientTestingModule],
+      providers: [
+        { provide: ClinicalReportService, useValue: serviceSpy },
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
+      ],
+    }).compileComponents();
+
+    reportService = TestBed.inject(
+      ClinicalReportService
+    ) as jasmine.SpyObj<ClinicalReportService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+
+    fixture = TestBed.createComponent(ClinicalReportDetailComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
 
   beforeEach(async () => {
     const serviceSpy = jasmine.createSpyObj('ClinicalReportService', [

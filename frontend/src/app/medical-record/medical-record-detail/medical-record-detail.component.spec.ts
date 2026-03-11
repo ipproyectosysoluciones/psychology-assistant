@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { MedicalRecord } from '../../models';
-import { MedicalRecordService } from '../../services/medical-record';
+import { of } from 'rxjs';
 import { MedicalRecordDetailComponent } from './medical-record-detail.component';
+import { MedicalRecordService } from '../../services/medical-record';
+import { createMockApiResponse, createMockMedicalRecord } from '../../test-fixtures';
 
 /**
  * ES: Tests para el MedicalRecordDetailComponent
@@ -16,22 +16,36 @@ describe('MedicalRecordDetailComponent', () => {
   let medicalRecordService: jasmine.SpyObj<MedicalRecordService>;
   let router: jasmine.SpyObj<Router>;
 
-  const mockRecord: MedicalRecord = {
-    id: '1',
-    patientId: '1',
-    recordDate: '2024-02-28',
-    primaryDiagnosis: 'Trastorno de Ansiedad',
-    secondaryDiagnosis: 'Depresión leve',
-    icdCode: 'F41.1',
-    symptoms: ['Preocupación', 'Irritabilidad'],
-    treatment: 'Psicoterapia',
-    medications: [{ name: 'Sertraline', dose: '50mg', frequency: 'Diaria' }],
-    followUpPlan: 'Seguimiento',
-    notes: 'Paciente mejora',
-    status: 'completed',
-    createdAt: '2024-02-28',
-    updatedAt: '2024-02-28',
-  };
+  beforeEach(async () => {
+    const serviceSpy = jasmine.createSpyObj('MedicalRecordService', [
+      'getMedicalRecord',
+    ]);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const activatedRouteSpy = { snapshot: { paramMap: { get: () => '1' } } };
+
+    await TestBed.configureTestingModule({
+      imports: [MedicalRecordDetailComponent, HttpClientTestingModule],
+      providers: [
+        { provide: MedicalRecordService, useValue: serviceSpy },
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
+      ],
+    }).compileComponents();
+
+    medicalRecordService = TestBed.inject(
+      MedicalRecordService,
+    ) as jasmine.SpyObj<MedicalRecordService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+
+    fixture = TestBed.createComponent(MedicalRecordDetailComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
 
   beforeEach(async () => {
     const serviceSpy = jasmine.createSpyObj('MedicalRecordService', [

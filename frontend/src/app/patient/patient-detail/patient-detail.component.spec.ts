@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { Patient } from '../../models';
-import { PatientService } from '../../services/patient';
+import { of } from 'rxjs';
 import { PatientDetailComponent } from './patient-detail.component';
+import { PatientService } from '../../services/patient';
+import { createMockApiResponse, createMockPatient } from '../../test-fixtures';
 
 /**
  * ES: Tests para el PatientDetailComponent
@@ -16,26 +16,7 @@ describe('PatientDetailComponent', () => {
   let patientService: jasmine.SpyObj<PatientService>;
   let router: jasmine.SpyObj<Router>;
   let activatedRoute: ActivatedRoute;
-
-  const mockPatient: Patient = {
-    id: '1',
-    firstName: 'Juan',
-    lastName: 'Pérez',
-    email: 'juan@example.com',
-    phone: '+57 300 1234567',
-    idType: 'CC',
-    idNumber: '123456789',
-    dateOfBirth: '1990-05-15',
-    gender: 'M',
-    address: 'Calle 123',
-    city: 'Bogotá',
-    country: 'Colombia',
-    postalCode: '110111',
-    employmentStatus: 'employed',
-    status: 'active',
-    createdAt: '2024-01-15',
-    updatedAt: '2024-02-28',
-  };
+  const mockPatient = createMockPatient();
 
   beforeEach(async () => {
     const patientServiceSpy = jasmine.createSpyObj('PatientService', [
@@ -43,30 +24,19 @@ describe('PatientDetailComponent', () => {
       'deletePatient',
     ]);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const activatedRouteSpy = { snapshot: { paramMap: { get: () => '1' } } };
 
     await TestBed.configureTestingModule({
       imports: [PatientDetailComponent, HttpClientTestingModule],
       providers: [
         { provide: PatientService, useValue: patientServiceSpy },
         { provide: Router, useValue: routerSpy },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: {
-                get: (key: string) => {
-                  if (key === 'id') return '1';
-                  return null;
-                },
-              },
-            },
-          },
-        },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
       ],
     }).compileComponents();
 
     patientService = TestBed.inject(
-      PatientService,
+      PatientService
     ) as jasmine.SpyObj<PatientService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     activatedRoute = TestBed.inject(ActivatedRoute);
@@ -75,6 +45,10 @@ describe('PatientDetailComponent', () => {
     component = fixture.componentInstance;
   });
 
+  /**
+   * ES: Verificar que el componente sea creado
+   * EN: Verify component is created
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });

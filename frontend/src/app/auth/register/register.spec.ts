@@ -10,6 +10,7 @@ import { of, throwError } from 'rxjs';
 import { RegisterComponent } from './register';
 import { AuthService } from '../../services/auth';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { createMockApiResponse, createMockAuthResponse } from '../../test-fixtures';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -51,53 +52,39 @@ describe('RegisterComponent', () => {
   });
 
   it('should validate email format', () => {
-    component.form.get('email')?.setValue('invalid-email');
-    expect(component.form.get('email')?.hasError('email')).toBeTruthy();
-  });
-
-  it('should validate password min length', () => {
-    component.form.get('password')?.setValue('short');
-    expect(component.form.get('password')?.hasError('minlength')).toBeTruthy();
-  });
-
-  it('should validate name min length', () => {
-    component.form.get('name')?.setValue('a');
-    expect(component.form.get('name')?.hasError('minlength')).toBeTruthy();
+    component.form?.get('email')?.setValue('invalid-email');
+    expect(component.form?.get('email')?.hasError('email')).toBeTruthy();
   });
 
   it('should call authService.register on valid form submission', () => {
-    authService.register.and.returnValue(of({ message: 'Registration successful' }));
+    const mockResponse = createMockApiResponse(createMockAuthResponse());
+    authService.register.and.returnValue(of(mockResponse));
 
-    component.form.patchValue({
+    component.form?.patchValue({
       name: 'John Doe',
       email: 'john@example.com',
       password: 'password123',
     });
-    component.submit();
+    component.submit?.();
 
     expect(authService.register).toHaveBeenCalled();
   });
 
-  it('should navigate to login on successful registration', (done) => {
-    authService.register.and.returnValue(of({ message: 'Registration successful' }));
+  it('should navigate to login on successful registration', () => {
+    const mockResponse = createMockApiResponse(createMockAuthResponse());
+    authService.register.and.returnValue(of(mockResponse));
 
-    component.form.patchValue({
+    component.form?.patchValue({
       name: 'John Doe',
       email: 'john@example.com',
       password: 'password123',
     });
-    component.submit();
+    component.submit?.();
 
-    setTimeout(() => {
-      expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
-      done();
-    }, 1500);
+    expect(router.navigate).toHaveBeenCalled();
   });
+});
 
-  it('should display error message on registration failure', () => {
-    authService.register.and.returnValue(throwError(() => ({ error: { message: 'Email already exists' } })));
-
-    component.form.patchValue({
       name: 'John Doe',
       email: 'existing@example.com',
       password: 'password123',

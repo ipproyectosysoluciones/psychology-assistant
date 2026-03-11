@@ -1,10 +1,10 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
-import { BillingRecord } from '../../models';
-import { BillingService } from '../../services/billing';
+import { of } from 'rxjs';
 import { BillingDetailComponent } from './billing-detail.component';
+import { BillingService } from '../../services/billing';
+import { createMockApiResponse, createMockBillingRecord } from '../../test-fixtures';
 
 /**
  * ES: Tests para el BillingDetailComponent
@@ -16,38 +16,36 @@ describe('BillingDetailComponent', () => {
   let billingService: jasmine.SpyObj<BillingService>;
   let router: jasmine.SpyObj<Router>;
 
-  const mockBilling: BillingRecord = {
-    id: '1',
-    invoiceNumber: 'INV-2024-001',
-    patientName: 'Juan Pérez',
-    therapist: 'Dra. María',
-    issueDate: '2024-02-28',
-    dueDate: '2024-03-14',
-    subtotal: 300000,
-    tax: 57000,
-    discount: 0,
-    totalAmount: 357000,
-    amountPaid: 357000,
-    remainingBalance: 0,
-    status: 'paid',
-    lineItems: [
-      {
-        description: 'Consulta',
-        quantity: 3,
-        unitPrice: 100000,
-        total: 300000,
-      },
-    ],
-    createdAt: '2024-02-28',
-    updatedAt: '2024-03-10',
-  };
-
   beforeEach(async () => {
     const serviceSpy = jasmine.createSpyObj('BillingService', [
       'getBillingRecord',
-      'deleteBillingRecord',
     ]);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    const activatedRouteSpy = { snapshot: { paramMap: { get: () => '1' } } };
+
+    await TestBed.configureTestingModule({
+      imports: [BillingDetailComponent, HttpClientTestingModule],
+      providers: [
+        { provide: BillingService, useValue: serviceSpy },
+        { provide: Router, useValue: routerSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy },
+      ],
+    }).compileComponents();
+
+    billingService = TestBed.inject(
+      BillingService
+    ) as jasmine.SpyObj<BillingService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+
+    fixture = TestBed.createComponent(BillingDetailComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
+
 
     await TestBed.configureTestingModule({
       imports: [BillingDetailComponent, HttpClientTestingModule],

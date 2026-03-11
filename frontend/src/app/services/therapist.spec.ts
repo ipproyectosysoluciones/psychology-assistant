@@ -6,6 +6,9 @@ import { TestBed } from '@angular/core/testing';
 import { environment } from '../../environments/environment';
 import { ApiResponse, Therapist } from '../models';
 import { TherapistService } from './therapist';
+import { createMockTherapist, createMockApiResponse } from '../test-fixtures';
+
+const apiUrl = environment.apiUrl || '/api/v1';
 
 /**
  * ES: Tests para el TherapistService
@@ -14,26 +17,7 @@ import { TherapistService } from './therapist';
 describe('TherapistService', () => {
   let service: TherapistService;
   let httpMock: HttpTestingController;
-  const apiUrl = environment.apiUrl;
-
-  const mockTherapist: Therapist = {
-    id: '1',
-    name: 'Dra. María López',
-    email: 'maria@example.com',
-    phone: '+57 320 4567890',
-    licenseNumber: 'PSY-2024-001',
-    licenseType: 'Psicología Clínica',
-    specializations: ['TCC', 'Familia'],
-    biography: 'Terapista experimentada',
-    education: ['Doctorado en Psicología'],
-    workSchedule: { monday: '9:00 AM - 5:00 PM' },
-    offeringServices: ['Individual', 'Familia'],
-    patientCount: 25,
-    averageRating: 4.8,
-    status: 'active',
-    createdAt: '2024-01-15',
-    updatedAt: '2024-02-28',
-  };
+  const mockTherapist = createMockTherapist();
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -48,6 +32,10 @@ describe('TherapistService', () => {
     httpMock.verify();
   });
 
+  /**
+   * ES: Verificar que el servicio sea creado
+   * EN: Verify service is created
+   */
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -77,7 +65,7 @@ describe('TherapistService', () => {
     };
 
     service.getTherapist('1').subscribe((response) => {
-      expect(response.data?.name).toEqual('Dra. María López');
+      expect(response.data?.licenseNumber).toEqual(mockTherapist.licenseNumber);
     });
 
     const req = httpMock.expectOne(`${apiUrl}/therapists/1`);
@@ -87,8 +75,8 @@ describe('TherapistService', () => {
 
   it('should createTherapist', () => {
     const newTherapist: Partial<Therapist> = {
-      name: 'Dr. Juan García',
-      email: 'juan@example.com',
+      licenseNumber: 'LIC-789012',
+      licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
     };
 
     const mockResponse: ApiResponse<Therapist> = {
@@ -108,7 +96,8 @@ describe('TherapistService', () => {
 
   it('should updateTherapist', () => {
     const updatedTherapist: Partial<Therapist> = {
-      patientCount: 30,
+      bio: 'Updated bio',
+      hourlyRate: 120,
     };
 
     const mockResponse: ApiResponse<Therapist> = {
