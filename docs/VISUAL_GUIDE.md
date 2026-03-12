@@ -1,5 +1,7 @@
 # 📊 Visual Navigation Guide
 
+> **🇬🇧 English** | [🇪🇸 **Español**](#español)
+
 **Psychology Assistant Documentation** | v0.4.0 | 32 Files | 7 Categories
 
 ---
@@ -415,3 +417,64 @@ When onboarding a new developer:
 **Status**: ✅ Complete and Validated
 
 *Questions? Check [docs/INDEX.md](./docs/INDEX.md) or open an issue with tag `docs`*
+
+---
+
+<h2 id="español">🇪🇸 Español</h2>
+
+## 📊 Guía de Navegación Visual
+
+**Psychology Assistant | v0.4.0** | 32 Archivos | 7 Categorías
+
+### 🎯 Navegación por Rol
+
+**Backend** → Instalación → Arquitectura → APIs → Inicio Rápido  
+**DevOps** → Requisitos → Infraestructura → Docker → Despliegue  
+**Frontend** → APIs → Endpoints → TypeScript → Inicio  
+**Arquitecto** → Arquitectura → Estructura → Config → Base de Datos  
+**Producto** → Descripción → Cambios v0.4.0 → Resultados Testing  
+
+### 📈 Estadísticas Documentación
+
+```
+Total Archivos: 32 markdown
+Categorías: 7 (Arquitectura Limpia)
+Enlaces Internos: 50+
+Idiomas: Inglés + Español
+Cobertura: 97.4% de tests
+```
+
+### 🗂️ Estructura de Categorías (7 Capas)
+
+```
+01-getting-started/  ← ENTRADA (Bienvenida)
+02-architecture/     ← DISEÑO (Estructura)
+03-api/              ← CONTRATO (APIs)
+04-guides/           ← OPERACIONES (Guías)
+05-infrastructure/   ← DESPLIEGUE (Docker)
+06-database/         ← PERSISTENCIA (BD)
+07-testing/          ← CALIDAD (Tests)
+```
+
+### ✅ Métricas de Éxito
+
+✅ Tiempo de Onboarding: 15-25 minutos  
+✅ Cobertura Documentación: 32 archivos  
+✅ Enlaces Válidos: 50+  
+✅ Soporte Bilingüe: ES + EN  
+✅ Rutas por Rol: 5 flujos  
+✅ Cobertura Testing: 97.4%  
+
+### 🚀 Cómo Navegar
+
+**Preguntas rápidas** → Ver [docs/INDEX.md](./docs/INDEX.md)  
+**Nuevo miembro** → Ver [TEAM_ONBOARDING.md](./TEAM_ONBOARDING.md)  
+**Exploración profunda** → Pick category 01-07  
+
+---
+
+**Última Actualización**: 12 de Marzo de 2026 | v0.4.0  
+**Estado**: ✅ Completado y Validado
+
+*¿Preguntas? Revisa [docs/INDEX.md](./docs/INDEX.md) o abre un issue con tag `docs`*
+

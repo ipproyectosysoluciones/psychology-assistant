@@ -1,6 +1,6 @@
 # 📚 Psychology Assistant - Documentation Index
 
-> 🌐 **English** | [📖 **Español**](#español)
+> �🇧 **English** | [🇪🇸 **Español**](#español)
 
 ---
 
@@ -202,11 +202,11 @@ The documentation follows **Clean Architecture** principles across 7 layers:
 
 ---
 
-<h2 id="español">📖 Español</h2>
+<h2 id="español">🇪🇸 Español</h2>
 
 # 📚 Psychology Assistant - Índice de Documentación
 
-> [**English**](#quick-navigation) | 📖 **Español**
+> [🇬🇧 **English**](#quick-navigation) | 🇪🇸 **Español**
 
 ---
 

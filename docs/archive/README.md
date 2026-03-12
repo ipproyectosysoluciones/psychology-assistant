@@ -6,7 +6,7 @@
 
 ## 🗂️ Estructura del Archivo
 
-```
+```dir
 docs/archive/
 └── historical/          ← Documentos de sesiones y verificaciones pasadas
     ├── BACKEND_VERIFICATION.md
@@ -22,6 +22,7 @@ docs/archive/
 ### historical/
 
 Esta carpeta contiene documentos de **referencia histórica** de:
+
 - Verificaciones de backend completadas
 - Items de acciones de verificación
 - Tareas pendientes de sesiones anteriores
@@ -43,6 +44,7 @@ Esta carpeta contiene documentos de **referencia histórica** de:
 ## ✅ Documentación Activa
 
 Para documentación actual y activa, consulta:
+
 - [docs/INDEX.md](../INDEX.md) - Hub central de documentación
 - [docs/01-getting-started/](../01-getting-started/) - Guías de inicio
 - [docs/02-architecture/](../02-architecture/) - Arquitectura

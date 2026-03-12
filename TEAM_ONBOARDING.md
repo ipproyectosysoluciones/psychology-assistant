@@ -1,5 +1,7 @@
 # 🎓 Team Onboarding - Guía de Documentación
 
+> **🇬🇧 English & 🇪🇸 Español** | **Bilingual Guide**
+
 **Para**: Nuevo equipo de desarrollo | **Versión**: 0.4.0 | **Fecha**: 12 Marzo 2026
 
 ---

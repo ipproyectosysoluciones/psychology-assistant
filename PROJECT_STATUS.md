@@ -1,5 +1,7 @@
 # Psychology Assistant - Project Status Report
 
+> **🇬🇧 English & 🇪🇸 Español**
+
 **Date**: March 12, 2026  
 **Version**: 0.3.0 ✨ (Backend Verification & API Standardization Release)
 **Status**: 🟢 **PRODUCTION READY**
