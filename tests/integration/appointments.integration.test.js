@@ -5,7 +5,7 @@ import {
   cleanDB,
   connectTestDB,
   createTestUser,
-  disconnectTestDB,
+  disconnectTestDB
 } from './setup.js';
 
 describe('Appointments Integration Tests', () => {
@@ -38,7 +38,7 @@ describe('Appointments Integration Tests', () => {
       const appointmentData = {
         date: futureDate.toISOString(),
         duration: 60,
-        description: 'Consultation session',
+        description: 'Consultation session'
       };
 
       const res = await request(app)
@@ -61,7 +61,7 @@ describe('Appointments Integration Tests', () => {
       const appointmentData = {
         date: futureDate.toISOString(),
         duration: 60,
-        description: 'Consultation session',
+        description: 'Consultation session'
       };
 
       const res = await request(app)
@@ -79,7 +79,7 @@ describe('Appointments Integration Tests', () => {
       const appointmentData = {
         date: pastDate.toISOString(),
         duration: 60,
-        description: 'Consultation session',
+        description: 'Consultation session'
       };
 
       const res = await request(app)
@@ -99,7 +99,7 @@ describe('Appointments Integration Tests', () => {
       const shortDuration = {
         date: futureDate.toISOString(),
         duration: 5,
-        description: 'Consultation session',
+        description: 'Consultation session'
       };
 
       const res = await request(app)
@@ -119,7 +119,7 @@ describe('Appointments Integration Tests', () => {
       const appointmentData = {
         date: futureDate.toISOString(),
         duration: 60,
-        description: longDescription,
+        description: longDescription
       };
 
       const res = await request(app)
@@ -148,7 +148,7 @@ describe('Appointments Integration Tests', () => {
           .send({
             date: date.toISOString(),
             duration: 60,
-            description: `Appointment ${i + 1}`,
+            description: `Appointment ${i + 1}`
           });
       }
 
@@ -178,7 +178,7 @@ describe('Appointments Integration Tests', () => {
           .send({
             date: date.toISOString(),
             duration: 60,
-            description: `Appointment ${i + 1}`,
+            description: `Appointment ${i + 1}`
           });
       }
 
@@ -213,7 +213,7 @@ describe('Appointments Integration Tests', () => {
         .send({
           date: futureDate.toISOString(),
           duration: 60,
-          description: 'Test appointment',
+          description: 'Test appointment'
         });
 
       appointmentId = res.body.data._id;
@@ -256,7 +256,7 @@ describe('Appointments Integration Tests', () => {
         .send({
           date: futureDate.toISOString(),
           duration: 60,
-          description: 'Original description',
+          description: 'Original description'
         });
 
       appointmentId = res.body.data._id;
@@ -271,7 +271,7 @@ describe('Appointments Integration Tests', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({
           description: 'Updated description',
-          duration: 90,
+          duration: 90
         });
 
       expect(res.status).toBe(200);
@@ -285,7 +285,7 @@ describe('Appointments Integration Tests', () => {
         .put(`/api/v1/appointments/${appointmentId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          status: 'completed',
+          status: 'completed'
         });
 
       // Should succeed if it's a scheduled appointment, fail only if actually past
@@ -307,7 +307,7 @@ describe('Appointments Integration Tests', () => {
         .send({
           date: futureDate.toISOString(),
           duration: 60,
-          description: 'Test appointment to cancel',
+          description: 'Test appointment to cancel'
         });
 
       appointmentId = res.body.data._id;
@@ -353,7 +353,7 @@ describe('Appointments Integration Tests', () => {
         .send({
           date: futureDate.toISOString(),
           duration: 60,
-          description: 'Full lifecycle test',
+          description: 'Full lifecycle test'
         });
 
       expect(createRes.status).toBe(201);
@@ -372,7 +372,7 @@ describe('Appointments Integration Tests', () => {
         .put(`/api/v1/appointments/${appointmentId}`)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          description: 'Updated lifecycle test',
+          description: 'Updated lifecycle test'
         });
 
       expect(updateRes.status).toBe(200);
