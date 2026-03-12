@@ -6,7 +6,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMockPatient } from '../test-fixtures';
 import { PatientService } from './patient';
 
-const apiUrl = '/api/v1';
+const apiUrl = '/api';
 
 /**
  * ES: Tests para el PatientService

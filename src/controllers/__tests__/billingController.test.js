@@ -23,7 +23,7 @@ describe('Billing Controller', () => {
     clinicId = '507f1f77bcf86cd799439011';
   });
 
-  describe('POST /api/v1/billings', () => {
+  describe('POST /api/billings', () => {
     it('should create a billing invoice', async () => {
       const billingData = {
         patient: patientId,
@@ -38,32 +38,32 @@ describe('Billing Controller', () => {
     });
   });
 
-  describe('GET /api/v1/billings/:id', () => {
+  describe('GET /api/billings/:id', () => {
     it('should retrieve billing details', async () => {
       expect(billingId).toBeDefined();
     });
   });
 
-  describe('GET /api/v1/patients/:patientId/billings', () => {
+  describe('GET /api/patients/:patientId/billings', () => {
     it('should list billings by patient', async () => {
       expect(patientId).toBeDefined();
     });
   });
 
-  describe('PUT /api/v1/billings/:id', () => {
+  describe('PUT /api/billings/:id', () => {
     it('should update billing', async () => {
       const updateData = { amount: 160000 };
       expect(updateData).toBeDefined();
     });
   });
 
-  describe('POST /api/v1/billings/:id/pay', () => {
+  describe('POST /api/billings/:id/pay', () => {
     it('should mark billing as paid', async () => {
       expect(billingId).toBeDefined();
     });
   });
 
-  describe('DELETE /api/v1/billings/:id', () => {
+  describe('DELETE /api/billings/:id', () => {
     it('should delete billing', async () => {
       expect(billingId).toBeDefined();
     });

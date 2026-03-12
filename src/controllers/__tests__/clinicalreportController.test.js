@@ -23,7 +23,7 @@ describe('Clinical Report Controller', () => {
     clinicId = '507f1f77bcf86cd799439011';
   });
 
-  describe('POST /api/v1/clinical-reports', () => {
+  describe('POST /api/clinical-reports', () => {
     it('should create a clinical report', async () => {
       const reportData = {
         patient: patientId,
@@ -42,32 +42,32 @@ describe('Clinical Report Controller', () => {
     });
   });
 
-  describe('GET /api/v1/clinical-reports/:id', () => {
+  describe('GET /api/clinical-reports/:id', () => {
     it('should retrieve clinical report', async () => {
       expect(reportId).toBeDefined();
     });
   });
 
-  describe('GET /api/v1/patients/:patientId/clinical-reports', () => {
+  describe('GET /api/patients/:patientId/clinical-reports', () => {
     it('should list reports by patient', async () => {
       expect(patientId).toBeDefined();
     });
   });
 
-  describe('PUT /api/v1/clinical-reports/:id', () => {
+  describe('PUT /api/clinical-reports/:id', () => {
     it('should update clinical report', async () => {
       const updateData = { overallProgress: 9 };
       expect(updateData).toBeDefined();
     });
   });
 
-  describe('POST /api/v1/clinical-reports/:id/review', () => {
+  describe('POST /api/clinical-reports/:id/review', () => {
     it('should mark report as reviewed', async () => {
       expect(reportId).toBeDefined();
     });
   });
 
-  describe('DELETE /api/v1/clinical-reports/:id', () => {
+  describe('DELETE /api/clinical-reports/:id', () => {
     it('should delete clinical report', async () => {
       expect(reportId).toBeDefined();
     });
