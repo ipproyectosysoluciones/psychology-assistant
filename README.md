@@ -7,6 +7,19 @@
 [![Tests](https://img.shields.io/badge/tests-37/38%20passed-brightgreen.svg)](./docs/07-testing/TESTING_REPORT.md)
 [![Build](https://img.shields.io/badge/build-46s%20|%201.17MB-brightgreen.svg)](./docs/07-testing/TESTING_REPORT.md)
 
+---
+
+## 📚 **Documentation Hub** — [**Open docs/INDEX.md**](./docs/INDEX.md)
+
+**¡NEW!** 🎉 Complete documentation reorganization - 32 files organized in 7 Clean Architecture layers. 
+**Start here**: Role-based navigation, quick access guides, and comprehensive index.
+
+👉 **[docs/INDEX.md](./docs/INDEX.md)** ← Central navigation for all developers
+
+For quick onboarding: **[TEAM_ONBOARDING.md](./TEAM_ONBOARDING.md)** (5-25 min by role)
+
+---
+
 **Start Here / Comienza Aquí:**
 
 - [🇪🇸 Guías en Español](#guías-en-español)
