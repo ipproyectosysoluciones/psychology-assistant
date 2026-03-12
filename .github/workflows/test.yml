@@ -16,11 +16,11 @@ jobs:
   test:
     name: Run Backend Tests
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [18.x, 20.x]
-    
+
     services:
       mongodb:
         image: mongo:6.0
@@ -76,7 +76,7 @@ jobs:
   frontend-tests:
     name: Frontend Unit Tests
     runs-on: ubuntu-latest
-    
+
     defaults:
       run:
         working-directory: ./frontend

@@ -31,21 +31,21 @@ jobs:
         run: |
           echo "🔍 CI/CD Pipeline Status"
           echo "========================"
-          
+
           TEST_STATUS="${{ needs.test.result }}"
           LINT_STATUS="${{ needs.lint.result }}"
           BUILD_STATUS="${{ needs.build.result }}"
-          
+
           echo "Tests:        $TEST_STATUS"
           echo "Linting:      $LINT_STATUS"
           echo "Build:        $BUILD_STATUS"
           echo "========================"
-          
+
           if [ "$TEST_STATUS" = "failure" ] || [ "$LINT_STATUS" = "failure" ] || [ "$BUILD_STATUS" = "failure" ]; then
             echo "❌ CI/CD Pipeline FAILED"
             exit 1
           fi
-          
+
           echo "✅ CI/CD Pipeline PASSED"
           echo ""
           echo "Next steps:"
@@ -94,4 +94,3 @@ jobs:
           echo "- Check test failures in 'Tests & Coverage'"
           echo "- Check linting errors in 'Code Quality'"
           echo "- Check build errors in 'Build & Artifacts'"
-

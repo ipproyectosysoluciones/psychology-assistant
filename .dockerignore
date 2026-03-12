@@ -48,6 +48,66 @@ typings/
 .eslintcache
 
 # Microbundle cache
+
+# IDE & Editor
+.git
+.gitignore
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+.editorconfig
+.prettierrc
+.eslintrc*
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.circleci
+.travis.yml
+Jenkinsfile
+
+# Documentation
+*.md
+docs/
+README.md
+CHANGELOG.md
+
+# Testing
+*.test.js
+*.spec.js
+*.spec.ts
+jest.config.js
+cypress/
+cypress.config.ts
+test/
+tests/
+__tests__/
+.nyc_output
+coverage
+
+# Build configs
+tsconfig*.json
+babel.config.js
+webpack.config.js
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Development
+.env.local
+.env.*.local
+node_modules
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/

@@ -127,31 +127,31 @@ jobs:
         run: |
           echo "📊 Quality Check Summary"
           echo "========================"
-          
+
           if [ "${{ needs.lint.result }}" = "failure" ]; then
             echo "❌ Linting: FAILED"
           else
             echo "✅ Linting: PASSED"
           fi
-          
+
           if [ "${{ needs.type-check.result }}" = "failure" ]; then
             echo "⚠️  Type Check: Issues found"
           else
             echo "✅ Type Check: PASSED"
           fi
-          
+
           if [ "${{ needs.prettier.result }}" = "failure" ]; then
             echo "⚠️  Code Formatting: Needs updates"
           else
             echo "✅ Code Formatting: PASSED"
           fi
-          
+
           if [ "${{ needs.security-audit.result }}" = "failure" ]; then
             echo "⚠️  Security Audit: Issues found"
           else
             echo "✅ Security Audit: PASSED"
           fi
-          
+
           # Summary
           echo "========================"
           if [ "${{ needs.lint.result }}" = "failure" ]; then

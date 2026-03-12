@@ -16,9 +16,15 @@ COPY . .
 # Expose Angular dev server port
 EXPOSE 4200
 
-# Health check for dev (optional)
+# Labels for metadata
+LABEL maintainer="Psychology Assistant Team"
+LABEL description="Psychology Assistant Frontend - Development"
+LABEL version="0.3.0"
+
+# Health check (check dev server)
+# Note: Using curl instead of wget as it's available in node alpine
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --quiet --tries=1 --spider http://localhost:4200/ || exit 1
+  CMD node -z "$(curl -s http://localhost:4200/ | grep -o '<app-root' | head -1)" || exit 1
 
 # Run Angular dev server with polling for container compatibility
 CMD ["pnpm", "start"]
