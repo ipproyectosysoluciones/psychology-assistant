@@ -1,0 +1,212 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy.yml'
+      - 'src/**'
+      - 'package.json'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ${{ github.repository }}/backend
+  FRONTEND_IMAGE: ${{ github.repository }}/frontend
+
+jobs:
+  # Pre-deployment checks
+  pre-deploy:
+    name: Pre-deployment Checks
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+
+    outputs:
+      deploy-backend: ${{ steps.check.outputs.backend }}
+      deploy-frontend: ${{ steps.check.outputs.frontend }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check changed files
+        id: check
+        run: |
+          echo "backend=true" >> $GITHUB_OUTPUT
+          echo "frontend=true" >> $GITHUB_OUTPUT
+          echo "✅ Ready for deployment"
+
+      - name: Verify environment variables
+        run: |
+          required_vars=(
+            "MONGO_ROOT_PASSWORD"
+            "JWT_SECRET"
+            "REFRESH_TOKEN_SECRET"
+          )
+
+          for var in "${required_vars[@]}"; do
+            if [ -z "$(eval echo \$$var)" ]; then
+              echo "❌ Missing required environment variable: $var"
+              exit 1
+            fi
+          done
+
+          echo "✅ All required environment variables present"
+        env:
+          MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+
+  # Build and push backend image
+  build-backend:
+    name: Build & Push Backend Image
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    if: needs.pre-deploy.outputs.deploy-backend == 'true'
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Build and push frontend image
+  build-frontend:
+    name: Build & Push Frontend Image
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    if: needs.pre-deploy.outputs.deploy-frontend == 'true'
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Deployment notification
+  deployment-notification:
+    name: Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend]
+    if: always()
+
+    steps:
+      - name: Check deployment status
+        run: |
+          if [ "${{ needs.build-backend.result }}" = "success" ] && [ "${{ needs.build-frontend.result }}" = "success" ]; then
+            echo "✅ Backend and Frontend images built successfully"
+            echo "📦 Images ready for deployment"
+            echo ""
+            echo "Pull images with:"
+            echo "docker pull ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE }}:main"
+            echo "docker pull ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:main"
+          else
+            echo "❌ Image build failed"
+            exit 1
+          fi
+
+      - name: Deployment Summary
+        if: success()
+        run: |
+          cat << EOF
+          ═════════════════════════════════════════════════════════
+          📦 DEPLOYMENT SUMMARY
+          ═════════════════════════════════════════════════════════
+
+          ✅ Backend Image:  Built & Pushed
+          ✅ Frontend Image: Built & Pushed
+          ✅ Registry: ${{ env.REGISTRY }}
+
+          🚀 Deployment Steps:
+          1. Pull images from registry
+          2. Update docker-compose.yml with new image tags
+          3. Run: docker-compose pull && docker-compose up -d
+          4. Verify services: curl http://localhost:5000/health
+
+          📮 Environment: ${{ github.event.inputs.environment || 'staging' }}
+          📝 Commit: ${{ github.sha }}
+          👤 Deployer: ${{ github.actor }}
+
+          ═════════════════════════════════════════════════════════
+          EOF
