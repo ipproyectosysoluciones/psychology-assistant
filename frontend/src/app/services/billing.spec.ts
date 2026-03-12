@@ -6,7 +6,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMockBillingRecord } from '../test-fixtures';
 import { BillingService } from './billing';
 
-const apiUrl = '/api/v1';
+const apiUrl = '/api';
 
 /**
  * ES: Tests para el BillingService

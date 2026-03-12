@@ -21,7 +21,7 @@ describe('Therapist Controller', () => {
     clinicId = '507f1f77bcf86cd799439011';
   });
 
-  describe('POST /api/v1/therapists', () => {
+  describe('POST /api/therapists', () => {
     it('should create a new therapist', async () => {
       const therapistData = {
         clinic: clinicId,
@@ -37,26 +37,26 @@ describe('Therapist Controller', () => {
     });
   });
 
-  describe('GET /api/v1/therapists/:id', () => {
+  describe('GET /api/therapists/:id', () => {
     it('should retrieve therapist details', async () => {
       expect(therapistId).toBeDefined();
     });
   });
 
-  describe('GET /api/v1/clinics/:clinicId/therapists', () => {
+  describe('GET /api/clinics/:clinicId/therapists', () => {
     it('should list therapists by clinic', async () => {
       expect(clinicId).toBeDefined();
     });
   });
 
-  describe('PUT /api/v1/therapists/:id', () => {
+  describe('PUT /api/therapists/:id', () => {
     it('should update therapist information', async () => {
       const updateData = { specializations: ['Updated'] };
       expect(updateData).toBeDefined();
     });
   });
 
-  describe('DELETE /api/v1/therapists/:id', () => {
+  describe('DELETE /api/therapists/:id', () => {
     it('should delete a therapist', async () => {
       expect(therapistId).toBeDefined();
     });

@@ -8,7 +8,7 @@ import { ApiResponse, Therapist } from '../models';
 import { createMockTherapist } from '../test-fixtures';
 import { TherapistService } from './therapist';
 
-const apiUrl = environment.apiUrl || '/api/v1';
+const apiUrl = environment.apiUrl || '/api';
 
 /**
  * ES: Tests para el TherapistService

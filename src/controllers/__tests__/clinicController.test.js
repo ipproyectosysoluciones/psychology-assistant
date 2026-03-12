@@ -38,10 +38,10 @@ beforeEach(async () => {
 describe('Clinic Controller', () => {
   let clinicId;
 
-  describe('POST /api/v1/clinics', () => {
+  describe('POST /api/clinics', () => {
     it('should create a new clinic', async () => {
       const response = await request(app)
-        .post('/api/v1/clinics')
+        .post('/api/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Test Clinic',
@@ -62,7 +62,7 @@ describe('Clinic Controller', () => {
 
     it('should fail without required fields', async () => {
       const response = await request(app)
-        .post('/api/v1/clinics')
+        .post('/api/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Test Clinic'
@@ -76,7 +76,7 @@ describe('Clinic Controller', () => {
     beforeEach(async () => {
       // Create a clinic for this test suite
       const createResponse = await request(app)
-        .post('/api/v1/clinics')
+        .post('/api/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Get Test Clinic',
@@ -95,7 +95,7 @@ describe('Clinic Controller', () => {
 
     it('should get a clinic by id', async () => {
       const response = await request(app)
-        .get(`/api/v1/clinics/${clinicId}`)
+        .get(`/api/clinics/${clinicId}`)
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);
@@ -105,18 +105,18 @@ describe('Clinic Controller', () => {
 
     it('should return 404 for non-existent clinic', async () => {
       const response = await request(app)
-        .get('/api/v1/clinics/507f1f77bcf86cd799439099')
+        .get('/api/clinics/507f1f77bcf86cd799439099')
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(404);
     });
   });
 
-  describe('PUT /api/v1/clinics/:id', () => {
+  describe('PUT /api/clinics/:id', () => {
     beforeEach(async () => {
       // Create a clinic for this test suite
       const createResponse = await request(app)
-        .post('/api/v1/clinics')
+        .post('/api/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Update Test Clinic',
@@ -135,7 +135,7 @@ describe('Clinic Controller', () => {
 
     it('should update a clinic', async () => {
       const response = await request(app)
-        .put(`/api/v1/clinics/${clinicId}`)
+        .put(`/api/clinics/${clinicId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Updated Clinic',
@@ -147,11 +147,11 @@ describe('Clinic Controller', () => {
     });
   });
 
-  describe('DELETE /api/v1/clinics/:id', () => {
+  describe('DELETE /api/clinics/:id', () => {
     beforeEach(async () => {
       // Create a clinic for this test suite
       const createResponse = await request(app)
-        .post('/api/v1/clinics')
+        .post('/api/clinics')
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           name: 'Delete Test Clinic',
@@ -170,7 +170,7 @@ describe('Clinic Controller', () => {
 
     it('should delete a clinic', async () => {
       const response = await request(app)
-        .delete(`/api/v1/clinics/${clinicId}`)
+        .delete(`/api/clinics/${clinicId}`)
         .set('Authorization', `Bearer ${authToken}`);
 
       expect(response.status).toBe(200);

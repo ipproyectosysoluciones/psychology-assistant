@@ -69,7 +69,7 @@ export const errorHandler = (err, req, res, next) => {
 
   // Don't leak error details in production
   if (environment.isProduction()) {
-    response.stack = undefined;
+    delete response.stack;
   } else {
     response.stack = err.stack;
   }

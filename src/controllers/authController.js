@@ -22,14 +22,14 @@ const generateTokens = async (userId, ipAddress, userAgent) => {
   try {
     // Access token: 7 días de expiración
     const accessToken = jwt.sign({ id: userId }, environment.JWT_SECRET, {
-      expiresIn: environment.JWT_EXPIRE
+      expiresIn: environment.JWT_EXPIRE,
     });
 
     // Refresh token: 30 días de expiración
     const refreshTokenValue = jwt.sign(
       { id: userId, type: 'refresh' },
       environment.JWT_SECRET,
-      { expiresIn: '30d' }
+      { expiresIn: '30d' },
     );
 
     // Guardar refresh token en base de datos
@@ -41,18 +41,18 @@ const generateTokens = async (userId, ipAddress, userAgent) => {
       token: refreshTokenValue,
       expiresAt,
       ipAddress,
-      userAgent
+      userAgent,
     });
 
     return {
       accessToken,
       refreshToken: refreshTokenValue,
-      refreshTokenId: refreshToken._id
+      refreshTokenId: refreshToken._id,
     };
   } catch (error) {
     logger.error('Error generating tokens', {
       error: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
     throw error;
   }
@@ -76,7 +76,7 @@ export const register = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      emailValidation.error
+      emailValidation.error,
     );
     throw AppError.badRequest(emailValidation.error);
   }
@@ -90,7 +90,7 @@ export const register = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      'User already exists'
+      'User already exists',
     );
     throw AppError.badRequest('User already exists');
   }
@@ -105,10 +105,10 @@ export const register = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      'Weak password'
+      'Weak password',
     );
     throw AppError.badRequest(
-      `Password is too weak: ${passwordValidation.error}`
+      `Password is too weak: ${passwordValidation.error}`,
     );
   }
 
@@ -116,21 +116,21 @@ export const register = asyncHandler(async (req, res) => {
   const user = await User.create({
     name: name.trim(),
     email: email.toLowerCase().trim(),
-    password
+    password,
   });
 
   // Create session
   await Session.create({
     user: user._id,
     ipAddress: req.ip,
-    userAgent: req.get('User-Agent')
+    userAgent: req.get('User-Agent'),
   });
 
   // Generate access and refresh tokens
   const { accessToken, refreshToken } = await generateTokens(
     user._id,
     req.ip,
-    req.get('User-Agent')
+    req.get('User-Agent'),
   );
 
   // Audit log successful registration
@@ -139,26 +139,26 @@ export const register = asyncHandler(async (req, res) => {
     AUDIT_EVENTS.REGISTER,
     'User',
     { email: user.email, name: user.name },
-    'SUCCESS'
+    'SUCCESS',
   );
 
   logger.info('User registered successfully', {
     userId: user._id,
-    email: user.email
+    email: user.email,
   });
 
-  const response = ApiResponse.success(
+  const response = ApiResponse.created(
     {
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
       },
       accessToken,
-      refreshToken
+      refreshToken,
     },
-    'User registered successfully'
+    'User registered successfully',
   );
 
   sendResponse(res, response);
@@ -175,7 +175,7 @@ export const login = asyncHandler(async (req, res) => {
 
   // Check for user
   const user = await User.findOne({ email: email.toLowerCase() }).select(
-    '+password'
+    '+password',
   );
   if (!user) {
     auditLog(
@@ -184,7 +184,7 @@ export const login = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      'User not found'
+      'User not found',
     );
     throw AppError.badRequest('Invalid credentials');
   }
@@ -197,7 +197,7 @@ export const login = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      'Account deactivated'
+      'Account deactivated',
     );
     throw AppError.badRequest('Account is deactivated');
   }
@@ -211,7 +211,7 @@ export const login = asyncHandler(async (req, res) => {
       'User',
       { email },
       'FAILURE',
-      'Invalid password'
+      'Invalid password',
     );
     throw AppError.badRequest('Invalid credentials');
   }
@@ -224,14 +224,14 @@ export const login = asyncHandler(async (req, res) => {
   await Session.create({
     user: user._id,
     ipAddress: req.ip,
-    userAgent: req.get('User-Agent')
+    userAgent: req.get('User-Agent'),
   });
 
   // Generate access and refresh tokens
   const { accessToken, refreshToken } = await generateTokens(
     user._id,
     req.ip,
-    req.get('User-Agent')
+    req.get('User-Agent'),
   );
 
   // Audit log successful login
@@ -242,14 +242,14 @@ export const login = asyncHandler(async (req, res) => {
     {
       email: user.email,
       ipAddress: req.ip,
-      userAgent: req.get('User-Agent')
+      userAgent: req.get('User-Agent'),
     },
-    'SUCCESS'
+    'SUCCESS',
   );
 
   logger.info('User logged in successfully', {
     userId: user._id,
-    email: user.email
+    email: user.email,
   });
 
   const response = ApiResponse.success(
@@ -259,12 +259,12 @@ export const login = asyncHandler(async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        twoFAEnabled: user.twoFAEnabled
+        twoFAEnabled: user.twoFAEnabled,
       },
       accessToken,
-      refreshToken
+      refreshToken,
     },
-    'Login successful'
+    'Login successful',
   );
 
   sendResponse(res, response);
@@ -295,7 +295,7 @@ export const enable2FA = asyncHandler(async (req, res) => {
 
   const response = ApiResponse.success(
     { qrCode, secret },
-    'Scan the QR code with your authenticator app'
+    'Scan the QR code with your authenticator app',
   );
 
   sendResponse(res, response);
@@ -327,7 +327,7 @@ export const verify2FA = asyncHandler(async (req, res) => {
 
   const response = ApiResponse.success(
     { twoFAEnabled: true },
-    'Two-factor authentication enabled successfully'
+    'Two-factor authentication enabled successfully',
   );
 
   sendResponse(res, response);
@@ -343,7 +343,7 @@ export const logout = asyncHandler(async (req, res) => {
   // Find active session
   const session = await Session.findOne({
     user: req.user._id,
-    isActive: true
+    isActive: true,
   }).sort({ loginTime: -1 });
 
   if (session) {
@@ -356,7 +356,7 @@ export const logout = asyncHandler(async (req, res) => {
     {
       isRevoked: true,
       revokedAt: new Date(),
-      revokedReason: 'Logout'
+      revokedReason: 'Logout',
     },
   );
 
@@ -383,7 +383,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   // Validate refresh token in database
   const tokenDoc = await RefreshToken.findOne({
     token: refreshToken,
-    isRevoked: false
+    isRevoked: false,
   }).populate('user', 'id name email role');
 
   if (!tokenDoc) {
@@ -407,7 +407,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   const newAccessToken = jwt.sign(
     { id: tokenDoc.user._id },
     environment.JWT_SECRET,
-    { expiresIn: environment.JWT_EXPIRE }
+    { expiresIn: environment.JWT_EXPIRE },
   );
 
   auditLog(
@@ -415,16 +415,16 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     AUDIT_EVENTS.LOGIN,
     'User',
     { action: 'Token refresh' },
-    'SUCCESS'
+    'SUCCESS',
   );
 
   logger.info('Access token refreshed', { userId: tokenDoc.user._id });
 
   const response = ApiResponse.success(
     {
-      accessToken: newAccessToken
+      accessToken: newAccessToken,
     },
-    'Token refreshed successfully'
+    'Token refreshed successfully',
   );
 
   sendResponse(res, response);

@@ -21,7 +21,7 @@ describe('Patient Controller', () => {
     clinicId = '507f1f77bcf86cd799439011';
   });
 
-  describe('POST /api/v1/patients', () => {
+  describe('POST /api/patients', () => {
     it('should create a new patient', async () => {
       const patientData = {
         clinic: clinicId,
@@ -39,26 +39,26 @@ describe('Patient Controller', () => {
     });
   });
 
-  describe('GET /api/v1/patients/:id', () => {
+  describe('GET /api/patients/:id', () => {
     it('should retrieve patient details', async () => {
       expect(patientId).toBeDefined();
     });
   });
 
-  describe('GET /api/v1/clinics/:clinicId/patients', () => {
+  describe('GET /api/clinics/:clinicId/patients', () => {
     it('should list patients by clinic', async () => {
       expect(clinicId).toBeDefined();
     });
   });
 
-  describe('PUT /api/v1/patients/:id', () => {
+  describe('PUT /api/patients/:id', () => {
     it('should update patient information', async () => {
       const updateData = { phone: '+57 1 9876543' };
       expect(updateData).toBeDefined();
     });
   });
 
-  describe('DELETE /api/v1/patients/:id', () => {
+  describe('DELETE /api/patients/:id', () => {
     it('should delete a patient', async () => {
       expect(patientId).toBeDefined();
     });

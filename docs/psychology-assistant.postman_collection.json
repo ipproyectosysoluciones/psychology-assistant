@@ -43,8 +43,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -78,8 +84,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             }
           }
         },
@@ -99,8 +111,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
             }
           }
         },
@@ -120,8 +138,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/enable-2fa",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "enable-2fa"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "enable-2fa"
+              ]
             }
           }
         },
@@ -151,8 +175,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/verify-2fa",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "verify-2fa"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify-2fa"
+              ]
             }
           }
         },
@@ -185,8 +215,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/refresh-token",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "refresh-token"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
             }
           }
         }
@@ -222,8 +258,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/appointments",
-              "host": ["{{base_url}}"],
-              "path": ["api", "appointments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments"
+              ]
             }
           }
         },
@@ -243,8 +284,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/appointments?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "appointments"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -274,8 +320,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/appointments/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "appointments", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -311,8 +363,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/appointments/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "appointments", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -338,8 +396,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/appointments/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "appointments", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "appointments",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -371,8 +435,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
             }
           }
         },
@@ -402,8 +472,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
             }
           }
         },
@@ -433,8 +509,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/change-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "change-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "change-password"
+              ]
             }
           }
         },
@@ -454,8 +536,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/stats",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "stats"
+              ]
             }
           }
         },
@@ -485,15 +573,21 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/delete-data",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "delete-data"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "delete-data"
+              ]
             }
           }
         }
       ]
     },
     {
-      "name": "Clinics (v1)",
+      "name": "Clinics",
       "description": "Endpoints de Clínicas | Clinics Endpoints",
       "item": [
         {
@@ -522,8 +616,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinics"
+              ]
             }
           }
         },
@@ -543,8 +642,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinics"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -574,8 +678,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinics",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -611,8 +721,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinics",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -638,8 +754,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinics/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinics", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinics",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -652,7 +774,7 @@
       ]
     },
     {
-      "name": "Therapists (v1)",
+      "name": "Therapists",
       "description": "Endpoints de Terapeutas | Therapists Endpoints",
       "item": [
         {
@@ -681,8 +803,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "therapists"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "therapists"
+              ]
             }
           }
         },
@@ -702,8 +829,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "therapists"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "therapists"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -733,8 +865,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "therapists", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "therapists",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -770,8 +908,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "therapists", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "therapists",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -797,8 +941,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/therapists/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "therapists", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "therapists",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -811,7 +961,7 @@
       ]
     },
     {
-      "name": "Patients (v1)",
+      "name": "Patients",
       "description": "Endpoints de Pacientes | Patients Endpoints",
       "item": [
         {
@@ -840,8 +990,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients"
+              ]
             }
           }
         },
@@ -861,8 +1016,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -892,8 +1052,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -929,8 +1095,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -956,8 +1128,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -970,7 +1148,7 @@
       ]
     },
     {
-      "name": "Medical Records (v1)",
+      "name": "Medical Records",
       "description": "Endpoints de Historiales Médicos | Medical Records Endpoints",
       "item": [
         {
@@ -999,8 +1177,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/medical-records",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "medical-records"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records"
+              ]
             }
           }
         },
@@ -1020,8 +1203,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/medical-records/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "medical-records", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1047,8 +1236,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/patients/:patientId/medical-records",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "patients", ":patientId", "medical-records"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "patients",
+                ":patientId",
+                "medical-records"
+              ],
               "variable": [
                 {
                   "key": "patientId",
@@ -1084,8 +1280,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/medical-records/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "medical-records", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1111,8 +1313,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/medical-records/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "medical-records", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "medical-records",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1125,7 +1333,7 @@
       ]
     },
     {
-      "name": "Billings (v1)",
+      "name": "Billings",
       "description": "Endpoints de Facturación | Billing Endpoints",
       "item": [
         {
@@ -1154,8 +1362,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/billings",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "billings"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "billings"
+              ]
             }
           }
         },
@@ -1175,8 +1388,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/billings?status=pending&page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "billings"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "billings"
+              ],
               "query": [
                 {
                   "key": "status",
@@ -1210,8 +1428,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/billings/:id/pay",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "billings", ":id", "pay"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "billings",
+                ":id",
+                "pay"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1237,8 +1462,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/billings/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "billings", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "billings",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1251,7 +1482,7 @@
       ]
     },
     {
-      "name": "Clinical Reports (v1)",
+      "name": "Clinical Reports",
       "description": "Endpoints de Reportes Clínicos | Clinical Reports Endpoints",
       "item": [
         {
@@ -1280,8 +1511,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinical-reports"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinical-reports"
+              ]
             }
           }
         },
@@ -1301,8 +1537,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinical-reports"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinical-reports"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -1332,8 +1573,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinical-reports", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinical-reports",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1369,8 +1616,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinical-reports", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinical-reports",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -1396,8 +1649,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/v1/clinical-reports/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "v1", "clinical-reports", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clinical-reports",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
