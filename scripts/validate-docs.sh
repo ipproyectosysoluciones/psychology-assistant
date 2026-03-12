@@ -170,6 +170,90 @@ check_todos() {
     echo
 }
 
+check_bilingual_consistency() {
+    echo -e "${BLUE}🌐 Checking bilingual consistency (ES+EN)...${NC}"
+    
+    local bilingual_required_files=(
+        "docs/INDEX.md"
+        "docs/VISUAL_GUIDE.md"
+        "TEAM_ONBOARDING.md"
+        "docs/MAINTENANCE_PROCESS.md"
+        "README.md"
+        "PROJECT_STATUS.md"
+        "DEVELOPMENT_GUIDE.md"
+    )
+    
+    local bilingual_issues=0
+    
+    for file in "${bilingual_required_files[@]}"; do
+        if [ -f "$file" ]; then
+            # Check if file has both Spanish and English markers
+            if grep -q "🇪🇸\|\## Español\|# Español" "$file" 2>/dev/null && \
+               grep -q "🇬🇧\|\## English\|# English" "$file" 2>/dev/null; then
+                local es_count=$(grep -c "🇪🇸" "$file" 2>/dev/null || echo "0")
+                local en_count=$(grep -c "🇬🇧" "$file" 2>/dev/null || echo "0")
+                echo -e "${GREEN}  ✅${NC} $file - Bilingual ✓"
+            else
+                local line_count=$(wc -l < "$file" 2>/dev/null)
+                if [ "$line_count" -lt 50 ]; then
+                    echo -e "${YELLOW}  ⚠️  $file - Small file, bilingual optional${NC}"
+                else
+                    echo -e "${RED}  ❌ $file - MISSING BILINGUAL CONTENT${NC}"
+                    ((bilingual_issues++))
+                    ((ERRORS++))
+                fi
+            fi
+        fi
+    done
+    
+    echo
+    [ $bilingual_issues -eq 0 ] && echo -e "${GREEN}✓ Bilingual requirements met${NC}" || echo -e "${RED}✗ $bilingual_issues files need translation${NC}"
+    echo
+}
+
+# ============================================================================
+# FUNCTION: Check root documentation presence
+# ============================================================================
+check_root_documentation() {
+    echo -e "${BLUE}📁 Checking root documentation files...${NC}"
+    
+    local required_root=(
+        "README.md"
+        "PROJECT_STATUS.md"
+        "DEVELOPMENT_GUIDE.md"
+    )
+    
+    local forbidden_root=(
+        "CHANGELOG.md"
+        "DEPLOYMENT.md"
+        "DOCKER.md"
+        "INDEX.md"
+    )
+    
+    echo "✓ Required files in root:"
+    for file in "${required_root[@]}"; do
+        if [ -f "$file" ]; then
+            echo -e "${GREEN}  ✅ $file${NC}"
+        else
+            echo -e "${RED}  ❌ MISSING: $file${NC}"
+            ((ERRORS++))
+        fi
+    done
+    
+    echo
+    echo "✗ Files that should be in docs/ (not root):"
+    for file in "${forbidden_root[@]}"; do
+        if [ -f "$file" ]; then
+            echo -e "${RED}  ❌ FOUND: $file (should be in docs/)${NC}"
+            ((ERRORS++))
+        else
+            echo -e "${GREEN}  ✅ Not in root (correct)${NC}"
+        fi
+    done
+    
+    echo
+}
+
 # ============================================================================
 # FUNCTION: Generate statistics
 # ============================================================================
@@ -180,11 +264,13 @@ generate_statistics() {
     local total_lines=$(find docs -name "*.md" -type f | xargs wc -l | tail -1 | awk '{print $1}')
     local total_words=$(find docs -name "*.md" -type f | xargs wc -w | tail -1 | awk '{print $1}')
     local links=$(grep -r "\[.*\](\./" docs --include="*.md" 2>/dev/null | wc -l)
+    local bilingual_count=$(grep -rl "🇪🇸\|🇬🇧" docs --include="*.md" 2>/dev/null | wc -l)
     
     echo "  Total markdown files: $total_files"
     echo "  Total lines of documentation: $total_lines"
     echo "  Total words: $total_words"
     echo "  Internal links: $links"
+    echo "  Bilingual files: $bilingual_count"
     echo
 }
 
@@ -224,10 +310,12 @@ print_summary() {
 
 main() {
     check_files_exist
+    check_root_documentation
     check_directory_structure
     check_internal_links
     check_file_sizes
     check_version_consistency
+    check_bilingual_consistency
     check_todos
     generate_statistics
     print_summary

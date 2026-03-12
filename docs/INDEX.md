@@ -172,6 +172,15 @@ See [Complete Release Notes](../v0.4.0_RELEASE_NOTES.md)
 ### Maintaining Documentation?
 → Read [Maintenance Process](./MAINTENANCE_PROCESS.md) | [Validation Scripts](../scripts/validate-docs.sh)
 
+### Looking for Historical/Archived Documents?
+→ See [Archive](./archive/README.md) - Historical sessions and verifications
+
+---
+
+## 🗂️ Documentation Organization
+
+The documentation follows **Clean Architecture** principles across 7 layers:
+
 ---
 
 ## 🔗 Important Links
