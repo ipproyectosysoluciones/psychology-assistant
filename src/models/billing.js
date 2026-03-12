@@ -57,7 +57,7 @@ const billingSchema = new mongoose.Schema(
         quantity: Number,
         unitPrice: Number,
         total: Number
-      },
+      }
     ],
     discount: {
       type: Number,
@@ -86,11 +86,11 @@ const billingSchema = new mongoose.Schema(
     },
     insurance: {
       type: String
-    },
+    }
   },
   {
     timestamps: true
-  },
+  }
 );
 
 billingSchema.index({ patient: 1, clinic: 1 });

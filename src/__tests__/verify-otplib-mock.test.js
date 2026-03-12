@@ -7,9 +7,9 @@ describe('Verify otplib mock with unstable_mockModule', () => {
         check: jest.fn(() => true), // Return true for tests
         keyuri: jest.fn(
           (email, appName, secret) =>
-            `otpauth://totp/${appName}:${email}?secret=${secret}&issuer=${appName}`,
-        ),
-      },
+            `otpauth://totp/${appName}:${email}?secret=${secret}&issuer=${appName}`
+        )
+      }
     }));
 
     // Dynamic import AFTER mock is registered

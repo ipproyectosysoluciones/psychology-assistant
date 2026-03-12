@@ -15,13 +15,13 @@ beforeEach(async () => {
   user = await User.create({
     name: 'Test User',
     email: 'test@example.com',
-    password: 'MySecurePass@2024',
+    password: 'MySecurePass@2024'
   });
 
   // Login to get token
   const loginResponse = await request(app).post('/api/auth/login').send({
     email: 'test@example.com',
-    password: 'MySecurePass@2024',
+    password: 'MySecurePass@2024'
   });
 
   token = loginResponse.body.data.accessToken;
@@ -35,14 +35,14 @@ describe('Appointment Controller', () => {
       const dayOfWeek = tomorrow.getDay();
       const daysToAdd = dayOfWeek === 6 ? 2 : dayOfWeek === 0 ? 1 : 1; // Skip Saturday/Sunday
       const appointmentDate = new Date(
-        Date.now() + (daysToAdd + 1) * 24 * 60 * 60 * 1000,
+        Date.now() + (daysToAdd + 1) * 24 * 60 * 60 * 1000
       );
       appointmentDate.setHours(10, 0, 0, 0); // Set to 10 AM
 
       const appointmentData = {
         date: appointmentDate.toISOString(),
         description:
-          'This is a test appointment for psychological consultation',
+          'This is a test appointment for psychological consultation'
       };
 
       const response = await request(app)
@@ -52,7 +52,7 @@ describe('Appointment Controller', () => {
 
       if (response.status !== 201) {
         throw new Error(
-          `Create appointment failed: ${JSON.stringify(response.body)}`,
+          `Create appointment failed: ${JSON.stringify(response.body)}`
         );
       }
 
@@ -60,7 +60,7 @@ describe('Appointment Controller', () => {
       expect(response.body.data.appointment).toHaveProperty('id');
       expect(response.body.data.appointment.date).toBeDefined();
       expect(response.body.data.appointment.description).toBe(
-        appointmentData.description,
+        appointmentData.description
       );
       expect(response.body.data.appointment.status).toBe('scheduled');
       expect(response.body.data).toHaveProperty('qrCode');
@@ -70,7 +70,7 @@ describe('Appointment Controller', () => {
     it('should fail with past date', async () => {
       const appointmentData = {
         date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
-        description: 'This is a test appointment',
+        description: 'This is a test appointment'
       };
 
       const response = await request(app)
@@ -86,7 +86,7 @@ describe('Appointment Controller', () => {
     it('should fail with invalid date format', async () => {
       const appointmentData = {
         date: 'invalid-date',
-        description: 'This is a test appointment',
+        description: 'This is a test appointment'
       };
 
       const response = await request(app)
@@ -102,7 +102,7 @@ describe('Appointment Controller', () => {
     it('should fail with short description', async () => {
       const appointmentData = {
         date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        description: 'Short',
+        description: 'Short'
       };
 
       const response = await request(app)
@@ -118,7 +118,7 @@ describe('Appointment Controller', () => {
     it('should fail without authorization', async () => {
       const appointmentData = {
         date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-        description: 'This is a test appointment',
+        description: 'This is a test appointment'
       };
 
       const response = await request(app)
@@ -139,14 +139,14 @@ describe('Appointment Controller', () => {
           user: user._id,
           date: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
           description: 'First appointment',
-          status: 'scheduled',
+          status: 'scheduled'
         },
         {
           user: user._id,
           date: new Date(Date.now() + 48 * 60 * 60 * 1000), // Day after tomorrow
           description: 'Second appointment',
-          status: 'scheduled',
-        },
+          status: 'scheduled'
+        }
       ]);
     });
 
@@ -196,7 +196,7 @@ describe('Appointment Controller', () => {
         user: user._id,
         date: new Date(Date.now() + 24 * 60 * 60 * 1000),
         description: 'Test appointment for retrieval',
-        status: 'scheduled',
+        status: 'scheduled'
       });
     });
 
@@ -208,10 +208,10 @@ describe('Appointment Controller', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.appointment.id).toBe(
-        appointment._id.toString(),
+        appointment._id.toString()
       );
       expect(response.body.data.appointment.description).toBe(
-        appointment.description,
+        appointment.description
       );
       expect(response.body.message).toBe('Appointment retrieved successfully');
     });
@@ -247,14 +247,14 @@ describe('Appointment Controller', () => {
         user: user._id,
         date: new Date(Date.now() + 24 * 60 * 60 * 1000),
         description: 'Original appointment',
-        status: 'scheduled',
+        status: 'scheduled'
       });
     });
 
     it('should update appointment successfully', async () => {
       const updateData = {
         description: 'Updated appointment description',
-        status: 'scheduled',
+        status: 'scheduled'
       };
 
       const response = await request(app)
@@ -265,7 +265,7 @@ describe('Appointment Controller', () => {
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.appointment.description).toBe(
-        updateData.description,
+        updateData.description
       );
       expect(response.body.data.appointment.status).toBe(updateData.status);
       expect(response.body.message).toBe('Appointment updated successfully');
@@ -282,7 +282,7 @@ describe('Appointment Controller', () => {
 
       expect(response.body.success).toBe(true);
       expect(new Date(response.body.data.appointment.date).toISOString()).toBe(
-        newDate,
+        newDate
       );
     });
 
@@ -297,7 +297,7 @@ describe('Appointment Controller', () => {
 
       expect(response.body.success).toBe(false);
       expect(response.body.message).toBe(
-        'Appointment date must be in the future',
+        'Appointment date must be in the future'
       );
     });
   });
@@ -311,14 +311,14 @@ describe('Appointment Controller', () => {
         user: user._id,
         date: new Date(Date.now() + 24 * 60 * 60 * 1000),
         description: 'Future appointment',
-        status: 'scheduled',
+        status: 'scheduled'
       });
 
       anotherFutureAppointment = await Appointment.create({
         user: user._id,
         date: new Date(Date.now() + 48 * 60 * 60 * 1000),
         description: 'Another future appointment',
-        status: 'scheduled',
+        status: 'scheduled'
       });
     });
 
@@ -333,7 +333,7 @@ describe('Appointment Controller', () => {
 
       // Verify appointment is deleted
       const deletedAppointment = await Appointment.findById(
-        futureAppointment._id,
+        futureAppointment._id
       );
       expect(deletedAppointment).toBeNull();
     });
@@ -345,7 +345,7 @@ describe('Appointment Controller', () => {
       futureAppointment = await Appointment.findByIdAndUpdate(
         futureAppointment._id,
         { status: 'completed' },
-        { new: true, runValidators: false },
+        { new: true, runValidators: false }
       );
 
       const response = await request(app)

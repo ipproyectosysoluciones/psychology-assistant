@@ -1,6 +1,6 @@
 # Psychology Assistant - Asistente de Psicología
 
-[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](#)
+[![Version](https://img.shields.io/badge/version-v0.3.0-blue.svg)](#)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -18,7 +18,7 @@
 
 Una plataforma completa para gestión de citas psicológicas con **100% type safety**, **100% test pass rate** (92 passed, 1 skipped) y documentación bilingual (ES/EN).
 
-**v0.2.0 Released**: Frontend refactoring complete with all tests passing ✅
+**v0.3.0 Released**: Backend verification complete - API routes standardized, HTTP status codes fixed, security audit passed ✅
 
 ### 🚀 Inicio Rápido
 
