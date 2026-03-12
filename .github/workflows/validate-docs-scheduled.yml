@@ -97,8 +97,7 @@ Timestamp: ${new Date().toISOString()}
 ### 📊 Reporte de Validación
 
 \`\`\`
-${reportContent.substring(0, 2000)}
-...
+${reportPreview}
 \`\`\`
 
 **Archivo completo**: [${files[0]}](../../actions/runs/${{ github.run_id }})
