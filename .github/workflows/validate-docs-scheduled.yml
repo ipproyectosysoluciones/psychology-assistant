@@ -21,10 +21,10 @@ jobs:
       
     steps:
       - name: 📥 Descargar repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         
       - name: 📦 Instalar dependencias de Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '20.x'
           
@@ -35,7 +35,7 @@ jobs:
         
       - name: 📊 Guardar reporte como artefacto
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: validation-report-${{ github.run_id }}
           path: docs/validation-reports/
@@ -48,8 +48,8 @@ jobs:
           ls -lah docs/validation-reports/ || echo "Sin reportes generados"
           
       - name: 🚀 Crear issue si hay fallos (CRÍTICO)
-        if: failure()
-        uses: actions/github-script@v7
+        if: steps.validate.outcome == 'failure'
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -121,7 +121,7 @@ ${reportContent.substring(0, 2000)}
             });
             
       - name: 📧 Notificar vía email (si falla)
-        if: failure()
+        if: steps.validate.outcome == 'failure'
         run: |
           echo "⚠️  VALIDACIÓN DE DOCUMENTACIÓN FALLÓ"
           echo ""
@@ -131,7 +131,7 @@ ${reportContent.substring(0, 2000)}
           echo "Nota: Se creó un issue automático en GitHub"
           
       - name: ✅ Validación exitosa
-        if: success()
+        if: steps.validate.outcome == 'success'
         run: |
           echo "✅ Documentación validada exitosamente"
           echo "Fecha: $(date)"
