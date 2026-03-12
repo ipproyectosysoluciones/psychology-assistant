@@ -90,9 +90,9 @@ jobs:
             
             const issueBody = `📋 **Validación de Documentación Falló**
 
-**Severidad**: ${severity}
+Severidad: ${severity}
 
-**Timestamp**: ${new Date().toISOString()}
+Timestamp: ${new Date().toISOString()}
 
 ### 📊 Reporte de Validación
 
