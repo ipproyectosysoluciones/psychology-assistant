@@ -16,23 +16,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          version: "10.32.1"
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm lint
         continue-on-error: true
 
       - name: Generate ESLint report
         if: always()
         run: |
-          npm run lint 2>&1 | tee eslint-report.txt || true
+          pnpm lint 2>&1 | tee eslint-report.txt || true
           if grep -q "error" eslint-report.txt; then
             echo "❌ ESLint errors found"
             exit 1
@@ -47,22 +53,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          version: "10.32.1"
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript compiler (Backend)
-        run: npx tsc --noEmit src/**/*.js 2>&1 || true
+        run: pnpm exec tsc --noEmit src/**/*.js 2>&1 || true
         continue-on-error: true
 
       - name: Check TypeScript frontend
         working-directory: ./frontend
-        run: npm run type-check 2>&1 || true
+        run: pnpm run type-check 2>&1 || true
         continue-on-error: true
 
       - name: TSC validation
@@ -77,17 +89,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          version: "10.32.1"
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Check Prettier formatting
-        run: npx prettier --check "src/**/*.{js,json}" "frontend/src/**/*.{ts,html,scss}" || true
+        run: pnpm exec prettier --check "src/**/*.{js,json}" "frontend/src/**/*.{ts,html,scss}" || true
         continue-on-error: true
 
   security-audit:
@@ -98,23 +116,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+        with:
+          version: "10.32.1"
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: 'pnpm'
 
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate --json > audit-report.json || true
+      - name: Run pnpm audit
+        run: pnpm audit --audit-level=moderate --json > audit-report.json || true
         continue-on-error: true
 
       - name: Check for vulnerabilities
         run: |
-          if grep -q '"critical"' audit-report.json || grep -q '"high"' audit-report.json; then
-            echo "⚠️  Critical/High vulnerabilities found"
-            cat audit-report.json
+          if [ -s audit-report.json ]; then
+            critical=$(jq -r '.metadata.vulnerabilities.critical // 0' audit-report.json 2>/dev/null || echo 0)
+            high=$(jq -r '.metadata.vulnerabilities.high // 0' audit-report.json 2>/dev/null || echo 0)
+            if [ "$((critical + high))" -gt 0 ]; then
+              echo "⚠️  Critical/High vulnerabilities found"
+              cat audit-report.json
+            else
+              echo "✅ No critical vulnerabilities"
+            fi
           else
-            echo "✅ No critical vulnerabilities"
+            echo "⚠️  Could not generate audit report"
           fi
 
   quality-gate:
