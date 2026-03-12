@@ -1,16 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
-import { of, throwError } from 'rxjs';
-import { RegisterComponent } from './register';
-import { AuthService } from '../../services/auth';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { createMockApiResponse, createMockAuthResponse } from '../../test-fixtures';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import { AuthService } from '../../services/auth';
+import {
+  createMockApiResponse,
+  createMockAuthResponse,
+} from '../../test-fixtures';
+import { RegisterComponent } from './register';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -82,15 +85,5 @@ describe('RegisterComponent', () => {
     component.submit?.();
 
     expect(router.navigate).toHaveBeenCalled();
-  });
-});
-
-      name: 'John Doe',
-      email: 'existing@example.com',
-      password: 'password123',
-    });
-    component.submit();
-
-    expect(component.errorMessage).toBe('Email already exists');
   });
 });

@@ -3,9 +3,8 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { createMockPatient } from '../test-fixtures';
 import { PatientService } from './patient';
-import { createMockPatient, createMockApiResponse } from '../test-fixtures';
-import { ApiResponse, Patient } from '../models';
 
 const apiUrl = '/api/v1';
 
@@ -33,4 +32,9 @@ describe('PatientService', () => {
 
   /**
    * ES: Verificar que el servicio sea creado
+   * EN: Verify that the service is created
+   */
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

@@ -9,10 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth';
-import {
-  createMockApiResponse,
-  createMockAuthResponse,
-} from '../../test-fixtures';
+import { createMockAuthResponse } from '../../test-fixtures';
 import { LoginComponent } from './login';
 
 describe('LoginComponent', () => {
@@ -66,7 +63,7 @@ describe('LoginComponent', () => {
   });
 
   it('should call authService.login on valid form submission', () => {
-    const mockResponse = createMockApiResponse(createMockAuthResponse());
+    const mockResponse = createMockAuthResponse();
     authService.login.and.returnValue(of(mockResponse));
 
     component.form?.get('email')?.setValue('test@example.com');
@@ -77,7 +74,7 @@ describe('LoginComponent', () => {
   });
 
   it('should navigate to dashboard on successful login', () => {
-    const mockResponse = createMockApiResponse(createMockAuthResponse());
+    const mockResponse = createMockAuthResponse();
     authService.login.and.returnValue(of(mockResponse));
 
     component.form?.get('email')?.setValue('test@example.com');
