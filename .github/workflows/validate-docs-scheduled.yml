@@ -114,7 +114,7 @@ ${reportContent.substring(0, 2000)}
             github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `[AUTO] ⚠️ ${severity} - Validación de Documentación Falló`,
+              title: `[AUTO] ALERT ${severity} - Validación de Documentación Falló`,
               body: issueBody,
               labels: labels,
               assignees: [] // Asignar a alguien si es necesario
