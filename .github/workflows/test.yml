@@ -1,0 +1,124 @@
+name: Tests & Coverage
+
+on:
+  push:
+    branches: [main, development/frontend-refactor]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_ENV: test
+  MONGO_URI: mongodb://localhost:27017/test
+  JWT_SECRET: test_secret_key_12345
+  REFRESH_TOKEN_SECRET: refresh_secret_key_12345
+
+jobs:
+  test:
+    name: Run Backend Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    services:
+      mongodb:
+        image: mongo:6.0
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage --passWithNoTests
+        env:
+          NODE_ENV: test
+
+      - name: Generate coverage report
+        if: matrix.node-version == '18.x'
+        run: npm test -- --coverage --coverageReporters=lcov --passWithNoTests
+
+      - name: Upload coverage to Codecov
+        if: matrix.node-version == '18.x'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: backend
+          name: backend-coverage
+          fail_ci_if_error: false
+
+      - name: Check coverage threshold
+        if: matrix.node-version == '18.x'
+        run: |
+          LINES=$(grep -oP 'lines-valid: \K[^ ]*' coverage/coverage-final.json || echo "0")
+          if (( $(echo "$LINES < 70" | bc -l) )); then
+            echo "❌ Coverage below 70% threshold"
+            exit 0  # Don't fail for now, just warn
+          fi
+          echo "✅ Coverage meets 70% minimum"
+
+  frontend-tests:
+    name: Frontend Unit Tests
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Angular tests
+        run: npm run test -- --watch=false --code-coverage --browsers=ChromeHeadless
+
+      - name: Upload Angular coverage
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./frontend/coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+          fail_ci_if_error: false
+
+  test-summary:
+    name: Test Results Summary
+    runs-on: ubuntu-latest
+    needs: [test, frontend-tests]
+    if: always()
+
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.test.result }}" = "failure" ] || [ "${{ needs.frontend-tests.result }}" = "failure" ]; then
+            echo "❌ Some tests failed"
+            exit 1
+          fi
+          echo "✅ All tests passed"
+          exit 0

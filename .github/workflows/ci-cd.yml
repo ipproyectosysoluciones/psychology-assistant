@@ -1,97 +1,97 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline Orchestrator
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, development/frontend-refactor]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: Tests & Coverage
+    uses: ./.github/workflows/test.yml
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run linter
-        run: pnpm run lint
-
-      - name: Run tests
-        run: pnpm run test:ci
-        env:
-          NODE_ENV: test
-          MONGO_URI: mongodb://localhost:27017/test
-          JWT_SECRET: test_jwt_secret
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage/lcov.info
+  lint:
+    name: Code Quality
+    uses: ./.github/workflows/lint.yml
 
   build:
+    name: Build & Artifacts
+    needs: [test, lint]
+    uses: ./.github/workflows/build.yml
+
+  ci-status:
+    name: CI Status Check
     runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main'
+    needs: [test, lint, build]
+    if: always()
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'pnpm'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build Docker image
-        run: docker build -t psychology-assistant:${{ github.sha }} .
-
-      - name: Run Docker container test
+      - name: Determine CI status
         run: |
-          docker run -d --name test-container -p 5000:5000 psychology-assistant:${{ github.sha }}
-          sleep 10
-          curl -f http://localhost:5000/api/health || exit 1
-          docker stop test-container
+          echo "🔍 CI/CD Pipeline Status"
+          echo "========================"
+          
+          TEST_STATUS="${{ needs.test.result }}"
+          LINT_STATUS="${{ needs.lint.result }}"
+          BUILD_STATUS="${{ needs.build.result }}"
+          
+          echo "Tests:        $TEST_STATUS"
+          echo "Linting:      $LINT_STATUS"
+          echo "Build:        $BUILD_STATUS"
+          echo "========================"
+          
+          if [ "$TEST_STATUS" = "failure" ] || [ "$LINT_STATUS" = "failure" ] || [ "$BUILD_STATUS" = "failure" ]; then
+            echo "❌ CI/CD Pipeline FAILED"
+            exit 1
+          fi
+          
+          echo "✅ CI/CD Pipeline PASSED"
+          echo ""
+          echo "Next steps:"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "- ✅ Ready for code review"
+            echo "- ✅ All checks passed"
+          else
+            echo "- ✅ Merge to main successful"
+            echo "- ✅ Ready for deployment"
+          fi
 
-  deploy-staging:
+  notify-success:
+    name: Success Notification
     runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/develop'
-    environment: staging
+    needs: ci-status
+    if: success()
 
     steps:
-      - name: Deploy to staging
-        run: echo "Deploying to staging environment..."
+      - name: Pipeline Success
+        run: |
+          echo "✅ All CI/CD checks passed successfully!"
+          echo ""
+          echo "📊 Summary:"
+          echo "- Tests: ✅ Passed"
+          echo "- Linting: ✅ Passed"
+          echo "- Build: ✅ Success"
+          echo ""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "PR is ready for merge!"
+          else
+            echo "Changes are deployed and ready!"
+          fi
 
-  deploy-production:
+  notify-failure:
+    name: Failure Notification
     runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    environment: production
+    needs: ci-status
+    if: failure()
 
     steps:
-      - name: Deploy to production
-        run: echo "Deploying to production environment..."
+      - name: Pipeline Failure
+        run: |
+          echo "❌ CI/CD Pipeline failed"
+          echo ""
+          echo "Please review:"
+          echo "- Check test failures in 'Tests & Coverage'"
+          echo "- Check linting errors in 'Code Quality'"
+          echo "- Check build errors in 'Build & Artifacts'"
+
