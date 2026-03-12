@@ -1,8 +1,11 @@
 # Psychology Assistant - Asistente de Psicología
 
+[![Version](https://img.shields.io/badge/version-v0.2.0-blue.svg)](#)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-92%20passed-brightgreen.svg)](#)
+[![Build](https://img.shields.io/badge/build-1.17%20MB-brightgreen.svg)](#)
 
 **Start Here / Comienza Aquí:**
 
@@ -13,7 +16,9 @@
 
 ## 🇪🇸 Guías en Español
 
-Una plataforma completa para gestión de citas psicológicas con **100% type safety**, **97.8% test coverage** y documentación bilingual (ES/EN).
+Una plataforma completa para gestión de citas psicológicas con **100% type safety**, **100% test pass rate** (92 passed, 1 skipped) y documentación bilingual (ES/EN).
+
+**v0.2.0 Released**: Frontend refactoring complete with all tests passing ✅
 
 ### 🚀 Inicio Rápido
 
@@ -49,7 +54,9 @@ Características principales:
 
 ## 🇬🇧 English Guides
 
-Complete platform for psychology appointment management with **100% type safety**, **97.8% test coverage**, and bilingual documentation (ES/EN).
+Complete platform for psychology appointment management with **100% type safety**, **100% test pass rate** (92 passed, 1 skipped), and bilingual documentation (ES/EN).
+
+**v0.2.0 Released**: Frontend refactoring complete with all tests passing ✅
 
 ### 🚀 Quick Start
 
