@@ -131,3 +131,4 @@ dist
 .pnp.*
 .qodo
 pnpm-lock.yaml
+!frontend/pnpm-lock.yaml
