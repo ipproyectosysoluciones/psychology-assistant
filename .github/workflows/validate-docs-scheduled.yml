@@ -1,0 +1,137 @@
+name: 📚 Validación Programada de Documentación
+
+# Ejecutar cada 2 días a las 14:00 UTC (16:00 CEST / 10:00 EST)
+on:
+  schedule:
+    # Cron format: minute hour day_of_month month day_of_week
+    # 0 14 */2 * * = cada 2 días a las 14:00 UTC
+    - cron: '0 14 */2 * *'
+  
+  # Permitir disparo manual desde Actions tab
+  workflow_dispatch:
+
+jobs:
+  validate-documentation:
+    name: Validar Documentación
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      issues: write
+      
+    steps:
+      - name: 📥 Descargar repositorio
+        uses: actions/checkout@v4
+        
+      - name: 📦 Instalar dependencias de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          
+      - name: 📚 Ejecutar validación de documentación
+        id: validate
+        run: bash scripts/validate-and-report.sh
+        continue-on-error: true
+        
+      - name: 📊 Guardar reporte como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report-${{ github.run_id }}
+          path: docs/validation-reports/
+          retention-days: 30
+          
+      - name: 🔍 Verificar resultados
+        if: always()
+        run: |
+          echo "Validación completada"
+          ls -lah docs/validation-reports/ || echo "Sin reportes generados"
+          
+      - name: 🚀 Crear issue si hay fallos (CRÍTICO)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Buscar el último reporte
+            const reportsDir = 'docs/validation-reports';
+            const files = fs.readdirSync(reportsDir)
+              .filter(f => f.startsWith('validation_') && f.endsWith('.log'))
+              .sort()
+              .reverse();
+              
+            if (files.length === 0) {
+              console.log('No reports found');
+              return;
+            }
+            
+            const reportFile = path.join(reportsDir, files[0]);
+            const reportContent = fs.readFileSync(reportFile, 'utf8');
+            
+            // Determinar severidad
+            let severity = '🔴 CRÍTICO';
+            let labels = ['documentation', '🔴-critico'];
+            
+            if (reportContent.includes('FAILED') || reportContent.includes('❌')) {
+              if (reportContent.includes('bilingual') || reportContent.includes('critical_files')) {
+                severity = '🔴 CRÍTICO';
+                labels = ['documentation', '🔴-critico'];
+              } else if (reportContent.includes('structure') || reportContent.includes('version')) {
+                severity = '🟠 ALTO';
+                labels = ['documentation', '🟠-alto'];
+              } else {
+                severity = '🟡 MEDIO';
+                labels = ['documentation', '🟡-medio'];
+              }
+            }
+            
+            const issueBody = `📋 **Validación de Documentación Falló**
+
+**Severidad**: ${severity}
+
+**Timestamp**: ${new Date().toISOString()}
+
+### 📊 Reporte de Validación
+
+\`\`\`
+${reportContent.substring(0, 2000)}
+...
+\`\`\`
+
+**Archivo completo**: [${files[0]}](../../actions/runs/${{ github.run_id }})
+
+### 🔗 Enlaces Útiles
+- 📖 [Guía de Validación](../../blob/main/docs/MAINTENANCE_PROCESS.md)
+- 🛠️ [Script de Validación](../../blob/main/scripts/validate-docs.sh)
+- 📁 [Reportes](../../tree/main/docs/validation-reports)
+
+---
+*Generado automáticamente por GitHub Actions cada 2 días*`;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[AUTO] ⚠️ ${severity} - Validación de Documentación Falló`,
+              body: issueBody,
+              labels: labels,
+              assignees: [] // Asignar a alguien si es necesario
+            });
+            
+      - name: 📧 Notificar vía email (si falla)
+        if: failure()
+        run: |
+          echo "⚠️  VALIDACIÓN DE DOCUMENTACIÓN FALLÓ"
+          echo ""
+          echo "Email a enviar: ipproyectossoluciones@gmail.com"
+          echo "Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo ""
+          echo "Nota: Se creó un issue automático en GitHub"
+          
+      - name: ✅ Validación exitosa
+        if: success()
+        run: |
+          echo "✅ Documentación validada exitosamente"
+          echo "Fecha: $(date)"

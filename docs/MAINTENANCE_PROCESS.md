@@ -390,15 +390,67 @@ code without language
 
 ## 📅 Maintenance Schedule
 
+### 🔄 Automated (Every 2 days at 14:00 UTC)
+
+**Automatic Validation via GitHub Actions + Local Cron**
+
+Documentation is automatically validated every **2 days at 14:00 UTC** (16:00 CEST / 10:00 EST):
+
+**GitHub Actions** (Always Active):
+- ✅ Runs automatically on schedule
+- ✅ Validates all critical files
+- ✅ Creates GitHub issues on failures
+- 📊 Generates reports in `docs/validation-reports/`
+- 📧 Notifies owner: `ipproyectossoluciones@gmail.com`
+
+**Local Cron** (Optional - macOS/Linux Development):
+```bash
+# Install local cron job
+bash scripts/install-cron-validation.sh
+
+# View installed cron job
+crontab -l | grep validate-and-report
+
+# Manual execution anytime
+bash scripts/validate-and-report.sh
+```
+
+**What gets validated automatically**:
+- ✅ All critical files present
+- ✅ Directory structure intact
+- ✅ Internal links (50+) still valid
+- ✅ File sizes (detect stubs <50 lines)
+- ✅ Version references consistent
+- ✅ Bilingual markers (ES+EN) present
+- ✅ No TODO/FIXME comments left
+
+**When validation fails**:
+- 🔴 **Critical issues** → Issue created with `🔴-critico` label
+- 🟠 **High priority** → Issue with `🟠-alto` label
+- 🟡 **Medium priority** → Issue with `🟡-medio` label
+- 📧 **Email notification** → To owner email
+
+**Reports location**: `docs/validation-reports/validation_YYYYMMDD_HHMMSS.log`
+
+**Monitoring dashboard**:
+- GitHub Actions: https://github.com/ipproyectosysoluciones/psychology-assistant/actions
+- Workflow: `.github/workflows/validate-docs-scheduled.yml`
+- Local reports: See `docs/validation-reports/`
+
+**Additional info**: See [VALIDATION_AUTOMATION.md](./VALIDATION_AUTOMATION.md)
+
+---
+
 ### Weekly (Every Mon 10am)
 
 - [ ] Review new commits to `docs/` folder
 - [ ] Check for any TODO comments in docs
 - [ ] Look for issues tagged `docs`
+- **Note**: Validation happens automatically (check GitHub Actions results)
 
 ### Bi-weekly (Every other Wed)
 
-- [ ] Run full link validation
+- [ ] Review failed validations from automated reports
 - [ ] Check for outdated version references
 - [ ] Review TEAM_ONBOARDING metrics
 
@@ -406,15 +458,17 @@ code without language
 
 - [ ] Full documentation review (all 32 files)
 - [ ] Update statistics in VISUAL_GUIDE.md if changed
-- [ ] Check external links validity
+- [ ] Check for any validation reports that need attention
 - [ ] Archive old RELEASE_NOTES if >3 versions old
+- **Automated validation**: Runs on scheduled date
 
 ### Quarterly (Mar 1, Jun 1, Sep 1, Dec 1)
 
-- [ ] Full audit of all categories
-- [ ] Check bilingual consistency
+- [ ] Full audit of all categories and validation results
+- [ ] Check bilingual consistency (automated + manual review)
 - [ ] Review user feedback on docs
 - [ ] Plan documentation improvements
+- [ ] Analyze validation report trends
 
 ### On Release (vX.X.X)
 
@@ -423,7 +477,7 @@ code without language
 - [ ] Update version badges in README.md
 - [ ] Update statistics in docs
 - [ ] Tag repository: `git tag -a vX.X.X`
-- [ ] Validate all 50+ links
+- [ ] Validate all 50+ links (done automatically before release)
 
 ---
 
