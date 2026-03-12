@@ -11,7 +11,7 @@
 
 ## 📚 **Documentation Hub** — [**Open docs/INDEX.md**](./docs/INDEX.md)
 
-**¡NEW!** 🎉 Complete documentation reorganization - 32 files organized in 7 Clean Architecture layers. 
+**¡NEW!** 🎉 Complete documentation reorganization - 32 files organized in 7 Clean Architecture layers.
 **Start here**: Role-based navigation, quick access guides, and comprehensive index.
 
 👉 **[docs/INDEX.md](./docs/INDEX.md)** ← Central navigation for all developers
@@ -22,8 +22,8 @@ For quick onboarding: **[TEAM_ONBOARDING.md](./TEAM_ONBOARDING.md)** (5-25 min b
 
 **Start Here / Comienza Aquí:**
 
-- [🇪🇸 Guías en Español](#guías-en-español)
-- [🇬🇧 English Guides](#english-guides)
+- [🇪🇸 Guías en Español](#-guías-en-español)
+- [🇬🇧 English Guides](#-english-guides)
 
 ---
 
@@ -105,7 +105,7 @@ Key features:
 
 ## 📋 Project Structure
 
-```
+```bash
 psychology-assistant/
 ├── INDEX.md                     ← Central navigation (new developers)
 ├── DEVELOPMENT_GUIDE.md         ← Setup guide
@@ -132,20 +132,6 @@ psychology-assistant/
 └── package.json                ← Dependencies
 ```
 
-│ ├── models/ # Esquemas Mongoose
-│ ├── routes/ # Endpoints API
-│ ├── middlewares/ # Auth, logging, rate limiting
-│ ├── services/ # Lógica reutilizable
-│ └── **tests**/ # Tests unitarios
-├── frontend/ # Angular application
-│ ├── src/
-│ └── public/
-├── docs/ # Documentación completa
-├── docker-compose.yml # Orquestación
-└── package.json
-
-````
-
 ### Stack Tecnológico
 
 **Backend:** Node.js 18+ | Express.js | MongoDB | Mongoose
@@ -171,7 +157,7 @@ npm run dev  # Puerto 5000
 
 # 5. Frontend (en otra terminal)
 cd frontend && ng serve --port 4200
-````
+```
 
 ### Testing
 
@@ -260,7 +246,7 @@ npm run dev  # Port 5000
 cd frontend && ng serve --port 4200
 ```
 
-### Testing
+### 🧪 Test Execution
 
 ```bash
 pnpm test              # Run tests
