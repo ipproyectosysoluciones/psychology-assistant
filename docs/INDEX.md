@@ -169,6 +169,9 @@ See [Complete Release Notes](../v0.4.0_RELEASE_NOTES.md)
 ### Report an Issue?
 → See [Contributing Guide](./01-getting-started/CONTRIBUTING.md)
 
+### Maintaining Documentation?
+→ Read [Maintenance Process](./MAINTENANCE_PROCESS.md) | [Validation Scripts](../scripts/validate-docs.sh)
+
 ---
 
 ## 🔗 Important Links
