@@ -60,11 +60,11 @@ jobs:
           REFRESH_TOKEN_SECRET: refresh_secret_key_1234567890123456789012345678
 
       - name: Generate coverage report
-        if: matrix.node-version == '18.x'
+        if: matrix.node-version == '24.x'
         run: pnpm test --coverage --coverageReporters=lcov --passWithNoTests --runInBand
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == '18.x'
+        if: matrix.node-version == '24.x'
         uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
         with:
           files: ./coverage/lcov.info
@@ -73,7 +73,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Check coverage threshold
-        if: matrix.node-version == '18.x'
+        if: matrix.node-version == '24.x'
         run: |
           LINES=$(grep -oP 'lines-valid: \K[^ ]*' coverage/coverage-final.json || echo "0")
           if (( $(echo "$LINES < 70" | bc -l) )); then
