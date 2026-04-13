@@ -43,6 +43,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 - **test.yml, build.yml, ci-cd.yml**: Added `dev` branch to CI/CD triggers
 - **package.json**: Confirmed `engines.node: >=24.0.0` and `pnpm: >=10.0.0`
 - **Dockerfile**: Updated to `node:24-alpine` (was `node:18-alpine`)
+- **All workflows**: Fixed pnpm version mismatch (`10.32.1` → `10.33.0`)
+- **All workflows**: Fixed Node version (`18` → `24`)
 
 ---
 
