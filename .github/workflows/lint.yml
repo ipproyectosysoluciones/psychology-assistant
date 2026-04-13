@@ -2,9 +2,9 @@ name: Lint & Type Check
 
 on:
   push:
-    branches: [main, development/frontend-refactor]
+    branches: [main, dev, development/frontend-refactor]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
   workflow_call:
 
 jobs:
@@ -19,13 +19,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.33.0'
           run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '18'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -56,20 +56,20 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.33.0'
           run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '18'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Run TypeScript compiler (Backend)
-        run: pnpm exec tsc --noEmit src/**/*.js 2>&1 || true
+        run: pnpm exec tsc --noEmit 2>&1 || true
         continue-on-error: true
 
       - name: Check TypeScript frontend
@@ -92,20 +92,20 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.33.0'
           run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '18'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Check Prettier formatting
-        run: pnpm exec prettier --check "src/**/*.{js,json}" "frontend/src/**/*.{ts,html,scss}" || true
+        run: pnpm exec prettier --check "src/**/*.{ts,json}" "frontend/src/**/*.{ts,html,scss}" || true
         continue-on-error: true
 
   security-audit:
@@ -119,13 +119,13 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.33.0'
           run_install: false
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '18'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Run pnpm audit

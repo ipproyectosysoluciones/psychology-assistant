@@ -3,20 +3,20 @@ version: '3.8'
 services:
   # Backend API Service
   app:
-    build: .
+    image: ipproyectos/psychology-assistant-backend:0.5.0
     container_name: psychology-assistant-backend
     ports:
       - '5000:5000'
     environment:
       - NODE_ENV=development
-      - MONGO_URI=mongodb://mongodb:27017/psychology-assistant-dev
-      - DATABASE_URL=mongodb://mongodb:27017/psychology-assistant-dev
-      - JWT_SECRET=dev_jwt_secret_change_in_production
-      - REFRESH_TOKEN_SECRET=dev_refresh_token_secret_change_in_production
-      - SESSION_SECRET=dev_session_secret_change_in_production
-      - PORT=5000
-      - LOG_LEVEL=debug
-      - CORS_ORIGIN=http://localhost:4200
+      - MONGO_URI=${MONGO_URI:-mongodb://mongodb:27017/psychology-assistant-dev}
+      - DATABASE_URL=${DATABASE_URL:-mongodb://mongodb:27017/psychology-assistant-dev}
+      - JWT_SECRET=${JWT_SECRET:-dev_jwt_secret_32_chars_minimum}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET:-dev_refresh_secret_32_chars_minimum}
+      - SESSION_SECRET=${SESSION_SECRET:-dev_session_secret_32_chars_minimum}
+      - PORT=${PORT:-5000}
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:4200}
     depends_on:
       mongodb:
         condition: service_healthy
