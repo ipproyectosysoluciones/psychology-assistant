@@ -1,13 +1,13 @@
 import request from 'supertest';
 import app from '../../app.js';
-import { Session } from '../../models/session.js';
 import { User } from '../../models/user.js';
+import { RefreshToken } from '../../models/refreshToken.js';
 import qrService from '../../services/qrService.js';
 import * as twoFAService from '../../services/twoFAService.js';
 
 beforeEach(async () => {
   await User.deleteMany({});
-  await Session.deleteMany({});
+  await RefreshToken.deleteMany({});
 
   // Mock qrService.generateQR to return a fake QR code
   jest
