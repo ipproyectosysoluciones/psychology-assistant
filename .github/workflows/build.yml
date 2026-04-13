@@ -69,7 +69,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build production bundle
-        run: pnpm build -- --configuration production
+        run: pnpm build --configuration production
 
       - name: Check bundle size
         run: |
