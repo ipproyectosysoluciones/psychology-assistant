@@ -161,7 +161,7 @@ describe('User Controller', () => {
 
       // Debug logging for CI race conditions
       if (response.status !== 200) {
-        console.log('DEBUG: change-password failed', {
+        console.info('DEBUG: change-password failed', {
           status: response.status,
           body: response.body,
           tokenPrefix: token?.substring(0, 20),
