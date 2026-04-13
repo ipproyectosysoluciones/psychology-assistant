@@ -26,6 +26,9 @@ beforeEach(async () => {
   });
 
   token = loginResponse.body.data.accessToken;
+
+  // Wait for any async operations to complete (prevents race conditions in CI)
+  await new Promise((resolve) => setTimeout(resolve, 100));
 });
 
 describe('User Controller', () => {
@@ -154,8 +157,18 @@ describe('User Controller', () => {
       const response = await request(app)
         .post('/api/users/change-password')
         .set('Authorization', `Bearer ${token}`)
-        .send(changeData)
-        .expect(200);
+        .send(changeData);
+
+      // Debug logging for CI race conditions
+      if (response.status !== 200) {
+        console.log('DEBUG: change-password failed', {
+          status: response.status,
+          body: response.body,
+          tokenPrefix: token?.substring(0, 20),
+        });
+      }
+
+      expect(response.status).toBe(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.passwordChanged).toBe(true);
