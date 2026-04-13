@@ -86,14 +86,17 @@ jobs:
 
       - name: Validate build output
         run: |
-          if [ -f dist/index.html ]; then
+          if [ -f dist/frontend/browser/index.html ]; then
             echo "✅ index.html generated"
           fi
 
-          if ls dist/main-*.js 1> /dev/null 2>&1; then
+          if ls dist/frontend/browser/main-*.js 1> /dev/null 2>&1; then
             echo "✅ Main bundle generated"
           else
             echo "❌ Main bundle missing"
+            ls -la dist/
+            ls -la dist/frontend/ 2>/dev/null || echo "No frontend folder"
+            ls -la dist/frontend/browser/ 2>/dev/null || echo "No browser folder"
             exit 1
           fi
 
