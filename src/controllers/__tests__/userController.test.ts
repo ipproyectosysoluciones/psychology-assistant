@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../../app.js';
 import { Appointment } from '../../models/appointment.js';
 import { User } from '../../models/user.js';
+import { Session } from '../../models/session.js';
 
 let token: string;
 let user: InstanceType<typeof User>;
@@ -9,6 +10,7 @@ let user: InstanceType<typeof User>;
 beforeEach(async () => {
   await User.deleteMany({});
   await Appointment.deleteMany({});
+  await Session.deleteMany({});
 
   // Create test user
   user = await User.create({
