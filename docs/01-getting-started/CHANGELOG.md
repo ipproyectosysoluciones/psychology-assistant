@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 
 ---
 
+## [0.4.1] - 2026-04-13
+
+### Changed
+
+#### Backend Logging
+
+- **Replaced console.log/error/warn with pino**: Centralized structured logging using `pino` + `pino-pretty`
+  - Logger module at `src/config/logger.ts`
+  - Development: Human-readable colored logs with timestamps (via `pino-pretty`)
+  - Production: JSON structured logs for log aggregation systems
+  - Configurable via `LOG_LEVEL` env var (default: `info`)
+  - Fixed 20+ incorrect API calls across 5 files
+
+#### Husky Configuration
+
+- **Installed and configured husky** for pre-commit hooks
+  - Hook runs `pnpm run precommit` (lint → test)
+  - Located at `.husky/pre-commit`
+
+### Fixed
+
+- **ESLint no-console warnings**: All 9 warnings eliminated
+- **TypeScript errors**: Corrected pino API pattern in all backend files
+
+---
+
 ## [0.4.0] - 2026-03-12
 
 ### Added

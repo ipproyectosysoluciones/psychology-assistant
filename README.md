@@ -4,7 +4,7 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-37/38%20passed-brightgreen.svg)](./docs/07-testing/TESTING_REPORT.md)
+[![Tests](https://img.shields.io/badge/tests-92/92%20passed-brightgreen.svg)](./docs/07-testing/TESTING_REPORT.md)
 [![Build](https://img.shields.io/badge/build-46s%20|%201.17MB-brightgreen.svg)](./docs/07-testing/TESTING_REPORT.md)
 
 ---
