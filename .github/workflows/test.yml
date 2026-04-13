@@ -113,15 +113,6 @@ jobs:
       - name: Run Angular tests
         run: pnpm test --watch=false
 
-      - name: Upload Angular coverage
-        if: always()
-        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
-        with:
-          files: ./frontend/coverage/lcov.info
-          flags: frontend
-          name: frontend-coverage
-          fail_ci_if_error: false
-
   test-summary:
     name: Test Results Summary
     runs-on: ubuntu-latest
