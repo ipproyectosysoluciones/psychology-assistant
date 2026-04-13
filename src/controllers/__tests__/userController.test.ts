@@ -19,6 +19,9 @@ beforeEach(async () => {
     password: 'MySecurePass@2024',
   });
 
+  // Wait for bcrypt hashing to complete in pre-save hook
+  await new Promise((resolve) => setTimeout(resolve, 200));
+
   // Login to get token
   const loginResponse = await request(app).post('/api/auth/login').send({
     email: 'test@example.com',
@@ -28,7 +31,7 @@ beforeEach(async () => {
   token = loginResponse.body.data.accessToken;
 
   // Wait for any async operations to complete (prevents race conditions in CI)
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 });
 
 describe('User Controller', () => {
