@@ -90,7 +90,7 @@ jobs:
             echo "✅ index.html generated"
           fi
 
-          if [ -f dist/main.*.js ]; then
+          if ls dist/main-*.js 1> /dev/null 2>&1; then
             echo "✅ Main bundle generated"
           else
             echo "❌ Main bundle missing"
