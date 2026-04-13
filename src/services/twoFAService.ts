@@ -1,6 +1,5 @@
 import crypto from 'crypto';
-// @ts-expect-error - otplib is mocked in Jest via jest.config.js
-import { totp } from 'otplib';
+import { generate, verify } from 'otplib';
 
 /**
  * @module generateSecret
@@ -40,10 +39,10 @@ export const generateSecret = (): string => {
  * @description Generates a time-based one-time password (TOTP) using the provided secret.
  *
  * @param { string } secret - The secret key used to generate the TOTP.
- * @returns { string } - The generated TOTP code.
+ * @returns { Promise<string> } - The generated TOTP code.
  */
-export const generate2FACode = (secret: string): string => {
-  return totp.generate(secret);
+export const generate2FACode = async (secret: string): Promise<string> => {
+  return generate({ secret });
 };
 
 /**
@@ -52,10 +51,11 @@ export const generate2FACode = (secret: string): string => {
  *
  * @param { string } token - The 2FA token to verify.
  * @param { string } secret - The secret key used to generate the token.
- * @returns { boolean } - True if the token is valid, false otherwise.
+ * @returns { Promise<boolean> } - True if the token is valid, false otherwise.
  */
-export const verify2FACode = (token: string, secret: string): boolean => {
-  return totp.check(token, secret);
+export const verify2FACode = async (token: string, secret: string): Promise<boolean> => {
+  const result = await verify({ token, secret });
+  return Boolean(result);
 };
 
 export const twoFAService = {

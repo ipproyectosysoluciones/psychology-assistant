@@ -12,7 +12,7 @@
     "build": "node scripts/build.mjs",
     "build:watch": "node scripts/build.mjs --watch",
     "build:tsc": "tsc --noEmit",
-    "start": "node dist/server.mjs",
+    "start": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

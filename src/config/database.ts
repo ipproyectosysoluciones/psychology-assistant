@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import pino from 'pino';
+
+// Dynamic import for mongodb-memory-server (only loaded when needed)
+import type { MongoMemoryServer as MongoMemoryServerType } from 'mongodb-memory-server';
 
 dotenv.config({ quiet: true });
 
@@ -13,7 +15,7 @@ dotenv.config({ quiet: true });
  */
 const logger = pino({ name: 'database' });
 
-let mongoServer: MongoMemoryServer | null = null;
+let mongoServer: MongoMemoryServerType | null = null;
 
 /**
  * @module connectDB
@@ -23,25 +25,28 @@ let mongoServer: MongoMemoryServer | null = null;
  */
 const connectDB = async (): Promise<void> => {
   try {
-    if (process.env.NODE_ENV === 'test') {
-      // Use in-memory database for testing
+    if (
+      process.env.NODE_ENV === 'test' ||
+      (process.env.NODE_ENV === 'development' &&
+        !process.env.DATABASE_URL &&
+        !process.env.MONGO_URI)
+    ) {
+      // Use in-memory database for testing OR development without URI
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
       mongoServer = await MongoMemoryServer.create();
       const mongoUri = mongoServer.getUri();
       const conn = await mongoose.connect(mongoUri);
       logger.info({ host: conn.connection.host }, 'MongoDB Memory Connected');
     } else if (process.env.NODE_ENV === 'development') {
-      // Development: use DATABASE_URL if provided, otherwise in-memory
-      if (process.env.DATABASE_URL || process.env.MONGO_URI) {
-        const mongoUri = (process.env.DATABASE_URL || process.env.MONGO_URI) as string;
-        const conn = await mongoose.connect(mongoUri);
-        logger.info({ host: conn.connection.host }, 'MongoDB Connected (Real)');
-      } else {
-        // Fallback to in-memory if no URI provided
-        mongoServer = await MongoMemoryServer.create();
-        const mongoUri = mongoServer.getUri();
-        const conn = await mongoose.connect(mongoUri);
-        logger.warn({ host: conn.connection.host }, 'MongoDB Memory Connected (Dev-only)');
+      // Development: use DATABASE_URL if provided, otherwise fail
+      const mongoUri = (process.env.DATABASE_URL || process.env.MONGO_URI) as string;
+      if (!mongoUri) {
+        throw new Error(
+          'DATABASE_URL or MONGO_URI environment variable is required for development'
+        );
       }
+      const conn = await mongoose.connect(mongoUri);
+      logger.info({ host: conn.connection.host }, 'MongoDB Connected (Real)');
     } else {
       // Production: use MONGO_URI or DATABASE_URL
       const mongoUri = process.env.MONGO_URI || process.env.DATABASE_URL;

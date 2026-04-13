@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Backend API Service
   app:
-    build: .
+    image: ipproyectos/psychology-assistant-backend:0.5.0
     container_name: psychology-assistant-backend
     ports:
       - '5000:5000'

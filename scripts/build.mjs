@@ -23,7 +23,7 @@ mkdirSync(distDir, { recursive: true });
  * Build configuration for the server bundle
  */
 const buildOptions = {
-  entryPoints: [join(srcDir, 'server.js')],
+  entryPoints: [join(srcDir, 'server.ts')],
   bundle: true,
   platform: 'node',
   target: 'node18',
@@ -33,6 +33,8 @@ const buildOptions = {
   minify: isMinify,
   legalComments: 'none',
   external: [
+    'pino',
+    'pino-pretty',
     'express',
     'mongoose',
     'mongodb-memory-server',
@@ -48,6 +50,7 @@ const buildOptions = {
     'jest',
     '@jest/globals',
     'supertest',
+    'node:*',
   ],
 };
 

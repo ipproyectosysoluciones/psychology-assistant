@@ -287,7 +287,7 @@ describe('Auth Controller', () => {
       // Generate a REAL TOTP token using the secret
       // We generate it just before using to minimize the window of expiration
       // TOTP tokens are valid for 30 seconds, so generating and using immediately should work
-      const validToken = twoFAService.generate2FACode(secret);
+      const validToken = await twoFAService.generate2FACode(secret);
 
       const response = await request(app)
         .post('/api/auth/verify-2fa')

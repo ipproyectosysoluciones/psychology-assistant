@@ -1,7 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import mongoose from 'mongoose';
-// @ts-expect-error — otplib v13 mock provides totp singleton via jest moduleNameMapper
-import { totp } from 'otplib';
+import { generateURI } from 'otplib';
 import { Request, Response } from 'express';
 import environment from '../config/environment.js';
 import logger from '../config/logger.js';
@@ -252,7 +251,11 @@ export const enable2FA = asyncHandler(async (req: Request, res: Response): Promi
   }
 
   const secret = twoFAService.generateSecret();
-  const otpAuthUrl = totp.keyuri(req.user!.email, 'PsychologyAssistant', secret);
+  const otpAuthUrl = generateURI({
+    issuer: 'PsychologyAssistant',
+    label: req.user!.email,
+    secret,
+  });
 
   const qrCode = await qrService.generateQR(otpAuthUrl);
 
@@ -281,7 +284,7 @@ export const verify2FA = asyncHandler(async (req: Request, res: Response): Promi
     throw AppError.badRequest('2FA not initialized');
   }
 
-  const isValid = twoFAService.verify2FACode(
+  const isValid = await twoFAService.verify2FACode(
     token,
     (req.user as unknown as Record<string, unknown>).twoFASecret as string
   );
