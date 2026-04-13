@@ -2,9 +2,9 @@ name: CI/CD Pipeline Orchestrator
 
 on:
   push:
-    branches: [main, development/frontend-refactor]
+    branches: [main, dev, development/frontend-refactor]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 jobs:
   test:

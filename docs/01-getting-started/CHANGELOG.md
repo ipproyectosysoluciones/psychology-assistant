@@ -32,6 +32,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 
 ---
 
+## [0.4.2] - 2026-04-13
+
+### Fixed
+
+#### GitHub Actions Workflows
+
+- **lint.yml**: Updated TypeScript compilation command from `src/**/*.js` to `src/**/*.ts`
+- **lint.yml**: Updated Prettier check to include `.ts` files (was checking `.js`)
+- **test.yml, build.yml, ci-cd.yml**: Added `dev` branch to CI/CD triggers
+- **package.json**: Fixed `engines.node` version constraint (was `>=24.0.0`, now `>=18.0.0`)
+
+---
+
 ## [0.4.0] - 2026-03-12
 
 ### Added

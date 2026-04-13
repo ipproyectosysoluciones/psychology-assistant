@@ -2,9 +2,9 @@ name: Build & Docker
 
 on:
   push:
-    branches: [main, development/frontend-refactor]
+    branches: [main, dev, development/frontend-refactor]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
   workflow_call:
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.32.1'
           run_install: false
 
       - name: Setup Node.js
@@ -55,7 +55,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
         with:
-          version: "10.32.1"
+          version: '10.32.1'
           run_install: false
 
       - name: Setup Node.js
