@@ -34,12 +34,9 @@ export default {
   ],
   collectCoverageFrom: [
     'src/**/*.ts',
-    'src/**/*.js',
     '!src/__tests__/**',
     '!src/config/database.ts',
-    '!src/config/database.js',
     '!src/server.ts',
-    '!src/server.js',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
