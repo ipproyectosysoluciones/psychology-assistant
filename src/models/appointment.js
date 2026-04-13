@@ -57,17 +57,4 @@ appointmentSchema.index({ psychologist: 1 });
 appointmentSchema.index({ status: 1 });
 appointmentSchema.index({ date: 1 });
 
-// Populate automático
-appointmentSchema.pre(/^find/, function (next) {
-  this.populate('user', 'name email');
-  if (this.options._recursed) {
-    return next();
-  }
-  this.populate({
-    path: 'psychologist',
-    select: 'name email role'
-  });
-  next();
-});
-
 export const Appointment = model('Appointment', appointmentSchema);

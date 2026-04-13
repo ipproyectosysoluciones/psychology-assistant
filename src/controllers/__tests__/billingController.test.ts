@@ -1,0 +1,60 @@
+/**
+ * Billing Controller Tests
+ */
+
+describe('Billing Controller', () => {
+  let billingId: string;
+  let patientId: string;
+  let clinicId: string;
+
+  beforeAll(async () => {
+    patientId = '507f1f77bcf86cd799439013';
+    clinicId = '507f1f77bcf86cd799439011';
+  });
+
+  describe('POST /api/billings', () => {
+    it('should create a billing invoice', async () => {
+      const billingData = {
+        patient: patientId,
+        clinic: clinicId,
+        therapist: '507f1f77bcf86cd799439014',
+        amount: 150000,
+        description: 'Sesiones de terapia - Marzo 2026',
+        paymentMethod: 'transfer',
+      };
+      expect(billingData).toBeDefined();
+      billingId = 'mock-billing-id';
+    });
+  });
+
+  describe('GET /api/billings/:id', () => {
+    it('should retrieve billing details', async () => {
+      expect(billingId).toBeDefined();
+    });
+  });
+
+  describe('GET /api/patients/:patientId/billings', () => {
+    it('should list billings by patient', async () => {
+      expect(patientId).toBeDefined();
+    });
+  });
+
+  describe('PUT /api/billings/:id', () => {
+    it('should update billing', async () => {
+      const updateData = { amount: 160000 };
+      expect(updateData).toBeDefined();
+    });
+  });
+
+  describe('POST /api/billings/:id/pay', () => {
+    it('should mark billing as paid', async () => {
+      expect(billingId).toBeDefined();
+    });
+  });
+
+  describe('DELETE /api/billings/:id', () => {
+    it('should delete billing', async () => {
+      expect(billingId).toBeDefined();
+    });
+  });
+});

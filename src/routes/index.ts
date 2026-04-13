@@ -1,0 +1,9 @@
+export { default as authRoutes } from './authRoutes.js';
+export { default as userRoutes } from './userRoutes.js';
+export { default as therapistRoutes } from './therapistRoutes.js';
+export { default as patientRoutes } from './patientRoutes.js';
+export { default as appointmentRoutes } from './appointmentRoutes.js';
+export { default as billingRoutes } from './billingRoutes.js';
+export { default as clinicRoutes } from './clinicRoutes.js';
+export { default as clinicalreportRoutes } from './clinicalreportRoutes.js';
+export { default as medicalrecordRoutes } from './medicalrecordRoutes.js';
