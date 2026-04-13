@@ -52,7 +52,7 @@ export default {
     },
   },
   verbose: true,
-  forceExit: true,
+  forceExit: false,
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
