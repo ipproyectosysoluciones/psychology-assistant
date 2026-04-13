@@ -41,7 +41,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 - **lint.yml**: Updated TypeScript compilation command from `src/**/*.js` to `src/**/*.ts`
 - **lint.yml**: Updated Prettier check to include `.ts` files (was checking `.js`)
 - **test.yml, build.yml, ci-cd.yml**: Added `dev` branch to CI/CD triggers
-- **package.json**: Fixed `engines.node` version constraint (was `>=24.0.0`, now `>=18.0.0`)
+- **package.json**: Confirmed `engines.node: >=24.0.0` and `pnpm: >=10.0.0`
+- **Dockerfile**: Updated to `node:24-alpine` (was `node:18-alpine`)
 
 ---
 

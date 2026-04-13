@@ -1,6 +1,6 @@
 # Multi-stage build for Backend - Production
 # Stage 1: Dependencies
-FROM node:18-alpine AS dependencies
+FROM node:24-alpine AS dependencies
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --production=false
 
 # Stage 2: Build & Runtime
-FROM node:18-alpine
+FROM node:24-alpine
 
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
@@ -48,7 +48,7 @@ EXPOSE 5000
 # Labels for metadata
 LABEL maintainer="Psychology Assistant Team"
 LABEL description="Psychology Assistant Backend API"
-LABEL version="0.3.0"
+LABEL version="0.4.0"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
